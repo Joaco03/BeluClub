@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Blu Club — Joyería de acero inoxidable en Paraná</title>
+<meta name="description" content="Anillos, collares, aros y pulseras de acero inoxidable quirúrgico. Waterproof e hipoalergénicos, para usar todos los días. Envíos en Paraná, Entre Ríos.">
+<link rel="icon" type="image/png" href="assets/logo-cuadrado.png">
+<meta name="theme-color" content="#1C1A19">
+<meta property="og:type" content="website">
+<meta property="og:title" content="The Blu Club">
+<meta property="og:description" content="Anillos, collares, aros y pulseras de acero inoxidable. Waterproof e hipoalergénicos, para usar todos los días.">
+<meta property="og:image" content="assets/logo-cuadrado.png">
+<meta name="twitter:card" content="summary">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body{margin:0;background:#fff;}
+    *{box-sizing:border-box;}
+    a{color:#7C2620;text-decoration:none;}
+    a:hover{color:#4E1712;}
+    @keyframes bcFade{from{opacity:0}to{opacity:1}}
+    @keyframes bcSlide{from{transform:translateX(-100%)}to{transform:translateX(0)}}
+  </style>
+</helmet>
+
+<div style="font-family:'Jost',sans-serif;color:#1C1A19;background:#fff;min-height:100vh;position:relative;overflow-x:hidden;">
+
+  <!-- HEADER -->
+  <header style="position:fixed;top:0;left:0;right:0;z-index:40;background:{{ headerBg }};border-bottom:1px solid {{ headerBorder }};transition:background .3s ease, border-color .3s ease;">
+    <div style="max-width:1400px;margin:0 auto;padding:0 22px;height:76px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;">
+      <div style="display:flex;align-items:center;">
+        <div onClick="{{ openMenu }}" title="Menú" style="cursor:pointer;display:flex;flex-direction:column;gap:5px;padding:8px 6px;">
+          <span style="display:block;width:24px;height:1.5px;background:{{ headerInk }};transition:background .3s;"></span>
+          <span style="display:block;width:24px;height:1.5px;background:{{ headerInk }};transition:background .3s;"></span>
+          <span style="display:block;width:24px;height:1.5px;background:{{ headerInk }};transition:background .3s;"></span>
+        </div>
+      </div>
+      <div onClick="{{ goHome }}" style="cursor:pointer;display:flex;align-items:center;justify-content:center;">
+        <sc-if value="{{ logoLight }}">
+          <img src="assets/logo-clarito.png" alt="The Blu Club" style="height:46px;object-fit:contain;display:block;">
+        </sc-if>
+        <sc-if value="{{ logoDark }}" hint-placeholder-val="{{ true }}">
+          <img src="assets/logo-bordo.png" alt="The Blu Club" style="height:46px;object-fit:contain;display:block;">
+        </sc-if>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:flex-end;gap:6px;">
+        <div onClick="{{ openAccount }}" title="Mi cuenta" style="cursor:pointer;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:{{ headerInk }};">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M12 12a4 4 0 100-8 4 4 0 000 8zM4 20.5c0-3.6 3.6-6.5 8-6.5s8 2.9 8 6.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"></path></svg>
+        </div>
+        <div onClick="{{ toggleCart }}" title="Carrito" style="cursor:pointer;position:relative;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:{{ headerInk }};">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M5.5 7.5h13l-1.1 12a1.8 1.8 0 01-1.8 1.6H8.4a1.8 1.8 0 01-1.8-1.6l-1.1-12z" stroke="currentColor" stroke-width="1.4"></path><path d="M9 7.5V6a3 3 0 016 0v1.5" stroke="currentColor" stroke-width="1.4"></path></svg>
+          <sc-if value="{{ cartCount }}" hint-placeholder-val="{{ 0 }}">
+            <span style="position:absolute;top:2px;right:0;background:#7C2620;color:#fff;font-size:10px;font-weight:500;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;padding:0 4px;">{{ cartCount }}</span>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- SIDE MENU -->
+  <sc-if value="{{ menuOpen }}">
+    <div onClick="{{ closeMenu }}" style="position:fixed;inset:0;background:rgba(28,26,25,0.45);z-index:55;animation:bcFade .2s ease;"></div>
+    <div style="position:fixed;top:0;left:0;bottom:0;width:min(340px,86%);background:#fff;z-index:56;animation:bcSlide .25s ease;display:flex;flex-direction:column;">
+      <div style="height:76px;padding:0 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #E4DED8;">
+        <span style="font-size:10.5px;letter-spacing:0.22em;text-transform:uppercase;color:#7A736E;">Menú</span>
+        <span onClick="{{ closeMenu }}" style="cursor:pointer;font-size:24px;line-height:1;color:#1C1A19;font-weight:300;">×</span>
+      </div>
+      <div style="flex:1;overflow-y:auto;padding:28px 24px;display:flex;flex-direction:column;gap:2px;">
+        <span onClick="{{ goCatalogAll }}" style="cursor:pointer;font-family:'Cormorant Garamond',serif;font-size:24px;padding:10px 0;" style-hover="color:#7C2620;">Todos los productos</span>
+        <span onClick="{{ goSale }}" style="cursor:pointer;font-family:'Cormorant Garamond',serif;font-size:24px;padding:10px 0;color:#A6322A;" style-hover="color:#7C2620;">Sale</span>
+        <div style="height:1px;background:#E4DED8;margin:14px 0 18px;"></div>
+        <sc-for list="{{ menuCategories }}" as="c" hint-placeholder-count="4">
+          <span onClick="{{ c.select }}" style="cursor:pointer;font-size:13.5px;letter-spacing:0.06em;padding:9px 0;color:#3A3532;" style-hover="color:#7C2620;">{{ c.name }}</span>
+        </sc-for>
+        <div style="height:1px;background:#E4DED8;margin:18px 0;"></div>
+        <span onClick="{{ goFaq }}" style="cursor:pointer;font-size:13.5px;letter-spacing:0.06em;padding:9px 0;color:#3A3532;" style-hover="color:#7C2620;">Preguntas frecuentes</span>
+        <span onClick="{{ openAccount }}" style="cursor:pointer;font-size:13.5px;letter-spacing:0.06em;padding:9px 0;color:#3A3532;" style-hover="color:#7C2620;">{{ accountLabel }}</span>
+        <sc-if value="{{ isAdminUser }}">
+          <span onClick="{{ goAdmin }}" style="cursor:pointer;font-size:13.5px;letter-spacing:0.06em;padding:9px 0;color:#7C2620;font-weight:500;">Administrar tienda</span>
+        </sc-if>
+      </div>
+      <div style="padding:22px 24px;border-top:1px solid #E4DED8;display:flex;flex-direction:column;gap:10px;">
+        <a href="{{ instagramUrl }}" target="_blank" rel="noopener" style="font-size:12px;letter-spacing:0.08em;color:#7A736E;">{{ instagramHandleDisplay }}</a>
+        <a href="{{ whatsappGeneralLink }}" target="_blank" rel="noopener" style="font-size:12px;letter-spacing:0.08em;color:#7A736E;">WhatsApp</a>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ACCOUNT MODAL -->
+  <sc-if value="{{ authOpen }}">
+    <div onClick="{{ closeAuth }}" style="position:fixed;inset:0;background:rgba(28,26,25,0.5);z-index:65;animation:bcFade .2s ease;"></div>
+    <div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(420px,92%);background:#fff;z-index:66;padding:38px 34px;animation:bcFade .2s ease;max-height:90vh;overflow-y:auto;">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:22px;">
+        <div>
+          <div style="font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:#7A736E;margin-bottom:8px;">{{ authKicker }}</div>
+          <h3 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:400;font-size:30px;line-height:1.1;">{{ authTitle }}</h3>
+        </div>
+        <span onClick="{{ closeAuth }}" style="cursor:pointer;font-size:24px;line-height:1;font-weight:300;color:#1C1A19;">×</span>
+      </div>
+
+      <sc-if value="{{ loggedIn }}">
+        <p style="font-size:14px;color:#5B554F;line-height:1.7;margin:0 0 24px;">{{ accountGreeting }}</p>
+        <sc-if value="{{ isAdminUser }}">
+          <div onClick="{{ goAdmin }}" style="cursor:pointer;background:#1C1A19;color:#fff;text-align:center;padding:14px;font-size:11.5px;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:10px;">Administrar tienda</div>
+        </sc-if>
+        <div onClick="{{ logout }}" style="cursor:pointer;border:1px solid #D8D1CA;text-align:center;padding:14px;font-size:11.5px;letter-spacing:0.18em;text-transform:uppercase;color:#3A3532;" style-hover="border-color:#1C1A19;">Cerrar sesión</div>
+      </sc-if>
+
+      <sc-if value="{{ showAuthForm }}" hint-placeholder-val="{{ true }}">
+        <sc-if value="{{ isRegisterMode }}">
+          <div style="margin-bottom:14px;">
+            <label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Nombre</label>
+            <input value="{{ authName }}" onChange="{{ onAuthNameChange }}" placeholder="Tu nombre" style="width:100%;padding:12px 14px;border:1px solid #D8D1CA;font-family:'Jost';font-size:14px;background:#fff;">
+          </div>
+        </sc-if>
+        <div style="margin-bottom:14px;">
+          <label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Email</label>
+          <input value="{{ authEmail }}" onChange="{{ onAuthEmailChange }}" type="email" placeholder="tu@email.com" style="width:100%;padding:12px 14px;border:1px solid #D8D1CA;font-family:'Jost';font-size:14px;background:#fff;">
+        </div>
+        <div style="margin-bottom:18px;">
+          <label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Contraseña</label>
+          <input value="{{ authPassword }}" onChange="{{ onAuthPasswordChange }}" type="password" placeholder="••••••••" onKeyDown="{{ onAuthKeyDown }}" style="width:100%;padding:12px 14px;border:1px solid #D8D1CA;font-family:'Jost';font-size:14px;background:#fff;">
+        </div>
+        <sc-if value="{{ authError }}">
+          <p style="margin:0 0 16px;font-size:12.5px;color:#A6322A;line-height:1.5;">{{ authError }}</p>
+        </sc-if>
+        <div onClick="{{ submitAuth }}" style="cursor:pointer;background:#1C1A19;color:#fff;text-align:center;padding:14px;font-size:11.5px;letter-spacing:0.18em;text-transform:uppercase;" style-hover="background:#7C2620;">{{ authSubmitLabel }}</div>
+        <div onClick="{{ toggleAuthMode }}" style="cursor:pointer;text-align:center;margin-top:18px;font-size:12.5px;color:#7A736E;text-decoration:underline;">{{ authSwitchLabel }}</div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <!-- CART DRAWER -->
+  <sc-if value="{{ cartOpen }}">
+    <div onClick="{{ toggleCart }}" style="position:fixed;inset:0;background:rgba(28,26,25,0.45);z-index:55;animation:bcFade .2s ease;"></div>
+    <div style="position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);background:#fff;z-index:56;display:flex;flex-direction:column;">
+      <div style="height:76px;padding:0 26px;border-bottom:1px solid #E4DED8;display:flex;align-items:center;justify-content:space-between;">
+        <span style="font-size:10.5px;letter-spacing:0.22em;text-transform:uppercase;color:#7A736E;">Tu carrito</span>
+        <span onClick="{{ toggleCart }}" style="cursor:pointer;font-size:24px;line-height:1;font-weight:300;">×</span>
+      </div>
+      <div style="flex:1;overflow-y:auto;padding:14px 26px;">
+        <sc-if value="{{ cartEmpty }}" hint-placeholder-val="{{ false }}">
+          <p style="color:#7A736E;text-align:center;margin-top:48px;font-size:14px;">Todavía no agregaste nada.</p>
+        </sc-if>
+        <sc-for list="{{ cartItems }}" as="item" hint-placeholder-count="0">
+          <div style="display:flex;gap:14px;padding:18px 0;border-bottom:1px solid #EFEAE4;">
+            <div style="width:70px;height:88px;overflow:hidden;flex-shrink:0;background:#F6F1EC;">
+              <img src="{{ item.image }}" alt="The Blu Club" style="width:100%;height:100%;object-fit:cover;display:block;">
+            </div>
+            <div style="flex:1;min-width:0;">
+              <div style="font-size:14px;letter-spacing:0.02em;">{{ item.name }}</div>
+              <div style="font-size:11.5px;color:#7A736E;margin-top:2px;">{{ item.materialName }}</div>
+              <div style="display:flex;align-items:center;gap:12px;margin-top:12px;">
+                <span onClick="{{ item.dec }}" style="cursor:pointer;width:24px;height:24px;border:1px solid #D8D1CA;display:flex;align-items:center;justify-content:center;font-size:13px;">−</span>
+                <span style="font-size:13px;min-width:12px;text-align:center;">{{ item.qty }}</span>
+                <span onClick="{{ item.inc }}" style="cursor:pointer;width:24px;height:24px;border:1px solid #D8D1CA;display:flex;align-items:center;justify-content:center;font-size:13px;">+</span>
+                <span onClick="{{ item.remove }}" style="cursor:pointer;margin-left:auto;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#7A736E;">Quitar</span>
+              </div>
+            </div>
+            <div style="font-size:14px;white-space:nowrap;">{{ item.lineTotalFormatted }}</div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="padding:22px 26px;border-top:1px solid #E4DED8;">
+        <div style="display:flex;justify-content:space-between;font-size:15px;margin-bottom:16px;">
+          <span style="letter-spacing:0.04em;">Subtotal</span><span>{{ cartSubtotalFormatted }}</span>
+        </div>
+        <a href="{{ whatsappCartLink }}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:10px;background:#1C1A19;color:#fff;padding:15px;font-size:11.5px;letter-spacing:0.18em;text-transform:uppercase;" style-hover="background:#7C2620;color:#fff;">
+          Finalizar por WhatsApp
+        </a>
+        <p style="margin:12px 0 0;font-size:11px;color:#9A938D;text-align:center;line-height:1.5;">Coordinamos pago y envío por mensaje.</p>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- TOAST -->
+  <sc-if value="{{ toast }}">
+    <div style="position:fixed;bottom:26px;left:50%;transform:translateX(-50%);background:#1C1A19;color:#fff;padding:13px 26px;font-size:11.5px;letter-spacing:0.16em;text-transform:uppercase;z-index:70;">{{ toast }}</div>
+  </sc-if>
+
+  <!-- ============ HOME ============ -->
+  <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+    <div data-screen-label="Inicio">
+
+      <!-- HERO -->
+      <div style="position:relative;height:88vh;min-height:560px;overflow:hidden;background:#EFE8E1;">
+        <sc-for list="{{ heroSlides }}" as="slide" hint-placeholder-count="3">
+          <sc-if value="{{ slide.active }}">
+            <div style="position:absolute;inset:0;animation:bcFade .8s ease;">
+              <img src="{{ slide.image }}" alt="Foto de portada" style="width:100%;height:100%;object-fit:cover;display:block;">
+              <div style="position:absolute;inset:0;background:linear-gradient(180deg, rgba(28,26,25,0.32) 0%, rgba(28,26,25,0.22) 45%, rgba(28,26,25,0.44) 100%);pointer-events:none;"></div>
+              <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:76px 28px 0;pointer-events:none;">
+                <span style="font-size:10.5px;letter-spacing:0.32em;text-transform:uppercase;color:#F2E6DA;pointer-events:auto;">{{ slide.kicker }}</span>
+                <h1 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:64px;line-height:1.08;color:#fff;margin:20px 0 20px;max-width:700px;pointer-events:auto;text-wrap:pretty;">{{ slide.headline }}</h1>
+                <p style="color:#F2EAE3;font-size:14px;font-weight:300;letter-spacing:0.05em;line-height:1.8;margin:0 0 34px;max-width:440px;pointer-events:auto;">{{ slide.sub }}</p>
+                <div onClick="{{ goCatalogAll }}" style="pointer-events:auto;cursor:pointer;background:#fff;color:#1C1A19;padding:15px 38px;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;" style-hover="background:#1C1A19;color:#fff;">Ver productos</div>
+              </div>
+            </div>
+          </sc-if>
+        </sc-for>
+        <div style="position:absolute;bottom:30px;left:50%;transform:translateX(-50%);display:flex;gap:8px;">
+          <sc-for list="{{ heroSlides }}" as="slide" hint-placeholder-count="3">
+            <span onClick="{{ slide.select }}" style="cursor:pointer;width:{{ slide.dotWidth }};height:2px;background:{{ slide.dotColor }};transition:width .3s;"></span>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- TRUST STRIP -->
+      <div style="background:#1C1A19;">
+        <div style="max-width:1400px;margin:0 auto;padding:44px 24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:34px;">
+          <div style="text-align:center;">
+            <div style="font-size:10px;letter-spacing:0.28em;text-transform:uppercase;color:#C7A98C;margin-bottom:10px;">Waterproof</div>
+            <div style="font-size:13px;color:#EDE6DF;font-weight:300;line-height:1.6;">Bañate, nadá y entrená sin sacártelo</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-size:10px;letter-spacing:0.28em;text-transform:uppercase;color:#C7A98C;margin-bottom:10px;">Acero inoxidable</div>
+            <div style="font-size:13px;color:#EDE6DF;font-weight:300;line-height:1.6;">No se oxida ni pierde el color</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-size:10px;letter-spacing:0.28em;text-transform:uppercase;color:#C7A98C;margin-bottom:10px;">Hipoalergénico</div>
+            <div style="font-size:13px;color:#EDE6DF;font-weight:300;line-height:1.6;">Apto para pieles sensibles</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-size:10px;letter-spacing:0.28em;text-transform:uppercase;color:#C7A98C;margin-bottom:10px;">Uso diario</div>
+            <div style="font-size:13px;color:#EDE6DF;font-weight:300;line-height:1.6;">Larga duración, pensado para siempre</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CATEGORIES -->
+      <div style="max-width:1400px;margin:0 auto;padding:96px 24px 0;">
+        <div style="text-align:center;margin-bottom:46px;">
+          <div style="font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:#7A736E;margin-bottom:14px;">Elegí tu favorito</div>
+          <h2 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:44px;margin:0;line-height:1.1;">Nuestros productos</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:4px;">
+          <sc-for list="{{ categoryTiles }}" as="tile" hint-placeholder-count="4">
+            <div onClick="{{ tile.select }}" style="cursor:pointer;position:relative;overflow:hidden;aspect-ratio:3/4;background:#F6F1EC;">
+              <img src="{{ tile.image }}" alt="Foto de categoría" style="width:100%;height:100%;object-fit:cover;display:block;">
+              <div style="position:absolute;inset:0;background:linear-gradient(0deg, rgba(28,26,25,0.55) 0%, rgba(28,26,25,0) 55%);pointer-events:none;"></div>
+              <div style="position:absolute;left:0;right:0;bottom:24px;text-align:center;color:#fff;font-size:11px;letter-spacing:0.24em;text-transform:uppercase;pointer-events:none;">{{ tile.name }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- FEATURED -->
+      <div style="max-width:1400px;margin:0 auto;padding:96px 24px 0;">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:40px;flex-wrap:wrap;">
+          <div>
+            <div style="font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:#7A736E;margin-bottom:14px;">Los más elegidos</div>
+            <h2 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:44px;margin:0;line-height:1.1;">Destacados</h2>
+          </div>
+          <span onClick="{{ goCatalogAll }}" style="cursor:pointer;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#1C1A19;border-bottom:1px solid #1C1A19;padding-bottom:4px;">Ver todo</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:30px 22px;">
+          <sc-for list="{{ featuredProducts }}" as="p" hint-placeholder-count="4">
+            <div onClick="{{ p.open }}" style="cursor:pointer;">
+              <div style="position:relative;overflow:hidden;aspect-ratio:4/5;background:#F6F1EC;">
+                <img src="{{ p.image }}" alt="Foto del producto" style="width:100%;height:100%;object-fit:cover;display:block;">
+                <sc-if value="{{ p.outOfStock }}">
+                  <div style="position:absolute;top:0;left:0;background:#1C1A19;color:#fff;font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;padding:6px 12px;">Agotado</div>
+                </sc-if>
+              </div>
+              <div style="padding-top:16px;text-align:center;">
+                <div style="font-size:14.5px;letter-spacing:0.03em;">{{ p.name }}</div>
+                <div style="font-size:10.5px;letter-spacing:0.18em;text-transform:uppercase;color:#9A938D;margin:6px 0 8px;">{{ p.materialName }}</div>
+                <div style="display:flex;align-items:baseline;justify-content:center;gap:8px;">
+                  <sc-if value="{{ p.isOnSale }}">
+                    <span style="font-size:12.5px;color:#9A938D;text-decoration:line-through;">{{ p.oldPriceFormatted }}</span>
+                  </sc-if>
+                  <span style="font-size:14px;color:{{ p.priceColor }};">{{ p.priceFormatted }}</span>
+                </div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- SALE -->
+      <sc-if value="{{ hasSale }}">
+        <div style="margin-top:96px;background:#1C1A19;padding:80px 24px;">
+          <div style="max-width:1400px;margin:0 auto;">
+            <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:40px;flex-wrap:wrap;">
+              <div>
+                <div style="font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:#C7A98C;margin-bottom:14px;">Precios rebajados</div>
+                <h2 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:46px;margin:0;line-height:1.05;color:#fff;">Sale</h2>
+              </div>
+              <span onClick="{{ goSale }}" style="cursor:pointer;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#fff;border-bottom:1px solid #fff;padding-bottom:4px;">Ver todo el sale</span>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:30px 22px;">
+              <sc-for list="{{ saleProducts }}" as="p" hint-placeholder-count="4">
+                <div onClick="{{ p.open }}" style="cursor:pointer;">
+                  <div style="position:relative;overflow:hidden;aspect-ratio:4/5;background:#2A2623;">
+                    <img src="{{ p.image }}" alt="Foto del producto" style="width:100%;height:100%;object-fit:cover;display:block;">
+                    <div style="position:absolute;top:0;left:0;background:#A6322A;color:#fff;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;padding:7px 13px;">{{ p.discountLabel }}</div>
+                  </div>
+                  <div style="padding-top:16px;text-align:center;">
+                    <div style="font-size:14.5px;letter-spacing:0.03em;color:#fff;">{{ p.name }}</div>
+                    <div style="font-size:10.5px;letter-spacing:0.18em;text-transform:uppercase;color:#A79E96;margin:6px 0 8px;">{{ p.materialName }}</div>
+                    <div style="display:flex;align-items:baseline;justify-content:center;gap:9px;">
+                      <span style="font-size:12.5px;color:#A79E96;text-decoration:line-through;">{{ p.oldPriceFormatted }}</span>
+                      <span style="font-size:15px;color:#F0C9A4;">{{ p.priceFormatted }}</span>
+                    </div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- EDITORIAL -->
+      <div style="max-width:1400px;margin:96px auto 0;padding:0 24px;">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));align-items:stretch;">
+          <div style="width:100%;min-width:0;align-self:stretch;min-height:440px;background:#F6F1EC;overflow:hidden;">
+            <img src="{{ editorialImage }}" alt="Foto editorial" style="width:100%;height:100%;object-fit:cover;display:block;">
+          </div>
+          <div style="background:#F6F1EC;display:flex;flex-direction:column;justify-content:center;padding:60px 52px;">
+            <div style="font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:#7A736E;margin-bottom:18px;">Hecho para durar</div>
+            <h2 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:40px;line-height:1.15;margin:0 0 20px;text-wrap:pretty;">Joyas que no te sacás nunca</h2>
+            <p style="font-size:14px;font-weight:300;line-height:1.9;color:#5B554F;margin:0 0 28px;max-width:420px;">Cada pieza es de acero inoxidable quirúrgico: resiste el agua, la transpiración y el uso de todos los días sin oxidarse ni cambiar de color. Elegí tu combinación en dorado o plateado y usala siempre.</p>
+            <span onClick="{{ goCatalogAll }}" style="cursor:pointer;align-self:flex-start;background:#1C1A19;color:#fff;padding:15px 34px;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;" style-hover="background:#7C2620;">Ver productos</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- INSTAGRAM -->
+      <sc-if value="{{ showInstagram }}" hint-placeholder-val="{{ true }}">
+        <div style="max-width:1400px;margin:0 auto;padding:96px 24px 0;text-align:center;">
+          <div style="font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:#7A736E;margin-bottom:14px;">Comunidad</div>
+          <h2 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:44px;margin:0 0 10px;line-height:1.1;">Seguinos en Instagram</h2>
+          <a href="{{ instagramUrl }}" target="_blank" rel="noopener" style="display:inline-block;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:38px;">{{ instagramHandleDisplay }}</a>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:4px;">
+            <sc-for list="{{ instagramTiles }}" as="tile" hint-placeholder-count="6">
+              <div style="aspect-ratio:1/1;background:#F6F1EC;">
+                <img src="{{ tile.image }}" alt="Foto de Instagram" style="width:100%;height:100%;object-fit:cover;display:block;">
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- FAQ -->
+      <div id="faq-section" style="max-width:860px;margin:0 auto;padding:96px 24px 110px;">
+        <div style="text-align:center;margin-bottom:44px;">
+          <div style="font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:#7A736E;margin-bottom:14px;">Todo lo que necesitás saber</div>
+          <h2 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:44px;margin:0;line-height:1.1;">Preguntas frecuentes</h2>
+        </div>
+        <sc-for list="{{ faqItems }}" as="faq" hint-placeholder-count="4">
+          <div style="border-bottom:1px solid #E4DED8;">
+            <div onClick="{{ faq.toggle }}" style="cursor:pointer;padding:24px 2px;display:flex;justify-content:space-between;align-items:center;gap:16px;">
+              <span style="font-size:15px;letter-spacing:0.02em;">{{ faq.q }}</span>
+              <span style="font-size:18px;font-weight:300;color:#7C2620;">{{ faq.sign }}</span>
+            </div>
+            <sc-if value="{{ faq.open }}">
+              <p style="margin:0 2px 26px;color:#5B554F;font-size:14px;font-weight:300;line-height:1.85;max-width:660px;">{{ faq.a }}</p>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ CATALOG ============ -->
+  <sc-if value="{{ isCatalog }}">
+    <div data-screen-label="Productos" style="max-width:1400px;margin:0 auto;padding:120px 24px 110px;">
+      <div style="font-size:10.5px;letter-spacing:0.16em;text-transform:uppercase;color:#9A938D;margin-bottom:20px;">
+        <span onClick="{{ goHome }}" style="cursor:pointer;">Inicio</span> — Productos
+      </div>
+      <h1 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:48px;margin:0 0 40px;line-height:1.05;">{{ catalogTitle }}</h1>
+
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+        <sc-for list="{{ categoryChips }}" as="chip" hint-placeholder-count="5">
+          <span onClick="{{ chip.select }}" style="cursor:pointer;padding:10px 20px;font-size:10.5px;letter-spacing:0.16em;text-transform:uppercase;border:1px solid {{ chip.border }};background:{{ chip.bg }};color:{{ chip.color }};">{{ chip.name }}</span>
+        </sc-for>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center;margin-bottom:44px;">
+        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+          <sc-for list="{{ materialChips }}" as="chip" hint-placeholder-count="3">
+            <span onClick="{{ chip.select }}" style="cursor:pointer;padding:10px 20px;font-size:10.5px;letter-spacing:0.16em;text-transform:uppercase;border:1px solid {{ chip.border }};background:{{ chip.bg }};color:{{ chip.color }};">{{ chip.name }}</span>
+          </sc-for>
+        </div>
+        <select value="{{ sortBy }}" onChange="{{ onSortChange }}" style="padding:11px 14px;border:1px solid #D8D1CA;font-family:'Jost';font-size:12px;letter-spacing:0.08em;background:#fff;color:#1C1A19;">
+          <option value="destacados">Destacados</option>
+          <option value="price_asc">Menor precio</option>
+          <option value="price_desc">Mayor precio</option>
+        </select>
+      </div>
+
+      <sc-if value="{{ catalogEmpty }}">
+        <p style="text-align:center;color:#7A736E;padding:80px 0;font-size:14px;">No hay productos en esta selección todavía.</p>
+      </sc-if>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:40px 22px;">
+        <sc-for list="{{ catalogProducts }}" as="p" hint-placeholder-count="8">
+          <div>
+            <div onClick="{{ p.open }}" style="cursor:pointer;position:relative;overflow:hidden;aspect-ratio:4/5;background:#F6F1EC;">
+              <img src="{{ p.image }}" alt="Foto del producto" style="width:100%;height:100%;object-fit:cover;display:block;">
+              <sc-if value="{{ p.outOfStock }}">
+                <div style="position:absolute;top:0;left:0;background:#1C1A19;color:#fff;font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;padding:6px 12px;">Agotado</div>
+              </sc-if>
+              <sc-if value="{{ p.featured }}">
+                <div style="position:absolute;top:0;right:0;background:#7C2620;color:#fff;font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;padding:6px 12px;">Destacado</div>
+              </sc-if>
+              <sc-if value="{{ p.isOnSale }}">
+                <div style="position:absolute;bottom:0;left:0;background:#A6322A;color:#fff;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;padding:7px 13px;">{{ p.discountLabel }}</div>
+              </sc-if>
+            </div>
+            <div style="padding-top:16px;text-align:center;">
+              <div onClick="{{ p.open }}" style="cursor:pointer;font-size:14.5px;letter-spacing:0.03em;">{{ p.name }}</div>
+              <div style="font-size:10.5px;letter-spacing:0.18em;text-transform:uppercase;color:#9A938D;margin:6px 0 8px;">{{ p.materialName }}</div>
+              <div style="display:flex;align-items:baseline;justify-content:center;gap:8px;margin-bottom:12px;">
+                <sc-if value="{{ p.isOnSale }}">
+                  <span style="font-size:12.5px;color:#9A938D;text-decoration:line-through;">{{ p.oldPriceFormatted }}</span>
+                </sc-if>
+                <span style="font-size:14px;color:{{ p.priceColor }};">{{ p.priceFormatted }}</span>
+              </div>
+              <span onClick="{{ p.quickAdd }}" style="cursor:pointer;display:inline-block;border:1px solid #D8D1CA;padding:10px 22px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#3A3532;" style-hover="background:#1C1A19;color:#fff;border-color:#1C1A19;">Agregar</span>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ PRODUCT ============ -->
+  <sc-if value="{{ isProduct }}">
+    <div data-screen-label="Producto" style="max-width:1240px;margin:0 auto;padding:120px 24px 110px;">
+      <div style="font-size:10.5px;letter-spacing:0.16em;text-transform:uppercase;color:#9A938D;margin-bottom:30px;">
+        <span onClick="{{ goHome }}" style="cursor:pointer;">Inicio</span> — <span onClick="{{ goCatalogAll }}" style="cursor:pointer;">Productos</span> — {{ selectedProduct.name }}
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:60px;">
+        <div style="aspect-ratio:4/5;background:#F6F1EC;overflow:hidden;">
+          <img src="{{ selectedProduct.image }}" alt="Foto del producto" style="width:100%;height:100%;object-fit:cover;display:block;">
+        </div>
+        <div>
+          <div style="font-size:10px;letter-spacing:0.26em;text-transform:uppercase;color:#7A736E;margin-bottom:16px;">{{ selectedProduct.materialName }}</div>
+          <h1 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:46px;margin:0 0 14px;line-height:1.08;">{{ selectedProduct.name }}</h1>
+          <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:26px;flex-wrap:wrap;">
+            <sc-if value="{{ selectedProduct.isOnSale }}">
+              <span style="font-size:16px;color:#9A938D;text-decoration:line-through;">{{ selectedProduct.oldPriceFormatted }}</span>
+            </sc-if>
+            <span style="font-size:22px;color:{{ selectedProduct.priceColor }};">{{ selectedProduct.priceFormatted }}</span>
+            <sc-if value="{{ selectedProduct.isOnSale }}">
+              <span style="background:#A6322A;color:#fff;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;padding:6px 11px;">{{ selectedProduct.discountLabel }}</span>
+            </sc-if>
+          </div>
+          <p style="color:#5B554F;line-height:1.9;font-size:14px;font-weight:300;margin:0 0 32px;">{{ selectedProduct.description }}</p>
+          <sc-if value="{{ selectedProduct.outOfStock }}">
+            <div style="background:#F6F1EC;color:#7C2620;padding:16px 18px;margin-bottom:24px;font-size:12.5px;letter-spacing:0.06em;">Este producto está agotado por ahora. Escribinos y te avisamos cuando vuelva.</div>
+          </sc-if>
+          <sc-if value="{{ selectedProductInStock }}">
+            <div style="display:flex;align-items:stretch;gap:12px;margin-bottom:12px;flex-wrap:wrap;">
+              <div style="display:flex;align-items:center;border:1px solid #D8D1CA;">
+                <span onClick="{{ decQty }}" style="cursor:pointer;width:42px;height:48px;display:flex;align-items:center;justify-content:center;font-size:15px;">−</span>
+                <span style="width:34px;text-align:center;font-size:14px;">{{ selectedQty }}</span>
+                <span onClick="{{ incQty }}" style="cursor:pointer;width:42px;height:48px;display:flex;align-items:center;justify-content:center;font-size:15px;">+</span>
+              </div>
+              <div onClick="{{ addSelectedToCart }}" style="cursor:pointer;flex:1;min-width:200px;background:#1C1A19;color:#fff;display:flex;align-items:center;justify-content:center;padding:15px;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;" style-hover="background:#7C2620;">Agregar al carrito</div>
+            </div>
+            <a href="{{ whatsappProductLink }}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;border:1px solid #1C1A19;color:#1C1A19;padding:15px;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:34px;" style-hover="background:#F6F1EC;color:#1C1A19;">Consultar por WhatsApp</a>
+          </sc-if>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:18px;padding-top:28px;border-top:1px solid #E4DED8;">
+            <div><div style="font-size:9.5px;letter-spacing:0.2em;text-transform:uppercase;color:#9A938D;margin-bottom:5px;">Waterproof</div><div style="font-size:12.5px;font-weight:300;color:#5B554F;">Resiste agua y transpiración</div></div>
+            <div><div style="font-size:9.5px;letter-spacing:0.2em;text-transform:uppercase;color:#9A938D;margin-bottom:5px;">Hipoalergénico</div><div style="font-size:12.5px;font-weight:300;color:#5B554F;">Acero inoxidable quirúrgico</div></div>
+            <div><div style="font-size:9.5px;letter-spacing:0.2em;text-transform:uppercase;color:#9A938D;margin-bottom:5px;">Envío</div><div style="font-size:12.5px;font-weight:300;color:#5B554F;">1 a 3 días en Paraná</div></div>
+            <div><div style="font-size:9.5px;letter-spacing:0.2em;text-transform:uppercase;color:#9A938D;margin-bottom:5px;">Cambios</div><div style="font-size:12.5px;font-weight:300;color:#5B554F;">30 días para cambiarlo</div></div>
+          </div>
+        </div>
+      </div>
+
+      <sc-if value="{{ hasRelated }}">
+        <div style="margin-top:110px;">
+          <h2 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:34px;margin:0 0 34px;text-align:center;">También te puede gustar</h2>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:22px;">
+            <sc-for list="{{ relatedProducts }}" as="p" hint-placeholder-count="4">
+              <div onClick="{{ p.open }}" style="cursor:pointer;">
+                <div style="aspect-ratio:4/5;overflow:hidden;background:#F6F1EC;">
+                  <img src="{{ p.image }}" alt="Foto del producto" style="width:100%;height:100%;object-fit:cover;display:block;">
+                </div>
+                <div style="padding-top:14px;text-align:center;font-size:14px;">{{ p.name }}</div>
+                <div style="display:flex;align-items:baseline;justify-content:center;gap:8px;margin-top:4px;">
+                  <sc-if value="{{ p.isOnSale }}">
+                    <span style="font-size:12px;color:#9A938D;text-decoration:line-through;">{{ p.oldPriceFormatted }}</span>
+                  </sc-if>
+                  <span style="font-size:13.5px;color:{{ p.priceColor }};">{{ p.priceFormatted }}</span>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <!-- ============ ADMIN ============ -->
+  <sc-if value="{{ isAdmin }}">
+    <div data-screen-label="Administración" style="max-width:1240px;margin:0 auto;padding:120px 24px 110px;">
+      <sc-if value="{{ adminDenied }}">
+        <div style="max-width:440px;margin:40px auto;text-align:center;">
+          <h1 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:38px;margin:0 0 14px;">Acceso restringido</h1>
+          <p style="color:#5B554F;font-size:14px;font-weight:300;line-height:1.8;margin:0 0 26px;">Iniciá sesión con tu cuenta de administradora para gestionar la tienda.</p>
+          <div onClick="{{ openAccount }}" style="cursor:pointer;background:#1C1A19;color:#fff;padding:15px;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;">Iniciar sesión</div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ adminAllowed }}">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:14px;">
+          <div>
+            <div style="font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:#7A736E;margin-bottom:12px;">Panel privado</div>
+            <h1 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:42px;margin:0;line-height:1.05;">Administrar tienda</h1>
+          </div>
+          <span onClick="{{ goHome }}" style="cursor:pointer;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;border-bottom:1px solid #1C1A19;padding-bottom:4px;">Volver al sitio</span>
+        </div>
+        <p style="color:#7A736E;margin:0 0 36px;font-size:13.5px;font-weight:300;">Agregá productos, subí las fotos arrastrándolas, y creá categorías o materiales nuevos sin tocar código.</p>
+
+        <div style="display:flex;gap:0;margin-bottom:36px;border-bottom:1px solid #E4DED8;">
+          <span onClick="{{ setAdminTabProducts }}" style="cursor:pointer;padding:14px 26px;font-size:10.5px;letter-spacing:0.18em;text-transform:uppercase;border-bottom:2px solid {{ adminTabProductsLine }};color:{{ adminTabProductsColor }};">Productos</span>
+          <span onClick="{{ setAdminTabCats }}" style="cursor:pointer;padding:14px 26px;font-size:10.5px;letter-spacing:0.18em;text-transform:uppercase;border-bottom:2px solid {{ adminTabCatsLine }};color:{{ adminTabCatsColor }};">Categorías y materiales</span>
+        </div>
+
+        <!-- PRODUCTS TAB -->
+        <sc-if value="{{ isAdminProducts }}">
+          <sc-if value="{{ formOpen }}">
+            <div style="border:1px solid #E4DED8;padding:32px;margin-bottom:34px;">
+              <h3 style="font-family:'Cormorant Garamond',serif;font-weight:400;font-size:26px;margin:0 0 26px;">{{ formTitle }}</h3>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-bottom:18px;">
+                <div>
+                  <label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Nombre</label>
+                  <input value="{{ form.name }}" onChange="{{ onFormNameChange }}" placeholder="Ej: Anillo Vera" style="width:100%;padding:11px 13px;border:1px solid #D8D1CA;font-family:'Jost';font-size:14px;">
+                </div>
+                <div>
+                  <label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Precio en pesos</label>
+                  <input value="{{ form.price }}" onChange="{{ onFormPriceChange }}" placeholder="8500" style="width:100%;padding:11px 13px;border:1px solid #D8D1CA;font-family:'Jost';font-size:14px;">
+                </div>
+                <div>
+                  <label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Precio de oferta — opcional</label>
+                  <input value="{{ form.salePrice }}" onChange="{{ onFormSalePriceChange }}" placeholder="Dejalo vacío si no está en oferta" style="width:100%;padding:11px 13px;border:1px solid #D8D1CA;font-family:'Jost';font-size:14px;">
+                </div>
+                <div>
+                  <label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Categoría</label>
+                  <select value="{{ form.categoryId }}" onChange="{{ onFormCategoryChange }}" style="width:100%;padding:11px 13px;border:1px solid #D8D1CA;font-family:'Jost';font-size:14px;background:#fff;">
+                    <sc-for list="{{ categories }}" as="c" hint-placeholder-count="4">
+                      <option value="{{ c.id }}">{{ c.name }}</option>
+                    </sc-for>
+                  </select>
+                </div>
+                <div>
+                  <label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Material</label>
+                  <select value="{{ form.materialId }}" onChange="{{ onFormMaterialChange }}" style="width:100%;padding:11px 13px;border:1px solid #D8D1CA;font-family:'Jost';font-size:14px;background:#fff;">
+                    <sc-for list="{{ materials }}" as="m" hint-placeholder-count="2">
+                      <option value="{{ m.id }}">{{ m.name }}</option>
+                    </sc-for>
+                  </select>
+                </div>
+              </div>
+              <div style="margin-bottom:18px;">
+                <label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Descripción</label>
+                <textarea value="{{ form.description }}" onChange="{{ onFormDescriptionChange }}" rows="3" placeholder="Contá de qué material es, cómo se usa, qué lo hace especial." style="width:100%;padding:11px 13px;border:1px solid #D8D1CA;font-family:'Jost';font-size:14px;resize:vertical;"></textarea>
+              </div>
+              <div style="display:flex;gap:28px;margin-bottom:22px;flex-wrap:wrap;">
+                <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;">
+                  <input type="checkbox" checked="{{ form.featured }}" onChange="{{ onFormFeaturedChange }}"> Mostrar en destacados
+                </label>
+                <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;">
+                  <input type="checkbox" checked="{{ form.outOfStock }}" onChange="{{ onFormOutOfStockChange }}"> Marcar como agotado
+                </label>
+              </div>
+              <div style="margin-bottom:26px;">
+                <label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Foto</label>
+                <div style="width:190px;height:238px;overflow:hidden;background:#F6F1EC;margin-bottom:12px;">
+                  <img src="{{ form.image }}" alt="Foto del producto" style="width:100%;height:100%;object-fit:cover;display:block;">
+                </div>
+                <label style="cursor:pointer;display:inline-block;border:1px solid #D8D1CA;padding:11px 22px;font-size:10.5px;letter-spacing:0.16em;text-transform:uppercase;color:#3A3532;" style-hover="border-color:#1C1A19;">
+                  {{ uploadLabel }}
+                  <input type="file" accept="image/*" onChange="{{ onProductImageFileChange }}" style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;">
+                </label>
+              </div>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <span onClick="{{ saveProduct }}" style="cursor:pointer;background:#1C1A19;color:#fff;padding:14px 32px;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;" style-hover="background:#7C2620;">Guardar</span>
+                <span onClick="{{ cancelForm }}" style="cursor:pointer;border:1px solid #D8D1CA;padding:14px 32px;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#3A3532;">Cancelar</span>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ formClosed }}">
+            <span onClick="{{ openNewProductForm }}" style="cursor:pointer;display:inline-block;background:#1C1A19;color:#fff;padding:14px 32px;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:30px;" style-hover="background:#7C2620;">Agregar producto</span>
+          </sc-if>
+
+          <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;margin-bottom:22px;">
+            <div style="flex:1;min-width:180px;">
+              <label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Buscar por nombre</label>
+              <input value="{{ adminSearch }}" onChange="{{ onAdminSearchChange }}" placeholder="Ej: Vera" style="width:100%;padding:11px 13px;border:1px solid #D8D1CA;font-family:'Jost';font-size:14px;">
+            </div>
+            <div style="width:220px;">
+              <label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Categoría</label>
+              <select value="{{ adminCatFilter }}" onChange="{{ onAdminCatFilterChange }}" style="width:100%;padding:11px 13px;border:1px solid #D8D1CA;font-family:'Jost';font-size:14px;background:#fff;">
+                <option value="">Todas las categorías</option>
+                <sc-for list="{{ categories }}" as="c" hint-placeholder-count="4">
+                  <option value="{{ c.id }}">{{ c.name }}</option>
+                </sc-for>
+              </select>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <sc-for list="{{ adminProducts }}" as="p" hint-placeholder-count="6">
+              <div style="display:flex;align-items:center;gap:18px;border:1px solid #EFEAE4;padding:14px 18px;flex-wrap:wrap;">
+                <div style="width:50px;height:62px;overflow:hidden;flex-shrink:0;background:#F6F1EC;">
+                  <img src="{{ p.image }}" alt="The Blu Club" style="width:100%;height:100%;object-fit:cover;display:block;">
+                </div>
+                <div style="flex:1;min-width:150px;">
+                  <div style="font-size:14px;">{{ p.name }}</div>
+                  <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#9A938D;margin-top:3px;">{{ p.categoryName }} · {{ p.materialName }}</div>
+                </div>
+                <div style="width:104px;">
+                  <sc-if value="{{ p.isOnSale }}">
+                    <div style="font-size:11.5px;color:#9A938D;text-decoration:line-through;">{{ p.oldPriceFormatted }}</div>
+                  </sc-if>
+                  <div style="font-size:14px;color:{{ p.priceColor }};">{{ p.priceFormatted }}</div>
+                </div>
+                <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;color:#5B554F;">
+                  <input type="checkbox" checked="{{ p.featured }}" onChange="{{ p.toggleFeatured }}"> Destacado
+                </label>
+                <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;color:#5B554F;">
+                  <input type="checkbox" checked="{{ p.outOfStock }}" onChange="{{ p.toggleOutOfStock }}"> Agotado
+                </label>
+                <span onClick="{{ p.edit }}" style="cursor:pointer;font-size:10.5px;letter-spacing:0.16em;text-transform:uppercase;color:#1C1A19;border-bottom:1px solid #1C1A19;">Editar</span>
+                <span onClick="{{ p.remove }}" style="cursor:pointer;font-size:10.5px;letter-spacing:0.16em;text-transform:uppercase;color:#A6322A;border-bottom:1px solid #A6322A;">Eliminar</span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <!-- CATEGORIES TAB -->
+        <sc-if value="{{ isAdminCats }}">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:44px;">
+            <div>
+              <h3 style="font-family:'Cormorant Garamond',serif;font-weight:400;font-size:24px;margin:0 0 18px;">Categorías</h3>
+              <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:20px;">
+                <sc-for list="{{ categories }}" as="c" hint-placeholder-count="4">
+                  <div style="display:flex;align-items:center;justify-content:space-between;border:1px solid #EFEAE4;padding:13px 16px;">
+                    <span style="font-size:14px;">{{ c.name }}</span>
+                    <span onClick="{{ c.remove }}" style="cursor:pointer;font-size:10.5px;letter-spacing:0.16em;text-transform:uppercase;color:#A6322A;">Eliminar</span>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="display:flex;gap:8px;">
+                <input value="{{ newCategoryName }}" onChange="{{ onNewCategoryChange }}" placeholder="Ej: Tobilleras" style="flex:1;padding:12px 13px;border:1px solid #D8D1CA;font-family:'Jost';font-size:14px;">
+                <span onClick="{{ addCategory }}" style="cursor:pointer;background:#1C1A19;color:#fff;padding:12px 22px;font-size:10.5px;letter-spacing:0.16em;text-transform:uppercase;display:flex;align-items:center;">Agregar</span>
+              </div>
+            </div>
+            <div>
+              <h3 style="font-family:'Cormorant Garamond',serif;font-weight:400;font-size:24px;margin:0 0 18px;">Materiales</h3>
+              <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:20px;">
+                <sc-for list="{{ materials }}" as="m" hint-placeholder-count="2">
+                  <div style="display:flex;align-items:center;justify-content:space-between;border:1px solid #EFEAE4;padding:13px 16px;">
+                    <span style="font-size:14px;">{{ m.name }}</span>
+                    <span onClick="{{ m.remove }}" style="cursor:pointer;font-size:10.5px;letter-spacing:0.16em;text-transform:uppercase;color:#A6322A;">Eliminar</span>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="display:flex;gap:8px;">
+                <input value="{{ newMaterialName }}" onChange="{{ onNewMaterialChange }}" placeholder="Ej: Acero rosé" style="flex:1;padding:12px 13px;border:1px solid #D8D1CA;font-family:'Jost';font-size:14px;">
+                <span onClick="{{ addMaterial }}" style="cursor:pointer;background:#1C1A19;color:#fff;padding:12px 22px;font-size:10.5px;letter-spacing:0.16em;text-transform:uppercase;display:flex;align-items:center;">Agregar</span>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <!-- FOOTER -->
+  <sc-if value="{{ showFooter }}" hint-placeholder-val="{{ true }}">
+    <footer style="background:#1C1A19;color:#DDD5CD;padding:70px 24px 34px;">
+      <div style="max-width:1400px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:44px;">
+        <div>
+          <img src="assets/logo-clarito.png" alt="The Blu Club" style="height:46px;object-fit:contain;margin-bottom:18px;">
+          <p style="font-size:13px;font-weight:300;line-height:1.85;color:#A79E96;max-width:280px;margin:0;">Anillos, collares, aros y pulseras de acero inoxidable. Waterproof, hipoalergénicos y hechos para acompañarte todos los días.</p>
+        </div>
+        <div>
+          <div style="font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:#C7A98C;margin-bottom:18px;">Tienda</div>
+          <div style="display:flex;flex-direction:column;gap:12px;font-size:13px;font-weight:300;color:#A79E96;">
+            <span onClick="{{ goCatalogAll }}" style="cursor:pointer;">Todos los productos</span>
+            <span onClick="{{ goSale }}" style="cursor:pointer;">Sale</span>
+            <sc-for list="{{ menuCategories }}" as="c" hint-placeholder-count="4">
+              <span onClick="{{ c.select }}" style="cursor:pointer;">{{ c.name }}</span>
+            </sc-for>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:#C7A98C;margin-bottom:18px;">Ayuda</div>
+          <div style="display:flex;flex-direction:column;gap:12px;font-size:13px;font-weight:300;color:#A79E96;">
+            <span onClick="{{ goFaq }}" style="cursor:pointer;">Preguntas frecuentes</span>
+            <span onClick="{{ openAccount }}" style="cursor:pointer;">{{ accountLabel }}</span>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:#C7A98C;margin-bottom:18px;">Contacto</div>
+          <div style="display:flex;flex-direction:column;gap:12px;font-size:13px;font-weight:300;">
+            <a href="{{ whatsappGeneralLink }}" target="_blank" rel="noopener" style="color:#A79E96;">WhatsApp</a>
+            <a href="{{ instagramUrl }}" target="_blank" rel="noopener" style="color:#A79E96;">{{ instagramHandleDisplay }}</a>
+          </div>
+        </div>
+      </div>
+      <div style="max-width:1400px;margin:52px auto 0;padding-top:24px;border-top:1px solid #35302C;font-size:11px;letter-spacing:0.12em;color:#7A736E;">© 2026 The Blu Club — Paraná, Entre Ríos</div>
+    </footer>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900},&quot;whatsappNumber&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;5493434000000&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Contacto&quot;},&quot;instagramHandle&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;theblu.shop&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Contacto&quot;},&quot;showInstagramSection&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Secciones&quot;}}">
+const PX = (id, w) => `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=${w || 900}`;
+
+// Conexión a Firebase: Firestore guarda el catálogo (compartido por todos los dispositivos) y
+// Authentication maneja el login (de forma segura, sin contraseñas caseras).
+// Los SDK se cargan a mano, en orden, en vez de con <script> en el helmet: así nos aseguramos de
+// que firebase-app termine de cargar antes que los módulos que dependen de él.
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    const el = document.createElement('script');
+    el.src = src;
+    el.async = false;
+    el.onload = () => resolve();
+    el.onerror = () => reject(new Error('No se pudo cargar ' + src));
+    document.head.appendChild(el);
+  });
+}
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDNF2zAtr7SA57-75gszMNT8trRFgRPXS4",
+  authDomain: "blushop-3db8b.firebaseapp.com",
+  projectId: "blushop-3db8b",
+  storageBucket: "blushop-3db8b.firebasestorage.app",
+  messagingSenderId: "513285805571",
+  appId: "1:513285805571:web:cb1eb240ff16affc36e036"
+};
+
+// Cloudinary guarda las fotos de los productos (en vez de Firebase Storage, que hoy exige
+// tarjeta de banco). CLOUD_NAME y UPLOAD_PRESET no son secretos — se usan así, expuestos,
+// en cualquier sitio que suba archivos directo desde el navegador.
+const CLOUDINARY_CLOUD_NAME = 'sbqlvvlr';
+const CLOUDINARY_UPLOAD_PRESET = 'BluShop_product';
+
+let db, auth, STORE_DOC;
+
+const firebaseReady = (async () => {
+  const base = 'https://www.gstatic.com/firebasejs/10.14.1/';
+  await loadScript(base + 'firebase-app-compat.js');
+  await Promise.all([
+    loadScript(base + 'firebase-firestore-compat.js'),
+    loadScript(base + 'firebase-auth-compat.js')
+  ]);
+  firebase.initializeApp(firebaseConfig);
+  db = firebase.firestore();
+  auth = firebase.auth();
+  STORE_DOC = db.collection('store').doc('main');
+})();
+
+
+
+class Component extends DCLogic {
+  getDefaultCategories() {
+    return [
+      { id: 'anillos', name: 'Anillos', image: PX(1616096, 800) },
+      { id: 'collares', name: 'Collares', image: PX(13530465, 800) },
+      { id: 'aros', name: 'Aros', image: PX(12144990, 800) },
+      { id: 'pulseras', name: 'Pulseras', image: PX(12124662, 800) }
+    ];
+  }
+  getDefaultMaterials() {
+    return [
+      { id: 'dorado', name: 'Acero dorado' },
+      { id: 'plateado', name: 'Acero plateado' }
+    ];
+  }
+  getDefaultProducts() {
+    const d = 'Acero inoxidable quirúrgico. Waterproof e hipoalergénico, pensado para usarse todos los días sin perder el brillo.';
+    return [
+      { id: 'p1', name: 'Anillo Vera', price: 8500, categoryId: 'anillos', materialId: 'dorado', description: 'Anillo fino de perfil redondeado. ' + d, featured: true, outOfStock: false, imageId: 'p-p1', image: PX(16689780) },
+      { id: 'p2', name: 'Anillo Vera', price: 8500, categoryId: 'anillos', materialId: 'plateado', description: 'Anillo fino de perfil redondeado. ' + d, featured: false, outOfStock: false, imageId: 'p-p2', image: PX(216491) },
+      { id: 'p3', name: 'Anillo Luna', price: 9200, salePrice: 6900, categoryId: 'anillos', materialId: 'dorado', description: 'Diseño delicado con detalle texturado. ' + d, featured: true, outOfStock: false, imageId: 'p-p3', image: PX(14058109) },
+      { id: 'p4', name: 'Anillo Luna', price: 9200, categoryId: 'anillos', materialId: 'plateado', description: 'Diseño delicado con detalle texturado. ' + d, featured: false, outOfStock: false, imageId: 'p-p4', image: PX(27295182) },
+      { id: 'p5', name: 'Anillo Clara ajustable', price: 7200, categoryId: 'anillos', materialId: 'dorado', description: 'Se adapta a cualquier talle. ' + d, featured: false, outOfStock: true, imageId: 'p-p5', image: PX(216491) },
+      { id: 'p6', name: 'Anillo Doble Aro', price: 9800, categoryId: 'anillos', materialId: 'plateado', description: 'Doble aro entrelazado, un clásico para combinar. ' + d, featured: false, outOfStock: false, imageId: 'p-p6', image: PX(1616096) },
+      { id: 'p7', name: 'Collar Cadena Fina', price: 11500, categoryId: 'collares', materialId: 'dorado', description: 'Cadena fina de largo regulable. ' + d, featured: true, outOfStock: false, imageId: 'p-p7', image: PX(13530465) },
+      { id: 'p8', name: 'Collar Cadena Fina', price: 11500, categoryId: 'collares', materialId: 'plateado', description: 'Cadena fina de largo regulable. ' + d, featured: false, outOfStock: false, imageId: 'p-p8', image: PX(6153885) },
+      { id: 'p9', name: 'Collar Dije Corazón', price: 12800, salePrice: 9900, categoryId: 'collares', materialId: 'dorado', description: 'Con dije de corazón, un clásico para regalar. ' + d, featured: false, outOfStock: false, imageId: 'p-p9', image: PX(17298636) },
+      { id: 'p10', name: 'Collar Choker', price: 10400, categoryId: 'collares', materialId: 'plateado', description: 'Choker corto, cómodo para el uso diario. ' + d, featured: false, outOfStock: false, imageId: 'p-p10', image: PX(9509032) },
+      { id: 'p11', name: 'Aros Mini Argolla', price: 7500, categoryId: 'aros', materialId: 'dorado', description: 'Argollas pequeñas y livianas. ' + d, featured: true, outOfStock: false, imageId: 'p-p11', image: PX(12144990) },
+      { id: 'p12', name: 'Aros Mini Argolla', price: 7500, categoryId: 'aros', materialId: 'plateado', description: 'Argollas pequeñas y livianas. ' + d, featured: false, outOfStock: false, imageId: 'p-p12', image: PX(6467618) },
+      { id: 'p13', name: 'Aros Perla', price: 8200, categoryId: 'aros', materialId: 'dorado', description: 'Con detalle de perla, para todos los días. ' + d, featured: false, outOfStock: false, imageId: 'p-p13', image: PX(16689780) },
+      { id: 'p14', name: 'Pulsera Cadena Fina', price: 9600, salePrice: 7680, categoryId: 'pulseras', materialId: 'dorado', description: 'Cadena fina con cierre regulable. ' + d, featured: true, outOfStock: false, imageId: 'p-p14', image: PX(12124662) },
+      { id: 'p15', name: 'Pulsera Cadena Fina', price: 9600, categoryId: 'pulseras', materialId: 'plateado', description: 'Cadena fina con cierre regulable. ' + d, featured: false, outOfStock: false, imageId: 'p-p15', image: PX(14058109) },
+      { id: 'p16', name: 'Pulsera Ajustable', price: 8900, categoryId: 'pulseras', materialId: 'plateado', description: 'Se ajusta a cualquier muñeca. ' + d, featured: false, outOfStock: false, imageId: 'p-p16', image: PX(27295182) }
+    ];
+  }
+  getDefaultFaq() {
+    return [
+      { q: '¿Cómo cuido mis joyas?', a: 'Son de acero inoxidable, así que podés bañarte, nadar o entrenar sin sacártelas. Para que duren más brillantes, evitá aplicar perfumes o cremas directamente sobre la pieza.' },
+      { q: '¿Cuánto tarda el envío?', a: 'Dentro de Paraná, los envíos salen en 1 a 3 días hábiles desde que confirmamos el pago. Te avisamos por WhatsApp con el seguimiento.' },
+      { q: '¿Puedo cambiar mi producto?', a: 'Sí. Tenés 30 días desde que lo recibís para cambiarlo por otro modelo o talle si no es lo que esperabas.' },
+      { q: '¿Son realmente hipoalergénicos?', a: 'Sí, todas las piezas son de acero inoxidable quirúrgico, apto para pieles sensibles. No se oxidan ni dejan marcas verdes.' },
+      { q: '¿Cómo puedo pagar?', a: 'Coordinamos el pago por WhatsApp: transferencia, efectivo o link de pago. Cuando finalizás el carrito nos llega tu pedido y te escribimos.' }
+    ];
+  }
+
+  state = {
+    view: 'home',
+    products: this.getDefaultProducts(),
+    categories: this.getDefaultCategories(),
+    materials: this.getDefaultMaterials(),
+    cart: [],
+    cartOpen: false,
+    menuOpen: false,
+    scrolled: false,
+    authOpen: false,
+    authMode: 'login',
+    authName: '',
+    authEmail: '',
+    authPassword: '',
+    authError: '',
+    user: null,
+    selectedProductId: 'p1',
+    selectedQty: 1,
+    catFilter: 'all',
+    matFilter: 'all',
+    sortBy: 'destacados',
+    heroSlide: 0,
+    faqOpen: 0,
+    adminTab: 'productos',
+    adminCatFilter: '',
+    adminSearch: '',
+    form: null,
+    newCategoryName: '',
+    newMaterialName: '',
+    toast: '',
+    uploadingImage: false
+  };
+
+  static STORE_VERSION = 7;
+  static ADMIN_EMAIL = 'belengrimaldidb1@gmail.com';
+
+  componentDidMount() {
+    firebaseReady.then(() => {
+      // Escucha el catálogo compartido en Firestore. Cualquier cambio (propio o de la dueña
+      // desde otro dispositivo) llega acá en tiempo real.
+      this._unsubStore = STORE_DOC.onSnapshot((snap) => {
+        const data = snap.exists ? snap.data() : null;
+        if (data && data.version === Component.STORE_VERSION && Array.isArray(data.products)) {
+          this.setState(this.migrate(data));
+        }
+        // Si todavía no existe el documento, se muestran los valores por defecto
+        // que ya están en el estado inicial, hasta que la dueña entre como admin.
+      }, (err) => { console.error('Error leyendo el catálogo:', err); });
+
+      // Escucha la sesión de Firebase Authentication (reemplaza el login casero).
+      this._unsubAuth = auth.onAuthStateChanged(async (fbUser) => {
+        if (!fbUser) { this.setState({ user: null }); return; }
+        const admin = fbUser.email === Component.ADMIN_EMAIL;
+        this.setState({ user: { name: fbUser.displayName || (fbUser.email || '').split('@')[0], email: fbUser.email, admin } });
+        if (admin) {
+          // Primera vez que la dueña entra: si el catálogo compartido todavía no existe, lo crea.
+          try {
+            const snap = await STORE_DOC.get();
+            const data = snap.exists ? snap.data() : null;
+            if (!data || data.version !== Component.STORE_VERSION || !Array.isArray(data.products)) this.persist();
+          } catch (e) {}
+        }
+      });
+    }).catch((e) => { console.error('No se pudo conectar con Firebase:', e); this.showToast('No se pudo conectar. Revisá tu conexión.'); });
+
+    this._onScroll = () => {
+      const y = window.scrollY || document.documentElement.scrollTop || 0;
+      const next = y > 60;
+      if (next !== this.state.scrolled) this.setState({ scrolled: next });
+    };
+    window.addEventListener('scroll', this._onScroll, { passive: true });
+    this._onScroll();
+
+    this._heroTimer = setInterval(() => {
+      this.setState(s => ({ heroSlide: (s.heroSlide + 1) % 3 }));
+    }, 7000);
+  }
+
+  componentWillUnmount() {
+    if (this._heroTimer) clearInterval(this._heroTimer);
+    if (this._onScroll) window.removeEventListener('scroll', this._onScroll);
+    if (this._unsubStore) this._unsubStore();
+    if (this._unsubAuth) this._unsubAuth();
+    clearTimeout(this._toastTimer);
+  }
+
+  // Keeps the owner's saved edits while filling in anything a newer default set added.
+  migrate(data) {
+    const defProducts = this.getDefaultProducts();
+    const defCats = this.getDefaultCategories();
+    const defMats = this.getDefaultMaterials();
+    const byId = (list) => { const m = {}; list.forEach(x => { m[x.id] = x; }); return m; };
+    const defP = byId(defProducts);
+
+    const products = (data.products || []).map(p => {
+      const base = defP[p.id];
+      return base ? { ...base, ...p, image: p.image || base.image } : p;
+    });
+    defProducts.forEach(p => { if (!products.some(x => x.id === p.id)) products.push(p); });
+
+    const categories = (data.categories || []).map(c => {
+      const base = defCats.find(d => d.id === c.id);
+      return base ? { ...base, ...c, image: c.image || base.image } : c;
+    });
+    defCats.forEach(c => { if (!categories.some(x => x.id === c.id)) categories.push(c); });
+
+    const materials = (data.materials && data.materials.length) ? data.materials : defMats;
+    return { products, categories, materials };
+  }
+
+  // Guarda el catálogo entero en Firestore. Las reglas de seguridad sólo dejan escribir a la dueña.
+  async persist() {
+    await firebaseReady;
+    const { products, categories, materials } = this.state;
+    STORE_DOC.set({ version: Component.STORE_VERSION, products, categories, materials })
+      .catch((e) => { console.error('No se pudo guardar en Firestore:', e); this.showToast('No se pudo guardar — revisá tu conexión'); });
+  }
+
+  showToast(msg) {
+    this.setState({ toast: msg });
+    clearTimeout(this._toastTimer);
+    this._toastTimer = setTimeout(() => this.setState({ toast: '' }), 2200);
+  }
+
+  fmt(n) { return '$' + Math.round(n || 0).toLocaleString('es-AR'); }
+  onSale(p) { const sp = parseFloat(p.salePrice); return !!(sp && sp > 0 && sp < p.price); }
+  effPrice(p) { return this.onSale(p) ? parseFloat(p.salePrice) : p.price; }
+  categoryName(id) { const c = this.state.categories.find(x => x.id === id); return c ? c.name : ''; }
+  materialName(id) { const m = this.state.materials.find(x => x.id === id); return m ? m.name : ''; }
+  isAdminUser() { return !!(this.state.user && this.state.user.admin); }
+
+  top() { try { window.scrollTo(0, 0); } catch (e) {} }
+
+  openMenu = () => this.setState({ menuOpen: true });
+  closeMenu = () => this.setState({ menuOpen: false });
+
+  goHome = () => { this.top(); this.setState({ view: 'home', menuOpen: false }); };
+  goCatalogAll = () => { this.top(); this.setState({ view: 'catalog', catFilter: 'all', matFilter: 'all', menuOpen: false }); };
+  goSale = () => { this.top(); this.setState({ view: 'catalog', catFilter: 'sale', matFilter: 'all', menuOpen: false }); };
+  goFaq = () => {
+    this.setState({ view: 'home', menuOpen: false }, () => {
+      setTimeout(() => {
+        const el = document.getElementById('faq-section');
+        if (el) window.scrollTo({ top: el.offsetTop - 90, behavior: 'smooth' });
+      }, 60);
+    });
+  };
+  goAdmin = () => { this.top(); this.setState({ view: 'admin', form: null, adminTab: 'productos', menuOpen: false, authOpen: false }); };
+  openProduct = (id) => { this.top(); this.setState({ view: 'product', selectedProductId: id, selectedQty: 1 }); };
+  setCatFilter = (id) => { this.top(); this.setState({ view: 'catalog', catFilter: id, matFilter: 'all', menuOpen: false }); };
+
+  toggleCart = () => this.setState(s => ({ cartOpen: !s.cartOpen }));
+
+  openAccount = () => this.setState({ authOpen: true, menuOpen: false, authError: '', authPassword: '' });
+  closeAuth = () => this.setState({ authOpen: false, authError: '' });
+  toggleAuthMode = () => this.setState(s => ({ authMode: s.authMode === 'login' ? 'register' : 'login', authError: '' }));
+  onAuthNameChange = (e) => this.setState({ authName: e.target.value });
+  onAuthEmailChange = (e) => this.setState({ authEmail: e.target.value });
+  onAuthPasswordChange = (e) => this.setState({ authPassword: e.target.value });
+  onAuthKeyDown = (e) => { if (e.key === 'Enter') this.submitAuth(); };
+
+  // Traduce los códigos de error de Firebase Auth a mensajes en criollo.
+  authErrorMessage(e) {
+    const code = e && e.code;
+    if (code === 'auth/email-already-in-use') return 'Ya existe una cuenta con ese email. Iniciá sesión.';
+    if (code === 'auth/invalid-email') return 'El email no es válido.';
+    if (code === 'auth/weak-password') return 'La contraseña necesita al menos 6 caracteres.';
+    if (code === 'auth/user-not-found' || code === 'auth/wrong-password' || code === 'auth/invalid-credential') return 'Email o contraseña incorrectos.';
+    if (code === 'auth/too-many-requests') return 'Demasiados intentos. Probá de nuevo en unos minutos.';
+    return 'Ocurrió un error. Probá de nuevo.';
+  }
+
+  submitAuth = async () => {
+    const email = (this.state.authEmail || '').trim().toLowerCase();
+    const pass = this.state.authPassword || '';
+    if (!email || !pass) { this.setState({ authError: 'Completá tu email y tu contraseña.' }); return; }
+
+    await firebaseReady;
+    try {
+      if (this.state.authMode === 'register') {
+        const name = (this.state.authName || '').trim();
+        if (!name) { this.setState({ authError: 'Decinos tu nombre.' }); return; }
+        if (pass.length < 6) { this.setState({ authError: 'La contraseña necesita al menos 6 caracteres.' }); return; }
+        const cred = await auth.createUserWithEmailAndPassword(email, pass);
+        await cred.user.updateProfile({ displayName: name });
+        this.setState({ authOpen: false, authError: '', authPassword: '', authName: '', authEmail: '' });
+        this.showToast('Hola, ' + name);
+      } else {
+        const cred = await auth.signInWithEmailAndPassword(email, pass);
+        this.setState({ authOpen: false, authError: '', authPassword: '', authName: '', authEmail: '' });
+        this.showToast('Hola, ' + (cred.user.displayName || cred.user.email));
+      }
+    } catch (e) {
+      this.setState({ authError: this.authErrorMessage(e) });
+    }
+  };
+
+  logout = async () => {
+    await firebaseReady;
+    auth.signOut().catch(() => {});
+    this.setState({ authOpen: false, view: 'home' });
+    this.showToast('Sesión cerrada');
+  };
+
+  addToCart(productId, qty) {
+    this.setState(s => {
+      const existing = s.cart.find(c => c.productId === productId);
+      const cart = existing
+        ? s.cart.map(c => c.productId === productId ? { ...c, qty: c.qty + qty } : c)
+        : [...s.cart, { productId, qty }];
+      return { cart, cartOpen: true };
+    });
+  }
+  addSelectedToCart = () => this.addToCart(this.state.selectedProductId, this.state.selectedQty);
+  incQty = () => this.setState(s => ({ selectedQty: s.selectedQty + 1 }));
+  decQty = () => this.setState(s => ({ selectedQty: Math.max(1, s.selectedQty - 1) }));
+  incCartItem(id) { this.setState(s => ({ cart: s.cart.map(c => c.productId === id ? { ...c, qty: c.qty + 1 } : c) })); }
+  decCartItem(id) { this.setState(s => ({ cart: s.cart.map(c => c.productId === id ? { ...c, qty: Math.max(1, c.qty - 1) } : c) })); }
+  removeCartItem(id) { this.setState(s => ({ cart: s.cart.filter(c => c.productId !== id) })); }
+
+  selectHero = (i) => this.setState({ heroSlide: i });
+  toggleFaq(i) { this.setState(s => ({ faqOpen: s.faqOpen === i ? -1 : i })); }
+  onSortChange = (e) => this.setState({ sortBy: e.target.value });
+
+  setAdminTabProducts = () => this.setState({ adminTab: 'productos' });
+  setAdminTabCats = () => this.setState({ adminTab: 'categorias' });
+  onAdminCatFilterChange = (e) => this.setState({ adminCatFilter: e.target.value });
+  onAdminSearchChange = (e) => this.setState({ adminSearch: e.target.value });
+
+  openNewProductForm = () => this.setState({
+    form: {
+      id: null, name: '', price: '', salePrice: '',
+      categoryId: (this.state.categories[0] || {}).id || '',
+      materialId: (this.state.materials[0] || {}).id || '',
+      description: '', featured: false, outOfStock: false,
+      imageId: 'p-new-' + Date.now(), image: ''
+    }
+  });
+  editProduct(p) { this.setState({ form: { ...p, price: String(p.price), salePrice: p.salePrice ? String(p.salePrice) : '' } }); }
+  cancelForm = () => this.setState({ form: null });
+
+  // Sube la foto elegida a Cloudinary (subida "unsigned", sin necesitar servidor propio)
+  // y guarda la URL resultante en el formulario.
+  onProductImageFileChange = async (e) => {
+    const file = e.target.files && e.target.files[0];
+    e.target.value = '';
+    if (!file || !this.state.form) return;
+    this.setState({ uploadingImage: true });
+    try {
+      const body = new FormData();
+      body.append('file', file);
+      body.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+      body.append('folder', 'products');
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, { method: 'POST', body });
+      const data = await res.json();
+      if (!res.ok || !data.secure_url) throw new Error((data.error && data.error.message) || 'Error de Cloudinary');
+      this.setState(s => ({ form: s.form ? { ...s.form, image: data.secure_url } : s.form, uploadingImage: false }));
+    } catch (err) {
+      console.error('Error subiendo la foto:', err);
+      this.setState({ uploadingImage: false });
+      alert('No se pudo subir la foto. Probá de nuevo.');
+    }
+  };
+
+  onFormNameChange = (e) => this.setState(s => ({ form: { ...s.form, name: e.target.value } }));
+  onFormPriceChange = (e) => this.setState(s => ({ form: { ...s.form, price: e.target.value } }));
+  onFormSalePriceChange = (e) => this.setState(s => ({ form: { ...s.form, salePrice: e.target.value } }));
+  onFormCategoryChange = (e) => this.setState(s => ({ form: { ...s.form, categoryId: e.target.value } }));
+  onFormMaterialChange = (e) => this.setState(s => ({ form: { ...s.form, materialId: e.target.value } }));
+  onFormDescriptionChange = (e) => this.setState(s => ({ form: { ...s.form, description: e.target.value } }));
+  onFormFeaturedChange = (e) => this.setState(s => ({ form: { ...s.form, featured: e.target.checked } }));
+  onFormOutOfStockChange = (e) => this.setState(s => ({ form: { ...s.form, outOfStock: e.target.checked } }));
+
+  saveProduct = () => {
+    const f = this.state.form;
+    if (!f.name || !f.name.trim()) { alert('Poné un nombre para el producto.'); return; }
+    const priceNum = parseFloat(f.price) || 0;
+    const saleNum = parseFloat(f.salePrice) || 0;
+    if (saleNum && saleNum >= priceNum) { alert('El precio de oferta tiene que ser menor al precio normal.'); return; }
+    this.setState(s => {
+      let products;
+      if (f.id) products = s.products.map(p => p.id === f.id ? { ...f, price: priceNum, salePrice: saleNum } : p);
+      else {
+        const id = 'prod-' + Date.now();
+        products = [...s.products, { ...f, id, price: priceNum, salePrice: saleNum, imageId: f.imageId || ('p-' + id) }];
+      }
+      return { products, form: null };
+    }, () => { this.persist(); this.showToast('Producto guardado'); });
+  };
+
+  toggleFeatured(id) { this.setState(s => ({ products: s.products.map(p => p.id === id ? { ...p, featured: !p.featured } : p) }), () => this.persist()); }
+  toggleOutOfStock(id) { this.setState(s => ({ products: s.products.map(p => p.id === id ? { ...p, outOfStock: !p.outOfStock } : p) }), () => this.persist()); }
+  deleteProduct(id) {
+    if (!confirm('¿Eliminar este producto?')) return;
+    this.setState(s => ({ products: s.products.filter(p => p.id !== id), cart: s.cart.filter(c => c.productId !== id) }), () => this.persist());
+  }
+
+  onNewCategoryChange = (e) => this.setState({ newCategoryName: e.target.value });
+  onNewMaterialChange = (e) => this.setState({ newMaterialName: e.target.value });
+  addCategory = () => {
+    const name = this.state.newCategoryName.trim();
+    if (!name) return;
+    const id = 'cat-' + Date.now();
+    this.setState(s => ({ categories: [...s.categories, { id, name, image: '' }], newCategoryName: '' }), () => this.persist());
+  };
+  addMaterial = () => {
+    const name = this.state.newMaterialName.trim();
+    if (!name) return;
+    const id = 'mat-' + Date.now();
+    this.setState(s => ({ materials: [...s.materials, { id, name }], newMaterialName: '' }), () => this.persist());
+  };
+  removeCategory(id) {
+    if (this.state.products.some(p => p.categoryId === id)) { alert('No podés eliminar una categoría que tiene productos asignados.'); return; }
+    this.setState(s => ({ categories: s.categories.filter(c => c.id !== id) }), () => this.persist());
+  }
+  removeMaterial(id) {
+    if (this.state.products.some(p => p.materialId === id)) { alert('No podés eliminar un material que tiene productos asignados.'); return; }
+    this.setState(s => ({ materials: s.materials.filter(m => m.id !== id) }), () => this.persist());
+  }
+
+  renderVals() {
+    const s = this.state;
+    const whatsappNumber = (this.props.whatsappNumber || '5493434000000').replace(/[^0-9]/g, '');
+    const instagramHandle = this.props.instagramHandle || 'theblu.shop';
+    const admin = this.isAdminUser();
+
+    const transparentHeader = s.view === 'home' && !s.scrolled;
+
+    const SLOT = 'v6-';
+    const withDetails = (p) => ({
+      ...p,
+      imageId: SLOT + p.imageId,
+      priceFormatted: this.fmt(this.effPrice(p)),
+      isOnSale: this.onSale(p),
+      oldPriceFormatted: this.onSale(p) ? this.fmt(p.price) : '',
+      discountLabel: this.onSale(p) ? ('−' + Math.round((1 - parseFloat(p.salePrice) / p.price) * 100) + '%') : '',
+      priceColor: this.onSale(p) ? '#A6322A' : '#7C2620',
+      categoryName: this.categoryName(p.categoryId),
+      materialName: this.materialName(p.materialId),
+      open: () => this.openProduct(p.id),
+      quickAdd: (e) => { if (e && e.stopPropagation) e.stopPropagation(); this.addToCart(p.id, 1); },
+      toggleFeatured: () => this.toggleFeatured(p.id),
+      toggleOutOfStock: () => this.toggleOutOfStock(p.id),
+      edit: () => this.editProduct(p),
+      remove: () => this.deleteProduct(p.id)
+    });
+
+    const heroData = [
+      { kicker: 'The Blu Club', headline: 'Tu esencial de todos los días', sub: 'Waterproof, hipoalergénicos y diseñados para acompañarte todos los días.', imageId: 'hero-1', image: PX(13530465, 1800) },
+      { kicker: 'Acero inoxidable', headline: 'Brillo que dura de verdad', sub: 'Piezas que no se oxidan ni pierden el color con el uso diario.', imageId: 'hero-2', image: PX(6467618, 1800) },
+      { kicker: 'Dorado y plateado', headline: 'Armá tu propia combinación', sub: 'Anillos, collares, aros y pulseras para mezclar como quieras.', imageId: 'hero-3', image: PX(9509032, 1800) }
+    ];
+    const heroSlides = heroData.map((h, i) => ({
+      ...h,
+      imageId: SLOT + h.imageId,
+      active: i === s.heroSlide,
+      select: () => this.selectHero(i),
+      dotWidth: i === s.heroSlide ? '42px' : '14px',
+      dotColor: i === s.heroSlide ? '#fff' : 'rgba(255,255,255,0.45)'
+    }));
+
+    const categoryTiles = s.categories.slice(0, 4).map(c => ({
+      name: c.name, imageId: SLOT + 'cat-' + c.id, image: c.image || '', select: () => this.setCatFilter(c.id)
+    }));
+    const menuCategories = s.categories.map(c => ({ name: c.name, select: () => this.setCatFilter(c.id) }));
+
+    const featuredProducts = s.products.filter(p => p.featured).slice(0, 4).map(withDetails);
+
+    const igIds = [13530465, 1616096, 12144990, 12124662, 17298636, 16689780];
+    const instagramTiles = igIds.map((id, i) => ({ imageId: SLOT + 'ig-' + i, image: PX(id, 600) }));
+
+    const faqItems = this.getDefaultFaq().map((f, i) => ({
+      ...f, open: s.faqOpen === i, sign: s.faqOpen === i ? '−' : '+', toggle: () => this.toggleFaq(i)
+    }));
+
+    const chipStyle = (on) => ({
+      bg: on ? '#1C1A19' : '#fff',
+      color: on ? '#fff' : '#3A3532',
+      border: on ? '#1C1A19' : '#D8D1CA'
+    });
+    const categoryChips = [{ id: 'all', name: 'Todos' }, { id: 'sale', name: 'Sale' }, ...s.categories].map(c => ({
+      name: c.name, select: () => { this.setState({ catFilter: c.id }); }, ...chipStyle(s.catFilter === c.id)
+    }));
+    const materialChips = [{ id: 'all', name: 'Todos los materiales' }, ...s.materials].map(m => ({
+      name: m.name, select: () => { this.setState({ matFilter: m.id }); }, ...chipStyle(s.matFilter === m.id)
+    }));
+
+    let catalog = s.products.filter(p =>
+      (s.catFilter === 'all' || (s.catFilter === 'sale' ? this.onSale(p) : p.categoryId === s.catFilter)) &&
+      (s.matFilter === 'all' || p.materialId === s.matFilter)
+    );
+    if (s.sortBy === 'price_asc') catalog = [...catalog].sort((a, b) => a.price - b.price);
+    else if (s.sortBy === 'price_desc') catalog = [...catalog].sort((a, b) => b.price - a.price);
+    else catalog = [...catalog].sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+    const catalogProducts = catalog.map(withDetails);
+    const catalogTitle = s.catFilter === 'all' ? 'Todos los productos'
+      : s.catFilter === 'sale' ? 'Sale' : this.categoryName(s.catFilter);
+    const saleProducts = s.products.filter(p => this.onSale(p) && !p.outOfStock).slice(0, 4).map(withDetails);
+
+    const selectedRaw = s.products.find(p => p.id === s.selectedProductId) || s.products[0] || {};
+    const selectedProduct = withDetails(selectedRaw);
+    const relatedProducts = s.products
+      .filter(p => p.categoryId === selectedRaw.categoryId && p.id !== selectedRaw.id)
+      .slice(0, 4).map(withDetails);
+
+    const cartItems = s.cart.map(ci => {
+      const p = s.products.find(pr => pr.id === ci.productId);
+      if (!p) return null;
+      return {
+        productId: p.id, name: p.name, materialName: this.materialName(p.materialId), qty: ci.qty,
+        imageId: SLOT + p.imageId, image: p.image || '',
+          lineTotalFormatted: this.fmt(this.effPrice(p) * ci.qty),
+        inc: () => this.incCartItem(p.id), dec: () => this.decCartItem(p.id), remove: () => this.removeCartItem(p.id)
+      };
+    }).filter(Boolean);
+    const cartSubtotal = s.cart.reduce((sum, ci) => {
+      const p = s.products.find(pr => pr.id === ci.productId);
+      return sum + (p ? this.effPrice(p) * ci.qty : 0);
+    }, 0);
+    const waLines = cartItems.map(i => `- ${i.name} (${i.materialName}) x${i.qty}`).join('%0A');
+    const whatsappCartLink = `https://wa.me/${whatsappNumber}?text=Hola!%20Quiero%20hacer%20este%20pedido%3A%0A${waLines}%0ATotal%3A%20${encodeURIComponent(this.fmt(cartSubtotal))}`;
+    const whatsappProductLink = `https://wa.me/${whatsappNumber}?text=Hola!%20Me%20interesa%20${encodeURIComponent(selectedProduct.name || '')}%20en%20${encodeURIComponent(selectedProduct.materialName || '')}`;
+
+    const loggedIn = !!s.user;
+    const isRegisterMode = !loggedIn && s.authMode === 'register';
+
+    return {
+      isHome: s.view === 'home', isCatalog: s.view === 'catalog', isProduct: s.view === 'product', isAdmin: s.view === 'admin',
+      showFooter: s.view !== 'admin',
+      adminAllowed: s.view === 'admin' && admin,
+      adminDenied: s.view === 'admin' && !admin,
+
+      headerBg: transparentHeader ? 'transparent' : '#fff',
+      headerBorder: transparentHeader ? 'transparent' : '#E4DED8',
+      headerInk: transparentHeader ? '#fff' : '#1C1A19',
+      logoLight: transparentHeader, logoDark: !transparentHeader,
+
+      menuOpen: s.menuOpen, openMenu: this.openMenu, closeMenu: this.closeMenu,
+      goHome: this.goHome, goCatalogAll: this.goCatalogAll, goFaq: this.goFaq, goAdmin: this.goAdmin,
+      menuCategories,
+
+      cartOpen: s.cartOpen, toggleCart: this.toggleCart,
+      cartCount: s.cart.reduce((n, c) => n + c.qty, 0),
+      cartItems, cartEmpty: cartItems.length === 0,
+      cartSubtotalFormatted: this.fmt(cartSubtotal),
+      whatsappCartLink, whatsappProductLink,
+      whatsappGeneralLink: `https://wa.me/${whatsappNumber}`,
+      toast: s.toast,
+
+      authOpen: s.authOpen, closeAuth: this.closeAuth, openAccount: this.openAccount,
+      loggedIn, showAuthForm: !loggedIn, isRegisterMode, isAdminUser: admin,
+      accountLabel: loggedIn ? 'Mi cuenta' : 'Iniciar sesión',
+      accountGreeting: loggedIn ? ('Hola ' + s.user.name + ', qué bueno verte de nuevo.') : '',
+      authKicker: loggedIn ? 'Mi cuenta' : (isRegisterMode ? 'Nueva cuenta' : 'Bienvenida'),
+      authTitle: loggedIn ? ('Hola, ' + s.user.name) : (isRegisterMode ? 'Creá tu cuenta' : 'Iniciar sesión'),
+      authSubmitLabel: isRegisterMode ? 'Crear cuenta' : 'Entrar',
+      authSwitchLabel: isRegisterMode ? 'Ya tengo cuenta, iniciar sesión' : 'No tengo cuenta, quiero crear una',
+      authName: s.authName, authEmail: s.authEmail, authPassword: s.authPassword, authError: s.authError,
+      onAuthNameChange: this.onAuthNameChange, onAuthEmailChange: this.onAuthEmailChange,
+      onAuthPasswordChange: this.onAuthPasswordChange, onAuthKeyDown: this.onAuthKeyDown,
+      submitAuth: this.submitAuth, toggleAuthMode: this.toggleAuthMode, logout: this.logout,
+
+      heroSlides, categoryTiles, featuredProducts,
+      saleProducts, hasSale: saleProducts.length > 0, goSale: this.goSale,
+      editorialImage: PX(6153885, 1200),
+      showInstagram: this.props.showInstagramSection !== false, instagramTiles,
+      instagramHandleDisplay: '@' + instagramHandle,
+      instagramUrl: `https://instagram.com/${instagramHandle}`,
+      faqItems,
+
+      categoryChips, materialChips, sortBy: s.sortBy, onSortChange: this.onSortChange,
+      catalogProducts, catalogEmpty: catalogProducts.length === 0, catalogTitle,
+
+      selectedProduct, selectedProductInStock: !selectedRaw.outOfStock,
+      selectedQty: s.selectedQty, incQty: this.incQty, decQty: this.decQty, addSelectedToCart: this.addSelectedToCart,
+      relatedProducts, hasRelated: relatedProducts.length > 0,
+
+      adminTab: s.adminTab, isAdminProducts: s.adminTab === 'productos', isAdminCats: s.adminTab === 'categorias',
+      setAdminTabProducts: this.setAdminTabProducts, setAdminTabCats: this.setAdminTabCats,
+      adminTabProductsLine: s.adminTab === 'productos' ? '#1C1A19' : 'transparent',
+      adminTabProductsColor: s.adminTab === 'productos' ? '#1C1A19' : '#9A938D',
+      adminTabCatsLine: s.adminTab === 'categorias' ? '#1C1A19' : 'transparent',
+      adminTabCatsColor: s.adminTab === 'categorias' ? '#1C1A19' : '#9A938D',
+      formOpen: !!s.form, formClosed: !s.form,
+      form: s.form ? { ...s.form, imageId: SLOT + s.form.imageId } : {},
+      formTitle: s.form && s.form.id ? 'Editar producto' : 'Nuevo producto',
+      openNewProductForm: this.openNewProductForm, cancelForm: this.cancelForm, saveProduct: this.saveProduct,
+      onFormNameChange: this.onFormNameChange, onFormPriceChange: this.onFormPriceChange,
+      onFormCategoryChange: this.onFormCategoryChange, onFormMaterialChange: this.onFormMaterialChange,
+      onFormDescriptionChange: this.onFormDescriptionChange, onFormSalePriceChange: this.onFormSalePriceChange,
+      onFormFeaturedChange: this.onFormFeaturedChange, onFormOutOfStockChange: this.onFormOutOfStockChange,
+      onProductImageFileChange: this.onProductImageFileChange,
+      uploadLabel: s.uploadingImage ? 'Subiendo…' : 'Subir foto',
+      adminProducts: s.products
+        .filter(p => !s.adminCatFilter || p.categoryId === s.adminCatFilter)
+        .filter(p => !s.adminSearch.trim() || p.name.toLowerCase().includes(s.adminSearch.trim().toLowerCase()))
+        .slice()
+        .sort((a, b) => {
+          const ca = this.categoryName(a.categoryId), cb = this.categoryName(b.categoryId);
+          return ca !== cb ? ca.localeCompare(cb, 'es') : a.name.localeCompare(b.name, 'es');
+        })
+        .map(withDetails),
+      adminCatFilter: s.adminCatFilter,
+      adminSearch: s.adminSearch,
+      onAdminCatFilterChange: this.onAdminCatFilterChange,
+      onAdminSearchChange: this.onAdminSearchChange,
+      categories: s.categories.map(c => ({ ...c, remove: () => this.removeCategory(c.id) })),
+      materials: s.materials.map(m => ({ ...m, remove: () => this.removeMaterial(m.id) })),
+      newCategoryName: s.newCategoryName, onNewCategoryChange: this.onNewCategoryChange, addCategory: this.addCategory,
+      newMaterialName: s.newMaterialName, onNewMaterialChange: this.onNewMaterialChange, addMaterial: this.addMaterial
+    };
+  }
+}
+</script>
+</body>
+</html>
