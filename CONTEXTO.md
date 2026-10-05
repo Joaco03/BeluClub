@@ -125,6 +125,16 @@ Límites del plan gratis de Cloudinary: fotos hasta 10 MB (si pesa más, el siti
 
 Los productos de ejemplo usan placeholders de Pexels (función `PX(id, ancho)`).
 
+## Navegación, carrito y animaciones
+
+- **Direcciones por pantalla:** `#/` (inicio), `#/productos`, `#/productos/<categoría>` (o `sale`), `#/producto/<id>`, `#/admin`. El botón "Atrás" del navegador funciona, vuelve a la misma altura de la página, y cada producto tiene su link para compartir. Todo pasa por `navigate()` y `applyRoute()`.
+- **Carrito:** se guarda en el navegador de cada clienta (`localStorage`, clave `blublub_cart_v1`), así no se pierde al recargar. Al agregar un producto, la foto vuela hasta el ícono del carrito (`flyToCart`) y la burbuja con la cantidad rebota; el carrito no se abre solo.
+- **Tarjetas:** con el mouse encima se van pasando las fotos y videos del producto (1,9 s por foto, 4,5 s por video, con fundido). En celulares no, porque no hay "mouse encima". El botón "Agregar" no aparece en productos agotados.
+- **Página de producto:** flechas, flechas del teclado y deslizar con el dedo para pasar las fotos. La foto principal se achica en pantallas bajas para que las miniaturas se vean sin bajar.
+- **Carga:** mientras llegan los datos de Firebase se muestran cuadros de carga en vez de los productos de ejemplo. Si un link apunta a un producto que ya no existe, aparece un aviso con botón al catálogo.
+- **Accesibilidad:** contorno visible al navegar con teclado y animaciones reducidas si la persona lo pidió en su sistema.
+- **Arreglo importante:** `migrate()` ya no vuelve a agregar productos o categorías de ejemplo que la dueña borró (antes reaparecían al recargar).
+
 ## Estilo visual
 
 Inspirado en caitlynminimalist.com: minimalista, editorial, **todo recto — cero esquinas redondeadas**.

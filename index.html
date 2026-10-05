@@ -28,6 +28,14 @@
     a:hover{color:#4E1712;}
     @keyframes bcFade{from{opacity:0}to{opacity:1}}
     @keyframes bcSlide{from{transform:translateX(-100%)}to{transform:translateX(0)}}
+    @keyframes bcBumpA{0%{transform:scale(1)}35%{transform:scale(1.5)}100%{transform:scale(1)}}
+    @keyframes bcBumpB{0%{transform:scale(1)}35%{transform:scale(1.5)}100%{transform:scale(1)}}
+    @keyframes bcPulse{0%,100%{opacity:1}50%{opacity:.55}}
+    button{font-family:inherit;}
+    :focus-visible{outline:1px solid #7C2620;outline-offset:3px;}
+    @media (prefers-reduced-motion: reduce){
+      *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important;}
+    }
   </style>
 </helmet>
 
@@ -55,10 +63,10 @@
         <div onClick="{{ openAccount }}" title="Mi cuenta" style="cursor:pointer;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:{{ headerInk }};">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M12 12a4 4 0 100-8 4 4 0 000 8zM4 20.5c0-3.6 3.6-6.5 8-6.5s8 2.9 8 6.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"></path></svg>
         </div>
-        <div onClick="{{ toggleCart }}" title="Carrito" style="cursor:pointer;position:relative;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:{{ headerInk }};">
+        <div data-cart-icon="1" onClick="{{ toggleCart }}" title="Carrito" style="cursor:pointer;position:relative;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:{{ headerInk }};">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M5.5 7.5h13l-1.1 12a1.8 1.8 0 01-1.8 1.6H8.4a1.8 1.8 0 01-1.8-1.6l-1.1-12z" stroke="currentColor" stroke-width="1.4"></path><path d="M9 7.5V6a3 3 0 016 0v1.5" stroke="currentColor" stroke-width="1.4"></path></svg>
           <sc-if value="{{ cartCount }}" hint-placeholder-val="{{ 0 }}">
-            <span style="position:absolute;top:2px;right:0;background:#7C2620;color:#fff;font-size:10px;font-weight:500;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;padding:0 4px;">{{ cartCount }}</span>
+            <span style="position:absolute;top:3px;right:1px;background:#7C2620;color:#fff;font-size:10px;font-weight:500;line-height:1;min-width:17px;height:17px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 5px;animation:{{ cartBadgeAnim }};">{{ cartCount }}</span>
           </sc-if>
         </div>
       </div>
@@ -262,10 +270,31 @@
           <span onClick="{{ goCatalogAll }}" style="cursor:pointer;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#1C1A19;border-bottom:1px solid #1C1A19;padding-bottom:4px;">Ver todo</span>
         </div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:30px 22px;">
+          <sc-for list="{{ skeletonCards }}" as="k">
+            <div>
+              <div style="aspect-ratio:4/5;background:#F6F1EC;animation:bcPulse 1.6s ease-in-out infinite;"></div>
+              <div style="height:12px;width:55%;margin:18px auto 0;background:#F6F1EC;animation:bcPulse 1.6s ease-in-out infinite;"></div>
+            </div>
+          </sc-for>
           <sc-for list="{{ featuredProducts }}" as="p" hint-placeholder-count="4">
             <div onClick="{{ p.open }}" style="cursor:pointer;">
-              <div style="position:relative;overflow:hidden;aspect-ratio:4/5;background:#F6F1EC;">
-                <img src="{{ p.image }}" alt="Foto del producto" style="width:100%;height:100%;object-fit:cover;display:block;">
+              <div data-card-media="1" onMouseEnter="{{ p.hoverStart }}" onMouseLeave="{{ p.hoverEnd }}" style="position:relative;overflow:hidden;aspect-ratio:4/5;background:#F6F1EC;">
+                <img src="{{ p.image }}" alt="{{ p.name }}" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block;">
+                <sc-for list="{{ p.slides }}" as="sl">
+                  <div style="position:absolute;inset:0;opacity:{{ sl.opacity }};transition:opacity .7s ease;pointer-events:none;">
+                    <img src="{{ sl.poster }}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">
+                    <sc-if value="{{ sl.playVideo }}">
+                      <video src="{{ sl.video }}" autoPlay="{{ sl.on }}" muted="{{ sl.on }}" loop="{{ sl.on }}" playsInline="{{ sl.on }}" onLoadedData="{{ sl.onReady }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"></video>
+                    </sc-if>
+                  </div>
+                </sc-for>
+                <sc-if value="{{ p.showDots }}">
+                  <div style="position:absolute;left:0;right:0;bottom:12px;display:flex;justify-content:center;gap:5px;pointer-events:none;">
+                    <sc-for list="{{ p.dots }}" as="d">
+                      <span style="width:16px;height:2px;background:{{ d.bg }};box-shadow:0 0 3px rgba(0,0,0,0.25);transition:background .4s ease;"></span>
+                    </sc-for>
+                  </div>
+                </sc-if>
                 <sc-if value="{{ p.outOfStock }}">
                   <div style="position:absolute;top:0;left:0;background:#1C1A19;color:#fff;font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;padding:6px 12px;">Agotado</div>
                 </sc-if>
@@ -299,8 +328,23 @@
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:30px 22px;">
               <sc-for list="{{ saleProducts }}" as="p" hint-placeholder-count="4">
                 <div onClick="{{ p.open }}" style="cursor:pointer;">
-                  <div style="position:relative;overflow:hidden;aspect-ratio:4/5;background:#2A2623;">
-                    <img src="{{ p.image }}" alt="Foto del producto" style="width:100%;height:100%;object-fit:cover;display:block;">
+                  <div data-card-media="1" onMouseEnter="{{ p.hoverStart }}" onMouseLeave="{{ p.hoverEnd }}" style="position:relative;overflow:hidden;aspect-ratio:4/5;background:#2A2623;">
+                    <img src="{{ p.image }}" alt="{{ p.name }}" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block;">
+                <sc-for list="{{ p.slides }}" as="sl">
+                  <div style="position:absolute;inset:0;opacity:{{ sl.opacity }};transition:opacity .7s ease;pointer-events:none;">
+                    <img src="{{ sl.poster }}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">
+                    <sc-if value="{{ sl.playVideo }}">
+                      <video src="{{ sl.video }}" autoPlay="{{ sl.on }}" muted="{{ sl.on }}" loop="{{ sl.on }}" playsInline="{{ sl.on }}" onLoadedData="{{ sl.onReady }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"></video>
+                    </sc-if>
+                  </div>
+                </sc-for>
+                <sc-if value="{{ p.showDots }}">
+                  <div style="position:absolute;left:0;right:0;bottom:12px;display:flex;justify-content:center;gap:5px;pointer-events:none;">
+                    <sc-for list="{{ p.dots }}" as="d">
+                      <span style="width:16px;height:2px;background:{{ d.bg }};box-shadow:0 0 3px rgba(0,0,0,0.25);transition:background .4s ease;"></span>
+                    </sc-for>
+                  </div>
+                </sc-if>
                     <div style="position:absolute;top:0;left:0;background:#A6322A;color:#fff;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;padding:7px 13px;">{{ p.discountLabel }}</div>
                   </div>
                   <div style="padding-top:16px;text-align:center;">
@@ -400,10 +444,31 @@
         <p style="text-align:center;color:#7A736E;padding:80px 0;font-size:14px;">No hay productos en esta selección todavía.</p>
       </sc-if>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:40px 22px;">
-        <sc-for list="{{ catalogProducts }}" as="p" hint-placeholder-count="8">
-          <div>
-            <div onClick="{{ p.open }}" style="cursor:pointer;position:relative;overflow:hidden;aspect-ratio:4/5;background:#F6F1EC;">
-              <img src="{{ p.image }}" alt="Foto del producto" style="width:100%;height:100%;object-fit:cover;display:block;">
+        <sc-for list="{{ skeletonCards }}" as="k">
+            <div>
+              <div style="aspect-ratio:4/5;background:#F6F1EC;animation:bcPulse 1.6s ease-in-out infinite;"></div>
+              <div style="height:12px;width:55%;margin:18px auto 0;background:#F6F1EC;animation:bcPulse 1.6s ease-in-out infinite;"></div>
+            </div>
+          </sc-for>
+          <sc-for list="{{ catalogProducts }}" as="p" hint-placeholder-count="8">
+          <div data-card="1">
+            <div onClick="{{ p.open }}" data-card-media="1" onMouseEnter="{{ p.hoverStart }}" onMouseLeave="{{ p.hoverEnd }}" style="cursor:pointer;position:relative;overflow:hidden;aspect-ratio:4/5;background:#F6F1EC;">
+              <img src="{{ p.image }}" alt="{{ p.name }}" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block;">
+                <sc-for list="{{ p.slides }}" as="sl">
+                  <div style="position:absolute;inset:0;opacity:{{ sl.opacity }};transition:opacity .7s ease;pointer-events:none;">
+                    <img src="{{ sl.poster }}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">
+                    <sc-if value="{{ sl.playVideo }}">
+                      <video src="{{ sl.video }}" autoPlay="{{ sl.on }}" muted="{{ sl.on }}" loop="{{ sl.on }}" playsInline="{{ sl.on }}" onLoadedData="{{ sl.onReady }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"></video>
+                    </sc-if>
+                  </div>
+                </sc-for>
+                <sc-if value="{{ p.showDots }}">
+                  <div style="position:absolute;left:0;right:0;bottom:12px;display:flex;justify-content:center;gap:5px;pointer-events:none;">
+                    <sc-for list="{{ p.dots }}" as="d">
+                      <span style="width:16px;height:2px;background:{{ d.bg }};box-shadow:0 0 3px rgba(0,0,0,0.25);transition:background .4s ease;"></span>
+                    </sc-for>
+                  </div>
+                </sc-if>
               <sc-if value="{{ p.outOfStock }}">
                 <div style="position:absolute;top:0;left:0;background:#1C1A19;color:#fff;font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;padding:6px 12px;">Agotado</div>
               </sc-if>
@@ -423,7 +488,12 @@
                 </sc-if>
                 <span style="font-size:14px;color:{{ p.priceColor }};">{{ p.priceFormatted }}</span>
               </div>
-              <span onClick="{{ p.quickAdd }}" style="cursor:pointer;display:inline-block;border:1px solid #D8D1CA;padding:10px 22px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#3A3532;" style-hover="background:#1C1A19;color:#fff;border-color:#1C1A19;">Agregar</span>
+              <sc-if value="{{ p.canQuickAdd }}">
+                <span onClick="{{ p.quickAdd }}" style="cursor:pointer;display:inline-block;border:1px solid #D8D1CA;padding:10px 22px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#3A3532;transition:background .2s ease,color .2s ease,border-color .2s ease;" style-hover="background:#1C1A19;color:#fff;border-color:#1C1A19;">Agregar</span>
+              </sc-if>
+              <sc-if value="{{ p.outOfStock }}">
+                <span style="display:inline-block;border:1px solid #EFEAE4;padding:10px 22px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#B5ADA6;">Sin stock</span>
+              </sc-if>
             </div>
           </div>
         </sc-for>
@@ -437,14 +507,38 @@
       <div style="font-size:10.5px;letter-spacing:0.16em;text-transform:uppercase;color:#9A938D;margin-bottom:30px;">
         <span onClick="{{ goHome }}" style="cursor:pointer;">Inicio</span> — <span onClick="{{ goCatalogAll }}" style="cursor:pointer;">Productos</span> — {{ selectedProduct.name }}
       </div>
+      <sc-if value="{{ productLoading }}">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:60px;">
+          <div style="aspect-ratio:4/5;background:#F6F1EC;animation:bcPulse 1.6s ease-in-out infinite;"></div>
+          <div>
+            <div style="height:14px;width:30%;background:#F6F1EC;margin-bottom:22px;animation:bcPulse 1.6s ease-in-out infinite;"></div>
+            <div style="height:40px;width:75%;background:#F6F1EC;margin-bottom:18px;animation:bcPulse 1.6s ease-in-out infinite;"></div>
+            <div style="height:22px;width:25%;background:#F6F1EC;animation:bcPulse 1.6s ease-in-out infinite;"></div>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ productMissing }}">
+        <div style="text-align:center;padding:80px 0 40px;">
+          <h1 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:40px;margin:0 0 14px;">Este producto ya no está disponible</h1>
+          <p style="color:#7A736E;font-size:14px;font-weight:300;margin:0 0 30px;">Puede que se haya agotado o que lo hayamos sacado del catálogo.</p>
+          <span onClick="{{ goCatalogAll }}" style="cursor:pointer;display:inline-block;background:#1C1A19;color:#fff;padding:15px 34px;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;" style-hover="background:#7C2620;">Ver todos los productos</span>
+        </div>
+      </sc-if>
+      <sc-if value="{{ productFound }}">
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:60px;">
-        <div>
-          <div style="aspect-ratio:4/5;background:#F6F1EC;overflow:hidden;">
-            <sc-if value="{{ activeIsImage }}" hint-placeholder-val="{{ true }}">
-              <img src="{{ activeSrc }}" alt="{{ selectedProduct.name }}" style="width:100%;height:100%;object-fit:cover;display:block;">
-            </sc-if>
-            <sc-if value="{{ activeIsVideo }}">
-              <video src="{{ activeSrc }}" poster="{{ activePoster }}" controls="{{ yes }}" playsInline="{{ yes }}" preload="metadata" style="width:100%;height:100%;object-fit:contain;display:block;background:#F6F1EC;"></video>
+        <div style="width:min(100%, calc((100svh - 290px) * 0.8));min-width:min(100%, 300px);margin:0 auto;">
+          <div data-product-media="1" onTouchStart="{{ onMediaTouchStart }}" onTouchEnd="{{ onMediaTouchEnd }}" style="position:relative;aspect-ratio:4/5;background:#F6F1EC;overflow:hidden;">
+            <sc-for list="{{ galleryMain }}" as="g">
+              <div data-active="{{ g.activeFlag }}" style="position:absolute;inset:0;opacity:{{ g.opacity }};transition:opacity .45s ease;pointer-events:{{ g.pe }};">
+                <img src="{{ g.still }}" alt="{{ g.alt }}" style="width:100%;height:100%;object-fit:cover;display:block;">
+                <sc-if value="{{ g.showVideo }}">
+                  <video src="{{ g.video }}" poster="{{ g.still }}" controls="{{ g.on }}" playsInline="{{ g.on }}" preload="metadata" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#F6F1EC;"></video>
+                </sc-if>
+              </div>
+            </sc-for>
+            <sc-if value="{{ hasManyMedia }}">
+              <button onClick="{{ prevMedia }}" aria-label="Foto anterior" type="button" style="position:absolute;top:50%;left:4px;transform:translateY(-50%);width:48px;height:48px;padding:0;border:0;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;"><span style="width:34px;height:34px;background:rgba(255,255,255,0.82);display:flex;align-items:center;justify-content:center;transition:background .2s ease;" style-hover="background:#fff;"><svg width="8" height="14" viewBox="0 0 8 14" aria-hidden="true"><path d="M7 1L1 7l6 6" fill="none" stroke="#1C1A19" stroke-width="1.2"></path></svg></span></button>
+              <button onClick="{{ nextMedia }}" aria-label="Foto siguiente" type="button" style="position:absolute;top:50%;right:4px;transform:translateY(-50%);width:48px;height:48px;padding:0;border:0;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;"><span style="width:34px;height:34px;background:rgba(255,255,255,0.82);display:flex;align-items:center;justify-content:center;transition:background .2s ease;" style-hover="background:#fff;"><svg width="8" height="14" viewBox="0 0 8 14" aria-hidden="true"><path d="M1 1l6 6-6 6" fill="none" stroke="#1C1A19" stroke-width="1.2"></path></svg></span></button>
             </sc-if>
           </div>
           <sc-if value="{{ hasManyMedia }}">
@@ -464,7 +558,7 @@
             </div>
           </sc-if>
         </div>
-        <div>
+        <div style="position:sticky;top:112px;align-self:start;">
           <div style="font-size:10px;letter-spacing:0.26em;text-transform:uppercase;color:#7A736E;margin-bottom:16px;">{{ selectedProduct.materialName }}</div>
           <h1 style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:46px;margin:0 0 14px;line-height:1.08;">{{ selectedProduct.name }}</h1>
           <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:26px;flex-wrap:wrap;">
@@ -506,8 +600,23 @@
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:22px;">
             <sc-for list="{{ relatedProducts }}" as="p" hint-placeholder-count="4">
               <div onClick="{{ p.open }}" style="cursor:pointer;">
-                <div style="aspect-ratio:4/5;overflow:hidden;background:#F6F1EC;">
-                  <img src="{{ p.image }}" alt="Foto del producto" style="width:100%;height:100%;object-fit:cover;display:block;">
+                <div data-card-media="1" onMouseEnter="{{ p.hoverStart }}" onMouseLeave="{{ p.hoverEnd }}" style="position:relative;aspect-ratio:4/5;overflow:hidden;background:#F6F1EC;">
+                  <img src="{{ p.image }}" alt="{{ p.name }}" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block;">
+                <sc-for list="{{ p.slides }}" as="sl">
+                  <div style="position:absolute;inset:0;opacity:{{ sl.opacity }};transition:opacity .7s ease;pointer-events:none;">
+                    <img src="{{ sl.poster }}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">
+                    <sc-if value="{{ sl.playVideo }}">
+                      <video src="{{ sl.video }}" autoPlay="{{ sl.on }}" muted="{{ sl.on }}" loop="{{ sl.on }}" playsInline="{{ sl.on }}" onLoadedData="{{ sl.onReady }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"></video>
+                    </sc-if>
+                  </div>
+                </sc-for>
+                <sc-if value="{{ p.showDots }}">
+                  <div style="position:absolute;left:0;right:0;bottom:12px;display:flex;justify-content:center;gap:5px;pointer-events:none;">
+                    <sc-for list="{{ p.dots }}" as="d">
+                      <span style="width:16px;height:2px;background:{{ d.bg }};box-shadow:0 0 3px rgba(0,0,0,0.25);transition:background .4s ease;"></span>
+                    </sc-for>
+                  </div>
+                </sc-if>
                 </div>
                 <div style="padding-top:14px;text-align:center;font-size:14px;">{{ p.name }}</div>
                 <div style="display:flex;align-items:baseline;justify-content:center;gap:8px;margin-top:4px;">
@@ -520,6 +629,7 @@
             </sc-for>
           </div>
         </div>
+      </sc-if>
       </sc-if>
     </div>
   </sc-if>
@@ -964,11 +1074,17 @@ class Component extends DCLogic {
     newMaterialName: '',
     toast: '',
     uploadStatus: '',
-    mediaIndex: 0
+    mediaIndex: 0,
+    storeLoaded: false,
+    hoverKey: '',
+    hoverIdx: 0,
+    hoverLeaving: false,
+    cartBump: 0
   };
 
   static STORE_VERSION = 7;
   static ADMIN_EMAIL = 'belengrimaldidb1@gmail.com';
+  static CART_KEY = 'blublub_cart_v1';
 
   componentDidMount() {
     firebaseReady.then(() => {
@@ -977,11 +1093,13 @@ class Component extends DCLogic {
       this._unsubStore = STORE_DOC.onSnapshot((snap) => {
         const data = snap.exists ? snap.data() : null;
         if (data && data.version === Component.STORE_VERSION && Array.isArray(data.products)) {
-          this.setState(this.migrate(data));
+          this.setState({ ...this.migrate(data), storeLoaded: true });
+        } else {
+          // Si todavía no existe el documento, se muestran los productos de ejemplo
+          // hasta que la dueña entre como admin.
+          this.setState({ storeLoaded: true });
         }
-        // Si todavía no existe el documento, se muestran los valores por defecto
-        // que ya están en el estado inicial, hasta que la dueña entre como admin.
-      }, (err) => { console.error('Error leyendo el catálogo:', err); });
+      }, (err) => { console.error('Error leyendo el catálogo:', err); this.setState({ storeLoaded: true }); });
 
       // Escucha la sesión de Firebase Authentication (reemplaza el login casero).
       this._unsubAuth = auth.onAuthStateChanged(async (fbUser) => {
@@ -997,7 +1115,33 @@ class Component extends DCLogic {
           } catch (e) {}
         }
       });
-    }).catch((e) => { console.error('No se pudo conectar con Firebase:', e); this.showToast('No se pudo conectar. Revisá tu conexión.'); });
+    }).catch((e) => { console.error('No se pudo conectar con Firebase:', e); this.setState({ storeLoaded: true }); this.showToast('No se pudo conectar. Revisá tu conexión.'); });
+    // Si Firebase tarda demasiado, mostramos lo que haya en vez de quedarnos cargando.
+    this._loadTimeout = setTimeout(() => { if (!this.state.storeLoaded) this.setState({ storeLoaded: true }); }, 7000);
+
+    // Carrito guardado en este navegador (así no se pierde al recargar la página).
+    try {
+      const saved = JSON.parse(localStorage.getItem(Component.CART_KEY) || '[]');
+      if (Array.isArray(saved) && saved.length) this.setState({ cart: saved.filter(c => c && c.productId && c.qty > 0) });
+    } catch (e) {}
+
+    // Navegación con la dirección del navegador: el botón "Atrás" funciona
+    // y cada producto tiene su propio link para compartir.
+    this._scrolls = {};
+    try { history.scrollRestoration = 'manual'; } catch (e) {}
+    this._onHashChange = () => this.applyRoute(!!this._navFromClick);
+    window.addEventListener('hashchange', this._onHashChange);
+    if (location.hash && location.hash !== '#/' && location.hash !== '#') this.applyRoute(true);
+
+    // Flechas del teclado para pasar las fotos del producto.
+    this._onKey = (e) => {
+      if (this.state.view !== 'product') return;
+      const tag = (e.target && e.target.tagName) || '';
+      if (/INPUT|TEXTAREA|SELECT|VIDEO/.test(tag)) return;
+      if (e.key === 'ArrowRight') this.nextMedia();
+      else if (e.key === 'ArrowLeft') this.prevMedia();
+    };
+    window.addEventListener('keydown', this._onKey);
 
     this._onScroll = () => {
       const y = window.scrollY || document.documentElement.scrollTop || 0;
@@ -1017,7 +1161,11 @@ class Component extends DCLogic {
     if (this._onScroll) window.removeEventListener('scroll', this._onScroll);
     if (this._unsubStore) this._unsubStore();
     if (this._unsubAuth) this._unsubAuth();
+    if (this._onHashChange) window.removeEventListener('hashchange', this._onHashChange);
+    if (this._onKey) window.removeEventListener('keydown', this._onKey);
     clearTimeout(this._toastTimer);
+    clearTimeout(this._hoverTimer);
+    clearTimeout(this._loadTimeout);
   }
 
   // Keeps the owner's saved edits while filling in anything a newer default set added.
@@ -1028,17 +1176,17 @@ class Component extends DCLogic {
     const byId = (list) => { const m = {}; list.forEach(x => { m[x.id] = x; }); return m; };
     const defP = byId(defProducts);
 
+    // Sólo completa datos faltantes de los productos de ejemplo que siguen existiendo.
+    // Antes también volvía a agregar los que la dueña había borrado: por eso reaparecían.
     const products = (data.products || []).map(p => {
       const base = defP[p.id];
       return base ? { ...base, ...p, image: p.image || base.image } : p;
     });
-    defProducts.forEach(p => { if (!products.some(x => x.id === p.id)) products.push(p); });
 
     const categories = (data.categories || []).map(c => {
       const base = defCats.find(d => d.id === c.id);
       return base ? { ...base, ...c, image: c.image || base.image } : c;
     });
-    defCats.forEach(c => { if (!categories.some(x => x.id === c.id)) categories.push(c); });
 
     const materials = (data.materials && data.materials.length) ? data.materials : defMats;
     return { products, categories, materials };
@@ -1065,25 +1213,131 @@ class Component extends DCLogic {
   materialName(id) { const m = this.state.materials.find(x => x.id === id); return m ? m.name : ''; }
   isAdminUser() { return !!(this.state.user && this.state.user.admin); }
 
-  top() { try { window.scrollTo(0, 0); } catch (e) {} }
+  top() { try { window.scrollTo(0, 0); } catch (e) {} this.stopAllHover(); }
 
   openMenu = () => this.setState({ menuOpen: true });
   closeMenu = () => this.setState({ menuOpen: false });
 
-  goHome = () => { this.top(); this.setState({ view: 'home', menuOpen: false }); };
-  goCatalogAll = () => { this.top(); this.setState({ view: 'catalog', catFilter: 'all', matFilter: 'all', menuOpen: false }); };
-  goSale = () => { this.top(); this.setState({ view: 'catalog', catFilter: 'sale', matFilter: 'all', menuOpen: false }); };
-  goFaq = () => {
-    this.setState({ view: 'home', menuOpen: false }, () => {
-      setTimeout(() => {
-        const el = document.getElementById('faq-section');
-        if (el) window.scrollTo({ top: el.offsetTop - 90, behavior: 'smooth' });
-      }, 60);
+  // ---- Navegación ----
+  // Cada pantalla tiene su dirección (#/productos, #/producto/<id>, #/admin). Así funciona
+  // el botón "Atrás" del navegador y se puede compartir el link de un producto.
+  navigate(hash, after) {
+    const cur = location.hash || '#/';
+    this._scrolls[cur] = window.scrollY || 0;
+    this._navAfter = after || null;
+    this._navFromClick = true;
+    if (cur === hash || (hash === '#/' && cur === '#')) { this.applyRoute(true); return; }
+    location.hash = hash;
+  }
+  replaceHash(hash) { try { history.replaceState(null, '', hash); } catch (e) {} }
+  applyRoute(fromClick) {
+    this._navFromClick = false;
+    const parts = (location.hash || '').replace(/^#\/?/, '').split('/');
+    const a = parts[0];
+    const b = parts[1] ? decodeURIComponent(parts[1]) : '';
+    let next;
+    if (a === 'producto' && b) next = { view: 'product', selectedProductId: b, selectedQty: 1, mediaIndex: 0 };
+    else if (a === 'productos') next = { view: 'catalog', catFilter: b || 'all', matFilter: 'all' };
+    else if (a === 'admin') next = { view: 'admin', form: null, adminTab: 'productos' };
+    else next = { view: 'home' };
+    clearTimeout(this._hoverTimer);
+    const after = this._navAfter;
+    this._navAfter = null;
+    const key = location.hash || '#/';
+    this.setState({ ...next, menuOpen: false, cartOpen: false, authOpen: false, hoverKey: '', hoverIdx: 0 }, () => {
+      if (after) { after(); return; }
+      // Al ir hacia atrás, vuelve a la misma altura donde estaba la clienta.
+      const y = fromClick ? 0 : ((this._scrolls && this._scrolls[key]) || 0);
+      requestAnimationFrame(() => { try { window.scrollTo(0, y); } catch (e) {} });
     });
+  }
+
+  goHome = () => this.navigate('#/');
+  goCatalogAll = () => this.navigate('#/productos');
+  goSale = () => this.navigate('#/productos/sale');
+  goFaq = () => this.navigate('#/', () => {
+    setTimeout(() => {
+      const el = document.getElementById('faq-section');
+      if (el) window.scrollTo({ top: el.offsetTop - 90, behavior: 'smooth' });
+    }, 60);
+  });
+  goAdmin = () => this.navigate('#/admin');
+  openProduct = (id) => this.navigate('#/producto/' + encodeURIComponent(id));
+  setCatFilter = (id) => this.navigate(id && id !== 'all' ? '#/productos/' + encodeURIComponent(id) : '#/productos');
+
+  // ---- Tarjetas: al pasar el mouse se van pasando las fotos y videos ----
+  startCardHover(key, media) {
+    if (!media || media.length < 2) return;
+    if (window.matchMedia && !window.matchMedia('(hover: hover)').matches) return; // en celulares no
+    clearTimeout(this._hoverTimer);
+    this.setState({ hoverKey: key, hoverIdx: 0, hoverLeaving: false });
+    const tick = (delay) => {
+      this._hoverTimer = setTimeout(() => {
+        if (this.state.hoverKey !== key || this.state.hoverLeaving) return;
+        const next = (this.state.hoverIdx + 1) % media.length;
+        this.setState({ hoverIdx: next });
+        tick(media[next].type === 'video' ? 4500 : 1900);
+      }, delay);
+    };
+    tick(450);
+  }
+  stopCardHover(key) {
+    if (this.state.hoverKey !== key) return;
+    clearTimeout(this._hoverTimer);
+    // Vuelve suave a la foto principal y después saca las capas extra.
+    this.setState({ hoverIdx: 0, hoverLeaving: true });
+    this._hoverTimer = setTimeout(() => {
+      if (this.state.hoverKey === key && this.state.hoverLeaving) this.setState({ hoverKey: '', hoverLeaving: false });
+    }, 750);
+  }
+  stopAllHover() { clearTimeout(this._hoverTimer); if (this.state.hoverKey) this.setState({ hoverKey: '', hoverIdx: 0, hoverLeaving: false }); }
+
+  // ---- Galería del producto ----
+  currentMediaCount() {
+    const p = this.state.products.find(x => x.id === this.state.selectedProductId);
+    return productMedia(p).length;
+  }
+  nextMedia = () => { const n = this.currentMediaCount(); if (n > 1) this.setState(s => ({ mediaIndex: ((s.mediaIndex || 0) + 1) % n })); };
+  prevMedia = () => { const n = this.currentMediaCount(); if (n > 1) this.setState(s => ({ mediaIndex: ((s.mediaIndex || 0) - 1 + n) % n })); };
+  onMediaTouchStart = (e) => { const t = e.touches && e.touches[0]; if (t) { this._tx = t.clientX; this._ty = t.clientY; } };
+  onMediaTouchEnd = (e) => {
+    const t = e.changedTouches && e.changedTouches[0];
+    if (!t || this._tx == null) return;
+    const dx = t.clientX - this._tx, dy = t.clientY - this._ty;
+    this._tx = null;
+    if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.3) { if (dx < 0) this.nextMedia(); else this.prevMedia(); }
   };
-  goAdmin = () => { this.top(); this.setState({ view: 'admin', form: null, adminTab: 'productos', menuOpen: false, authOpen: false }); };
-  openProduct = (id) => { this.top(); this.setState({ view: 'product', selectedProductId: id, selectedQty: 1, mediaIndex: 0 }); };
-  setCatFilter = (id) => { this.top(); this.setState({ view: 'catalog', catFilter: id, matFilter: 'all', menuOpen: false }); };
+
+  // ---- Animación: la foto vuela hasta el carrito ----
+  flyToCart(imgEl, productId, qty) {
+    const add = () => this.addToCart(productId, qty);
+    const target = document.querySelector('[data-cart-icon]');
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!imgEl || !target || reduce || typeof document.body.animate !== 'function') { add(); return; }
+    const a = imgEl.getBoundingClientRect(), b = target.getBoundingClientRect();
+    if (!a.width || !a.height) { add(); return; }
+    const ghost = document.createElement('img');
+    ghost.src = imgEl.currentSrc || imgEl.src;
+    ghost.alt = '';
+    Object.assign(ghost.style, {
+      position: 'fixed', left: a.left + 'px', top: a.top + 'px', width: a.width + 'px', height: a.height + 'px',
+      objectFit: 'cover', zIndex: '90', pointerEvents: 'none', margin: '0', boxShadow: '0 10px 30px rgba(28,26,25,0.18)'
+    });
+    document.body.appendChild(ghost);
+    const dx = (b.left + b.width / 2) - (a.left + a.width / 2);
+    const dy = (b.top + b.height / 2) - (a.top + a.height / 2);
+    const end = Math.max(0.02, 16 / Math.max(a.width, a.height));
+    const mid = Math.max(end, Math.min(0.45, 140 / Math.max(a.width, a.height)));
+    let done = false;
+    const finish = () => { if (done) return; done = true; ghost.remove(); add(); };
+    const anim = ghost.animate([
+      { transform: 'translate(0px, 0px) scale(1)', opacity: 1 },
+      { transform: `translate(${dx * 0.45}px, ${dy * 0.45 - 70}px) scale(${mid})`, opacity: 1, offset: 0.5 },
+      { transform: `translate(${dx}px, ${dy}px) scale(${end})`, opacity: 0.35 }
+    ], { duration: 800, easing: 'cubic-bezier(.45,0,.25,1)', fill: 'forwards' });
+    anim.onfinish = finish;
+    setTimeout(finish, 1400);
+  }
 
   toggleCart = () => this.setState(s => ({ cartOpen: !s.cartOpen }));
 
@@ -1144,15 +1398,19 @@ class Component extends DCLogic {
       const cart = existing
         ? s.cart.map(c => c.productId === productId ? { ...c, qty: c.qty + qty } : c)
         : [...s.cart, { productId, qty }];
-      return { cart, cartOpen: true };
-    });
+      return { cart, cartBump: (s.cartBump || 0) + 1 };
+    }, () => this.saveCart());
   }
-  addSelectedToCart = () => this.addToCart(this.state.selectedProductId, this.state.selectedQty);
+  saveCart() { try { localStorage.setItem(Component.CART_KEY, JSON.stringify(this.state.cart)); } catch (e) {} }
+  addSelectedToCart = () => {
+    const img = document.querySelector('[data-product-media] [data-active="1"] img');
+    this.flyToCart(img, this.state.selectedProductId, this.state.selectedQty);
+  };
   incQty = () => this.setState(s => ({ selectedQty: s.selectedQty + 1 }));
   decQty = () => this.setState(s => ({ selectedQty: Math.max(1, s.selectedQty - 1) }));
-  incCartItem(id) { this.setState(s => ({ cart: s.cart.map(c => c.productId === id ? { ...c, qty: c.qty + 1 } : c) })); }
-  decCartItem(id) { this.setState(s => ({ cart: s.cart.map(c => c.productId === id ? { ...c, qty: Math.max(1, c.qty - 1) } : c) })); }
-  removeCartItem(id) { this.setState(s => ({ cart: s.cart.filter(c => c.productId !== id) })); }
+  incCartItem(id) { this.setState(s => ({ cart: s.cart.map(c => c.productId === id ? { ...c, qty: c.qty + 1 } : c) }), () => this.saveCart()); }
+  decCartItem(id) { this.setState(s => ({ cart: s.cart.map(c => c.productId === id ? { ...c, qty: Math.max(1, c.qty - 1) } : c) }), () => this.saveCart()); }
+  removeCartItem(id) { this.setState(s => ({ cart: s.cart.filter(c => c.productId !== id) }), () => this.saveCart()); }
 
   selectHero = (i) => this.setState({ heroSlide: i });
   toggleFaq(i) { this.setState(s => ({ faqOpen: s.faqOpen === i ? -1 : i })); }
@@ -1243,7 +1501,7 @@ class Component extends DCLogic {
   toggleOutOfStock(id) { this.setState(s => ({ products: s.products.map(p => p.id === id ? { ...p, outOfStock: !p.outOfStock } : p) }), () => this.persist()); }
   deleteProduct(id) {
     if (!confirm('¿Eliminar este producto?')) return;
-    this.setState(s => ({ products: s.products.filter(p => p.id !== id), cart: s.cart.filter(c => c.productId !== id) }), () => this.persist());
+    this.setState(s => ({ products: s.products.filter(p => p.id !== id), cart: s.cart.filter(c => c.productId !== id) }), () => { this.persist(); this.saveCart(); });
   }
 
   onNewCategoryChange = (e) => this.setState({ newCategoryName: e.target.value });
@@ -1300,6 +1558,37 @@ class Component extends DCLogic {
       };
     };
 
+    const loading = !s.storeLoaded;
+    const withCard = (p, section) => {
+      const base = withDetails(p);
+      const key = section + ':' + p.id;
+      const media = productMedia(p);
+      const hovered = s.hoverKey === key && media.length > 1;
+      const idx = hovered ? (s.hoverIdx || 0) % media.length : 0;
+      return {
+        ...base,
+        canQuickAdd: !p.outOfStock,
+        slides: hovered ? media.map((m, i) => ({
+          poster: mediaThumb(m, 900),
+          video: m.type === 'video' ? cldVideo(m.url, 720) : '',
+          playVideo: m.type === 'video' && i === idx,
+          opacity: i === idx ? 1 : 0,
+          on: true,
+          onReady: (e) => { try { e.target.muted = true; const pr = e.target.play(); if (pr && pr.catch) pr.catch(() => {}); } catch (err) {} }
+        })) : [],
+        showDots: hovered && !s.hoverLeaving,
+        dots: hovered ? media.map((_, i) => ({ bg: i === idx ? '#fff' : 'rgba(255,255,255,0.5)' })) : [],
+        hoverStart: () => this.startCardHover(key, media),
+        hoverEnd: () => this.stopCardHover(key),
+        quickAdd: (e) => {
+          if (e && e.stopPropagation) e.stopPropagation();
+          const root = e && e.currentTarget && e.currentTarget.closest ? e.currentTarget.closest('[data-card]') : null;
+          const img = root ? root.querySelector('[data-card-media] img') : null;
+          this.flyToCart(img, p.id, 1);
+        }
+      };
+    };
+
     const heroData = [
       { kicker: 'The Blu Club', headline: 'Tu esencial de todos los días', sub: 'Waterproof, hipoalergénicos y diseñados para acompañarte todos los días.', imageId: 'hero-1', image: PX(13530465, 1800) },
       { kicker: 'Acero inoxidable', headline: 'Brillo que dura de verdad', sub: 'Piezas que no se oxidan ni pierden el color con el uso diario.', imageId: 'hero-2', image: PX(6467618, 1800) },
@@ -1319,7 +1608,7 @@ class Component extends DCLogic {
     }));
     const menuCategories = s.categories.map(c => ({ name: c.name, select: () => this.setCatFilter(c.id) }));
 
-    const featuredProducts = s.products.filter(p => p.featured).slice(0, 4).map(withDetails);
+    const featuredProducts = loading ? [] : s.products.filter(p => p.featured).slice(0, 4).map(p => withCard(p, 'feat'));
 
     const igIds = [13530465, 1616096, 12144990, 12124662, 17298636, 16689780];
     const instagramTiles = igIds.map((id, i) => ({ imageId: SLOT + 'ig-' + i, image: PX(id, 600) }));
@@ -1334,7 +1623,7 @@ class Component extends DCLogic {
       border: on ? '#1C1A19' : '#D8D1CA'
     });
     const categoryChips = [{ id: 'all', name: 'Todos' }, { id: 'sale', name: 'Sale' }, ...s.categories].map(c => ({
-      name: c.name, select: () => { this.setState({ catFilter: c.id }); }, ...chipStyle(s.catFilter === c.id)
+      name: c.name, select: () => { this.setState({ catFilter: c.id }); this.replaceHash(c.id === 'all' ? '#/productos' : '#/productos/' + encodeURIComponent(c.id)); }, ...chipStyle(s.catFilter === c.id)
     }));
     const materialChips = [{ id: 'all', name: 'Todos los materiales' }, ...s.materials].map(m => ({
       name: m.name, select: () => { this.setState({ matFilter: m.id }); }, ...chipStyle(s.matFilter === m.id)
@@ -1347,21 +1636,31 @@ class Component extends DCLogic {
     if (s.sortBy === 'price_asc') catalog = [...catalog].sort((a, b) => a.price - b.price);
     else if (s.sortBy === 'price_desc') catalog = [...catalog].sort((a, b) => b.price - a.price);
     else catalog = [...catalog].sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
-    const catalogProducts = catalog.map(withDetails);
+    const catalogProducts = loading ? [] : catalog.map(p => withCard(p, 'cat'));
     const catalogTitle = s.catFilter === 'all' ? 'Todos los productos'
       : s.catFilter === 'sale' ? 'Sale' : this.categoryName(s.catFilter);
-    const saleProducts = s.products.filter(p => this.onSale(p) && !p.outOfStock).slice(0, 4).map(withDetails);
+    const saleProducts = loading ? [] : s.products.filter(p => this.onSale(p) && !p.outOfStock).slice(0, 4).map(p => withCard(p, 'sale'));
 
-    const selectedRaw = s.products.find(p => p.id === s.selectedProductId) || s.products[0] || {};
+    const foundProduct = s.products.find(p => p.id === s.selectedProductId);
+    const selectedRaw = foundProduct || {};
     const selectedProduct = withDetails(selectedRaw);
     const selMedia = productMedia(selectedRaw);
     const mediaIdx = Math.min(s.mediaIndex || 0, Math.max(0, selMedia.length - 1));
-    const activeMedia = selMedia[mediaIdx] || null;
     const selectedMedia = selMedia.map((m, i) => ({
       thumb: mediaThumb(m, 300), isVideo: m.type === 'video',
       border: i === mediaIdx ? '#1C1A19' : 'transparent',
       opacity: i === mediaIdx ? 1 : 0.6,
       select: () => this.setState({ mediaIndex: i })
+    }));
+    const galleryMain = selMedia.map((m, i) => ({
+      still: m.type === 'video' ? cldPoster(m.url, 1200) : cldImage(m.url, 1400),
+      video: m.type === 'video' ? cldVideo(m.url) : '',
+      showVideo: m.type === 'video' && i === mediaIdx,
+      opacity: i === mediaIdx ? 1 : 0,
+      pe: i === mediaIdx ? 'auto' : 'none',
+      activeFlag: i === mediaIdx ? '1' : '0',
+      alt: selectedRaw.name || '',
+      on: true
     }));
     const formMedia = ((s.form && s.form.media) || []).map((m, i) => ({
       thumb: mediaThumb(m, 300), isVideo: m.type === 'video',
@@ -1370,7 +1669,7 @@ class Component extends DCLogic {
     }));
     const relatedProducts = s.products
       .filter(p => p.categoryId === selectedRaw.categoryId && p.id !== selectedRaw.id)
-      .slice(0, 4).map(withDetails);
+      .slice(0, 4).map(p => withCard(p, 'rel'));
 
     const cartItems = s.cart.map(ci => {
       const p = s.products.find(pr => pr.id === ci.productId);
@@ -1438,7 +1737,7 @@ class Component extends DCLogic {
       faqItems,
 
       categoryChips, materialChips, sortBy: s.sortBy, onSortChange: this.onSortChange,
-      catalogProducts, catalogEmpty: catalogProducts.length === 0, catalogTitle,
+      catalogProducts, catalogEmpty: !loading && catalogProducts.length === 0, catalogTitle,
 
       selectedProduct, selectedProductInStock: !selectedRaw.outOfStock,
       selectedQty: s.selectedQty, incQty: this.incQty, decQty: this.decQty, addSelectedToCart: this.addSelectedToCart,
@@ -1463,10 +1762,11 @@ class Component extends DCLogic {
       uploadBusy: !!s.uploadStatus,
       formMedia, formHasMedia: formMedia.length > 0, formNoMedia: formMedia.length === 0,
       selectedMedia, hasManyMedia: selectedMedia.length > 1,
-      activeIsImage: !!activeMedia && activeMedia.type !== 'video',
-      activeIsVideo: !!activeMedia && activeMedia.type === 'video',
-      activeSrc: activeMedia ? (activeMedia.type === 'video' ? cldVideo(activeMedia.url) : cldImage(activeMedia.url, 1400)) : '',
-      activePoster: activeMedia && activeMedia.type === 'video' ? cldPoster(activeMedia.url, 1200) : '',
+      galleryMain, prevMedia: this.prevMedia, nextMedia: this.nextMedia,
+      onMediaTouchStart: this.onMediaTouchStart, onMediaTouchEnd: this.onMediaTouchEnd,
+      productLoading: loading, productFound: !loading && !!foundProduct, productMissing: !loading && !foundProduct,
+      skeletonCards: loading ? [{ k: 1 }, { k: 2 }, { k: 3 }, { k: 4 }] : [],
+      cartBadgeAnim: s.cartBump ? ((s.cartBump % 2 ? 'bcBumpA' : 'bcBumpB') + ' .55s cubic-bezier(.3,1.5,.5,1)') : 'none',
       yes: true,
       adminProducts: s.products
         .filter(p => !s.adminCatFilter || p.categoryId === s.adminCatFilter)
