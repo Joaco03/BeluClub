@@ -5,12 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Blu Club — Joyería de acero inoxidable en Paraná</title>
 <meta name="description" content="Anillos, collares, aros y pulseras de acero inoxidable quirúrgico. Waterproof e hipoalergénicos, para usar todos los días. Envíos en Paraná, Entre Ríos.">
-<link rel="icon" type="image/png" href="assets/logo-cuadrado.png">
+<link rel="icon" type="image/svg+xml" href="assets/logo-bc-cuadrado.svg">
+<link rel="icon" type="image/png" href="assets/favicon-180.png">
+<link rel="apple-touch-icon" href="assets/favicon-180.png">
 <meta name="theme-color" content="#1C1A19">
 <meta property="og:type" content="website">
 <meta property="og:title" content="The Blu Club">
 <meta property="og:description" content="Anillos, collares, aros y pulseras de acero inoxidable. Waterproof e hipoalergénicos, para usar todos los días.">
-<meta property="og:image" content="assets/logo-cuadrado.png">
+<meta property="og:image" content="assets/logo-bc-cuadrado.png">
 <meta name="twitter:card" content="summary">
 <script src="./support.js"></script>
 </head>
@@ -43,10 +45,10 @@
       </div>
       <div onClick="{{ goHome }}" style="cursor:pointer;display:flex;align-items:center;justify-content:center;">
         <sc-if value="{{ logoLight }}">
-          <img src="assets/logo-clarito.png" alt="The Blu Club" style="height:46px;object-fit:contain;display:block;">
+          <img src="assets/logo-bc-clarito.svg" alt="The Blu Club" style="height:36px;width:auto;display:block;">
         </sc-if>
         <sc-if value="{{ logoDark }}" hint-placeholder-val="{{ true }}">
-          <img src="assets/logo-bordo.png" alt="The Blu Club" style="height:46px;object-fit:contain;display:block;">
+          <img src="assets/logo-bc-bordo.svg" alt="The Blu Club" style="height:36px;width:auto;display:block;">
         </sc-if>
       </div>
       <div style="display:flex;align-items:center;justify-content:flex-end;gap:6px;">
@@ -436,8 +438,31 @@
         <span onClick="{{ goHome }}" style="cursor:pointer;">Inicio</span> — <span onClick="{{ goCatalogAll }}" style="cursor:pointer;">Productos</span> — {{ selectedProduct.name }}
       </div>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:60px;">
-        <div style="aspect-ratio:4/5;background:#F6F1EC;overflow:hidden;">
-          <img src="{{ selectedProduct.image }}" alt="Foto del producto" style="width:100%;height:100%;object-fit:cover;display:block;">
+        <div>
+          <div style="aspect-ratio:4/5;background:#F6F1EC;overflow:hidden;">
+            <sc-if value="{{ activeIsImage }}" hint-placeholder-val="{{ true }}">
+              <img src="{{ activeSrc }}" alt="{{ selectedProduct.name }}" style="width:100%;height:100%;object-fit:cover;display:block;">
+            </sc-if>
+            <sc-if value="{{ activeIsVideo }}">
+              <video src="{{ activeSrc }}" poster="{{ activePoster }}" controls="{{ yes }}" playsInline="{{ yes }}" preload="metadata" style="width:100%;height:100%;object-fit:contain;display:block;background:#F6F1EC;"></video>
+            </sc-if>
+          </div>
+          <sc-if value="{{ hasManyMedia }}">
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:8px;margin-top:10px;">
+              <sc-for list="{{ selectedMedia }}" as="m" hint-placeholder-count="4">
+                <div onClick="{{ m.select }}" style="cursor:pointer;position:relative;aspect-ratio:4/5;background:#F6F1EC;overflow:hidden;border:1px solid {{ m.border }};opacity:{{ m.opacity }};transition:opacity .2s;" style-hover="opacity:1;">
+                  <img src="{{ m.thumb }}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">
+                  <sc-if value="{{ m.isVideo }}">
+                    <span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;">
+                      <span style="width:26px;height:26px;background:rgba(28,26,25,0.72);display:flex;align-items:center;justify-content:center;">
+                        <svg width="10" height="12" viewBox="0 0 10 12"><path d="M0 0l10 6-10 6z" fill="#fff"></path></svg>
+                      </span>
+                    </span>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
         </div>
         <div>
           <div style="font-size:10px;letter-spacing:0.26em;text-transform:uppercase;color:#7A736E;margin-bottom:16px;">{{ selectedProduct.materialName }}</div>
@@ -518,7 +543,7 @@
           </div>
           <span onClick="{{ goHome }}" style="cursor:pointer;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;border-bottom:1px solid #1C1A19;padding-bottom:4px;">Volver al sitio</span>
         </div>
-        <p style="color:#7A736E;margin:0 0 36px;font-size:13.5px;font-weight:300;">Agregá productos, subí las fotos arrastrándolas, y creá categorías o materiales nuevos sin tocar código.</p>
+        <p style="color:#7A736E;margin:0 0 36px;font-size:13.5px;font-weight:300;">Agregá productos con sus fotos y videos, y creá categorías o materiales nuevos sin tocar código.</p>
 
         <div style="display:flex;gap:0;margin-bottom:36px;border-bottom:1px solid #E4DED8;">
           <span onClick="{{ setAdminTabProducts }}" style="cursor:pointer;padding:14px 26px;font-size:10.5px;letter-spacing:0.18em;text-transform:uppercase;border-bottom:2px solid {{ adminTabProductsLine }};color:{{ adminTabProductsColor }};">Productos</span>
@@ -573,13 +598,37 @@
                 </label>
               </div>
               <div style="margin-bottom:26px;">
-                <label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Foto</label>
-                <div style="width:190px;height:238px;overflow:hidden;background:#F6F1EC;margin-bottom:12px;">
-                  <img src="{{ form.image }}" alt="Foto del producto" style="width:100%;height:100%;object-fit:cover;display:block;">
-                </div>
-                <label style="cursor:pointer;display:inline-block;border:1px solid #D8D1CA;padding:11px 22px;font-size:10.5px;letter-spacing:0.16em;text-transform:uppercase;color:#3A3532;" style-hover="border-color:#1C1A19;">
+                <label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Fotos y videos</label>
+                <p style="font-size:12.5px;font-weight:300;color:#7A736E;margin:0 0 14px;">Podés elegir varios archivos a la vez. La principal es la que se ve en el catálogo.</p>
+                <sc-if value="{{ formHasMedia }}">
+                  <div style="display:flex;flex-wrap:wrap;gap:14px;margin-bottom:16px;">
+                    <sc-for list="{{ formMedia }}" as="m" hint-placeholder-count="3">
+                      <div style="width:132px;">
+                        <div style="position:relative;aspect-ratio:4/5;background:#F6F1EC;overflow:hidden;">
+                          <img src="{{ m.thumb }}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">
+                          <sc-if value="{{ m.isMain }}">
+                            <span style="position:absolute;left:0;top:0;background:#1C1A19;color:#fff;font-size:9px;letter-spacing:0.14em;text-transform:uppercase;padding:5px 8px;">Principal</span>
+                          </sc-if>
+                          <sc-if value="{{ m.isVideo }}">
+                            <span style="position:absolute;right:0;bottom:0;background:rgba(28,26,25,0.75);color:#fff;font-size:9px;letter-spacing:0.14em;text-transform:uppercase;padding:5px 8px;">Video</span>
+                          </sc-if>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:6px;margin-top:8px;font-size:11.5px;">
+                          <sc-if value="{{ m.notMain }}">
+                            <span onClick="{{ m.makeMain }}" style="cursor:pointer;color:#3A3532;text-decoration:underline;text-underline-offset:3px;">Hacer principal</span>
+                          </sc-if>
+                          <span onClick="{{ m.remove }}" style="cursor:pointer;color:#A6322A;margin-left:auto;">Quitar</span>
+                        </div>
+                      </div>
+                    </sc-for>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ formNoMedia }}">
+                  <div style="width:132px;aspect-ratio:4/5;background:#F6F1EC;display:flex;align-items:center;justify-content:center;text-align:center;font-size:12px;color:#9A938D;padding:14px;margin-bottom:16px;">Todavía no hay fotos</div>
+                </sc-if>
+                <label style="cursor:pointer;position:relative;display:inline-block;border:1px solid #D8D1CA;padding:11px 22px;font-size:10.5px;letter-spacing:0.16em;text-transform:uppercase;color:#3A3532;" style-hover="border-color:#1C1A19;">
                   {{ uploadLabel }}
-                  <input type="file" accept="image/*" onChange="{{ onProductImageFileChange }}" style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;">
+                  <input type="file" accept="image/*,video/*" multiple="{{ yes }}" disabled="{{ uploadBusy }}" onChange="{{ onProductMediaFilesChange }}" style="position:absolute;left:0;top:0;width:1px;height:1px;opacity:0;overflow:hidden;">
                 </label>
               </div>
               <div style="display:flex;gap:10px;flex-wrap:wrap;">
@@ -603,6 +652,15 @@
                 <option value="">Todas las categorías</option>
                 <sc-for list="{{ categories }}" as="c" hint-placeholder-count="4">
                   <option value="{{ c.id }}">{{ c.name }}</option>
+                </sc-for>
+              </select>
+            </div>
+            <div style="width:220px;">
+              <label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Material</label>
+              <select value="{{ adminMatFilter }}" onChange="{{ onAdminMatFilterChange }}" style="width:100%;padding:11px 13px;border:1px solid #D8D1CA;font-family:'Jost';font-size:14px;background:#fff;">
+                <option value="">Todos los materiales</option>
+                <sc-for list="{{ materials }}" as="m" hint-placeholder-count="2">
+                  <option value="{{ m.id }}">{{ m.name }}</option>
                 </sc-for>
               </select>
             </div>
@@ -681,7 +739,8 @@
     <footer style="background:#1C1A19;color:#DDD5CD;padding:70px 24px 34px;">
       <div style="max-width:1400px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:44px;">
         <div>
-          <img src="assets/logo-clarito.png" alt="The Blu Club" style="height:46px;object-fit:contain;margin-bottom:18px;">
+          <img src="assets/logo-bc-clarito.svg" alt="The Blu Club" style="height:40px;width:auto;display:block;margin-bottom:14px;">
+          <div style="font-family:'Cormorant Garamond',serif;font-weight:300;font-size:22px;color:#F3E6D3;margin-bottom:16px;">The Blu Club</div>
           <p style="font-size:13px;font-weight:300;line-height:1.85;color:#A79E96;max-width:280px;margin:0;">Anillos, collares, aros y pulseras de acero inoxidable. Waterproof, hipoalergénicos y hechos para acompañarte todos los días.</p>
         </div>
         <div>
@@ -747,6 +806,68 @@ const firebaseConfig = {
 // en cualquier sitio que suba archivos directo desde el navegador.
 const CLOUDINARY_CLOUD_NAME = 'sbqlvvlr';
 const CLOUDINARY_UPLOAD_PRESET = 'BluShop_product';
+
+// Las fotos de celular (sobre todo de iPhone) suelen venir en formato HEIC: el celular las muestra,
+// pero Chrome y Edge en la compu no. Por eso nunca usamos la URL original de Cloudinary: le pedimos
+// que entregue cada foto convertida al mejor formato que entienda cada navegador (f_auto),
+// comprimida (q_auto) y achicada al ancho que hace falta (w_...). Funciona también con las fotos
+// que ya estaban subidas, sin volver a cargarlas.
+function isCloudinary(url) { return typeof url === 'string' && url.indexOf('res.cloudinary.com') !== -1 && url.indexOf('/upload/') !== -1; }
+function cldImage(url, w) {
+  if (!isCloudinary(url)) return url || '';
+  return url.replace('/upload/', `/upload/f_auto,q_auto,c_limit,w_${w || 1200}/`);
+}
+// Videos: se convierten a MP4 (lo reproduce cualquier navegador, incluso si se grabó en .mov).
+function cldVideo(url, w) {
+  if (!isCloudinary(url)) return url || '';
+  return url.replace('/upload/', `/upload/q_auto,vc_auto,c_limit,w_${w || 1080}/`).replace(/\.[a-z0-9]+$/i, '.mp4');
+}
+// Primer fotograma del video como imagen (para la miniatura y las tarjetas del catálogo).
+function cldPoster(url, w) {
+  if (!isCloudinary(url)) return '';
+  return url.replace('/upload/', `/upload/so_0,q_auto,c_limit,w_${w || 900}/`).replace(/\.[a-z0-9]+$/i, '.jpg');
+}
+function mediaThumb(m, w) { return m.type === 'video' ? cldPoster(m.url, w) : cldImage(m.url, w); }
+
+// Fotos y videos de un producto. Los productos viejos tenían una sola foto en `image`.
+function productMedia(p) {
+  if (p && Array.isArray(p.media) && p.media.length) return p.media.filter(m => m && m.url);
+  return p && p.image ? [{ url: p.image, type: 'image' }] : [];
+}
+
+// El plan gratis de Cloudinary acepta fotos de hasta 10 MB y videos de hasta 100 MB.
+const MAX_PHOTO_BYTES = 10 * 1024 * 1024;
+const MAX_VIDEO_BYTES = 100 * 1024 * 1024;
+
+// Si la foto pesa más de lo permitido, la achica en el navegador antes de subirla.
+async function shrinkPhotoIfNeeded(file) {
+  if (file.size <= MAX_PHOTO_BYTES * 0.9) return file;
+  try {
+    const bmp = await createImageBitmap(file);
+    const scale = Math.min(1, 2400 / Math.max(bmp.width, bmp.height));
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.round(bmp.width * scale);
+    canvas.height = Math.round(bmp.height * scale);
+    canvas.getContext('2d').drawImage(bmp, 0, 0, canvas.width, canvas.height);
+    const blob = await new Promise(r => canvas.toBlob(r, 'image/jpeg', 0.88));
+    return blob ? new File([blob], file.name.replace(/\.[^.]+$/, '') + '.jpg', { type: 'image/jpeg' }) : file;
+  } catch (e) { return file; }
+}
+
+async function uploadToCloudinary(file) {
+  const isVideo = (file.type || '').indexOf('video/') === 0 || /\.(mov|mp4|m4v|webm|avi)$/i.test(file.name);
+  if (isVideo && file.size > MAX_VIDEO_BYTES) throw new Error('el video pesa más de 100 MB');
+  if (!isVideo) file = await shrinkPhotoIfNeeded(file);
+  if (!isVideo && file.size > MAX_PHOTO_BYTES) throw new Error('la foto pesa más de 10 MB');
+  const body = new FormData();
+  body.append('file', file);
+  body.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+  body.append('folder', 'products');
+  const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${isVideo ? 'video' : 'image'}/upload`, { method: 'POST', body });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok || !data.secure_url) throw new Error((data.error && data.error.message) || 'Cloudinary no respondió');
+  return { url: data.secure_url, type: isVideo ? 'video' : 'image' };
+}
 
 let db, auth, STORE_DOC;
 
@@ -836,12 +957,14 @@ class Component extends DCLogic {
     faqOpen: 0,
     adminTab: 'productos',
     adminCatFilter: '',
+    adminMatFilter: '',
     adminSearch: '',
     form: null,
     newCategoryName: '',
     newMaterialName: '',
     toast: '',
-    uploadingImage: false
+    uploadStatus: '',
+    mediaIndex: 0
   };
 
   static STORE_VERSION = 7;
@@ -959,7 +1082,7 @@ class Component extends DCLogic {
     });
   };
   goAdmin = () => { this.top(); this.setState({ view: 'admin', form: null, adminTab: 'productos', menuOpen: false, authOpen: false }); };
-  openProduct = (id) => { this.top(); this.setState({ view: 'product', selectedProductId: id, selectedQty: 1 }); };
+  openProduct = (id) => { this.top(); this.setState({ view: 'product', selectedProductId: id, selectedQty: 1, mediaIndex: 0 }); };
   setCatFilter = (id) => { this.top(); this.setState({ view: 'catalog', catFilter: id, matFilter: 'all', menuOpen: false }); };
 
   toggleCart = () => this.setState(s => ({ cartOpen: !s.cartOpen }));
@@ -1038,6 +1161,7 @@ class Component extends DCLogic {
   setAdminTabProducts = () => this.setState({ adminTab: 'productos' });
   setAdminTabCats = () => this.setState({ adminTab: 'categorias' });
   onAdminCatFilterChange = (e) => this.setState({ adminCatFilter: e.target.value });
+  onAdminMatFilterChange = (e) => this.setState({ adminMatFilter: e.target.value });
   onAdminSearchChange = (e) => this.setState({ adminSearch: e.target.value });
 
   openNewProductForm = () => this.setState({
@@ -1046,34 +1170,42 @@ class Component extends DCLogic {
       categoryId: (this.state.categories[0] || {}).id || '',
       materialId: (this.state.materials[0] || {}).id || '',
       description: '', featured: false, outOfStock: false,
-      imageId: 'p-new-' + Date.now(), image: ''
+      imageId: 'p-new-' + Date.now(), image: '', media: []
     }
   });
-  editProduct(p) { this.setState({ form: { ...p, price: String(p.price), salePrice: p.salePrice ? String(p.salePrice) : '' } }); }
+  editProduct(p) { this.setState({ form: { ...p, media: productMedia(p), price: String(p.price), salePrice: p.salePrice ? String(p.salePrice) : '' } }); }
   cancelForm = () => this.setState({ form: null });
 
-  // Sube la foto elegida a Cloudinary (subida "unsigned", sin necesitar servidor propio)
-  // y guarda la URL resultante en el formulario.
-  onProductImageFileChange = async (e) => {
-    const file = e.target.files && e.target.files[0];
-    e.target.value = '';
-    if (!file || !this.state.form) return;
-    this.setState({ uploadingImage: true });
-    try {
-      const body = new FormData();
-      body.append('file', file);
-      body.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
-      body.append('folder', 'products');
-      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, { method: 'POST', body });
-      const data = await res.json();
-      if (!res.ok || !data.secure_url) throw new Error((data.error && data.error.message) || 'Error de Cloudinary');
-      this.setState(s => ({ form: s.form ? { ...s.form, image: data.secure_url } : s.form, uploadingImage: false }));
-    } catch (err) {
-      console.error('Error subiendo la foto:', err);
-      this.setState({ uploadingImage: false });
-      alert('No se pudo subir la foto. Probá de nuevo.');
+  // Sube una o varias fotos/videos a Cloudinary, de a uno, y los va sumando al producto.
+  onProductMediaFilesChange = async (e) => {
+    const files = Array.from((e.target && e.target.files) || []);
+    if (e.target) e.target.value = '';
+    if (!files.length || !this.state.form || this.state.uploadStatus) return;
+    const failed = [];
+    for (let i = 0; i < files.length; i++) {
+      this.setState({ uploadStatus: files.length > 1 ? `Subiendo ${i + 1} de ${files.length}…` : 'Subiendo…' });
+      try {
+        const item = await uploadToCloudinary(files[i]);
+        this.setState(s => ({ form: s.form ? { ...s.form, media: [...(s.form.media || []), item] } : s.form }));
+      } catch (err) {
+        console.error('Error subiendo', files[i].name, err);
+        failed.push(`${files[i].name}: ${err.message}`);
+      }
     }
+    this.setState({ uploadStatus: '' });
+    if (failed.length) alert('Estos archivos no se pudieron subir:\n\n' + failed.join('\n'));
   };
+  removeFormMedia(i) {
+    this.setState(s => ({ form: { ...s.form, media: (s.form.media || []).filter((_, j) => j !== i) } }));
+  }
+  makeFormMediaMain(i) {
+    this.setState(s => {
+      const list = [...(s.form.media || [])];
+      const [item] = list.splice(i, 1);
+      return { form: { ...s.form, media: [item, ...list] } };
+    });
+  }
+
 
   onFormNameChange = (e) => this.setState(s => ({ form: { ...s.form, name: e.target.value } }));
   onFormPriceChange = (e) => this.setState(s => ({ form: { ...s.form, price: e.target.value } }));
@@ -1090,12 +1222,18 @@ class Component extends DCLogic {
     const priceNum = parseFloat(f.price) || 0;
     const saleNum = parseFloat(f.salePrice) || 0;
     if (saleNum && saleNum >= priceNum) { alert('El precio de oferta tiene que ser menor al precio normal.'); return; }
+    if (this.state.uploadStatus) { alert('Esperá a que terminen de subirse las fotos y videos.'); return; }
+    const media = (f.media || []).filter(m => m && m.url).map(m => ({ url: m.url, type: m.type === 'video' ? 'video' : 'image' }));
+    // `image` queda como la foto principal, por compatibilidad con los productos cargados antes.
+    const firstPhoto = media.find(m => m.type === 'image');
+    const image = firstPhoto ? firstPhoto.url : (media[0] ? cldPoster(media[0].url) : '');
+    const clean = { ...f, media, image, price: priceNum, salePrice: saleNum };
     this.setState(s => {
       let products;
-      if (f.id) products = s.products.map(p => p.id === f.id ? { ...f, price: priceNum, salePrice: saleNum } : p);
+      if (f.id) products = s.products.map(p => p.id === f.id ? clean : p);
       else {
         const id = 'prod-' + Date.now();
-        products = [...s.products, { ...f, id, price: priceNum, salePrice: saleNum, imageId: f.imageId || ('p-' + id) }];
+        products = [...s.products, { ...clean, id, imageId: f.imageId || ('p-' + id) }];
       }
       return { products, form: null };
     }, () => { this.persist(); this.showToast('Producto guardado'); });
@@ -1140,8 +1278,11 @@ class Component extends DCLogic {
     const transparentHeader = s.view === 'home' && !s.scrolled;
 
     const SLOT = 'v6-';
-    const withDetails = (p) => ({
+    const withDetails = (p) => {
+      const media = productMedia(p);
+      return {
       ...p,
+      image: media[0] ? mediaThumb(media[0], 900) : '',
       imageId: SLOT + p.imageId,
       priceFormatted: this.fmt(this.effPrice(p)),
       isOnSale: this.onSale(p),
@@ -1156,7 +1297,8 @@ class Component extends DCLogic {
       toggleOutOfStock: () => this.toggleOutOfStock(p.id),
       edit: () => this.editProduct(p),
       remove: () => this.deleteProduct(p.id)
-    });
+      };
+    };
 
     const heroData = [
       { kicker: 'The Blu Club', headline: 'Tu esencial de todos los días', sub: 'Waterproof, hipoalergénicos y diseñados para acompañarte todos los días.', imageId: 'hero-1', image: PX(13530465, 1800) },
@@ -1212,6 +1354,20 @@ class Component extends DCLogic {
 
     const selectedRaw = s.products.find(p => p.id === s.selectedProductId) || s.products[0] || {};
     const selectedProduct = withDetails(selectedRaw);
+    const selMedia = productMedia(selectedRaw);
+    const mediaIdx = Math.min(s.mediaIndex || 0, Math.max(0, selMedia.length - 1));
+    const activeMedia = selMedia[mediaIdx] || null;
+    const selectedMedia = selMedia.map((m, i) => ({
+      thumb: mediaThumb(m, 300), isVideo: m.type === 'video',
+      border: i === mediaIdx ? '#1C1A19' : 'transparent',
+      opacity: i === mediaIdx ? 1 : 0.6,
+      select: () => this.setState({ mediaIndex: i })
+    }));
+    const formMedia = ((s.form && s.form.media) || []).map((m, i) => ({
+      thumb: mediaThumb(m, 300), isVideo: m.type === 'video',
+      isMain: i === 0, notMain: i !== 0,
+      makeMain: () => this.makeFormMediaMain(i), remove: () => this.removeFormMedia(i)
+    }));
     const relatedProducts = s.products
       .filter(p => p.categoryId === selectedRaw.categoryId && p.id !== selectedRaw.id)
       .slice(0, 4).map(withDetails);
@@ -1221,7 +1377,7 @@ class Component extends DCLogic {
       if (!p) return null;
       return {
         productId: p.id, name: p.name, materialName: this.materialName(p.materialId), qty: ci.qty,
-        imageId: SLOT + p.imageId, image: p.image || '',
+        imageId: SLOT + p.imageId, image: productMedia(p)[0] ? mediaThumb(productMedia(p)[0], 300) : '',
           lineTotalFormatted: this.fmt(this.effPrice(p) * ci.qty),
         inc: () => this.incCartItem(p.id), dec: () => this.decCartItem(p.id), remove: () => this.removeCartItem(p.id)
       };
@@ -1302,10 +1458,19 @@ class Component extends DCLogic {
       onFormCategoryChange: this.onFormCategoryChange, onFormMaterialChange: this.onFormMaterialChange,
       onFormDescriptionChange: this.onFormDescriptionChange, onFormSalePriceChange: this.onFormSalePriceChange,
       onFormFeaturedChange: this.onFormFeaturedChange, onFormOutOfStockChange: this.onFormOutOfStockChange,
-      onProductImageFileChange: this.onProductImageFileChange,
-      uploadLabel: s.uploadingImage ? 'Subiendo…' : 'Subir foto',
+      onProductMediaFilesChange: this.onProductMediaFilesChange,
+      uploadLabel: s.uploadStatus || 'Agregar fotos o videos',
+      uploadBusy: !!s.uploadStatus,
+      formMedia, formHasMedia: formMedia.length > 0, formNoMedia: formMedia.length === 0,
+      selectedMedia, hasManyMedia: selectedMedia.length > 1,
+      activeIsImage: !!activeMedia && activeMedia.type !== 'video',
+      activeIsVideo: !!activeMedia && activeMedia.type === 'video',
+      activeSrc: activeMedia ? (activeMedia.type === 'video' ? cldVideo(activeMedia.url) : cldImage(activeMedia.url, 1400)) : '',
+      activePoster: activeMedia && activeMedia.type === 'video' ? cldPoster(activeMedia.url, 1200) : '',
+      yes: true,
       adminProducts: s.products
         .filter(p => !s.adminCatFilter || p.categoryId === s.adminCatFilter)
+        .filter(p => !s.adminMatFilter || p.materialId === s.adminMatFilter)
         .filter(p => !s.adminSearch.trim() || p.name.toLowerCase().includes(s.adminSearch.trim().toLowerCase()))
         .slice()
         .sort((a, b) => {
@@ -1314,8 +1479,10 @@ class Component extends DCLogic {
         })
         .map(withDetails),
       adminCatFilter: s.adminCatFilter,
+      adminMatFilter: s.adminMatFilter,
       adminSearch: s.adminSearch,
       onAdminCatFilterChange: this.onAdminCatFilterChange,
+      onAdminMatFilterChange: this.onAdminMatFilterChange,
       onAdminSearchChange: this.onAdminSearchChange,
       categories: s.categories.map(c => ({ ...c, remove: () => this.removeCategory(c.id) })),
       materials: s.materials.map(m => ({ ...m, remove: () => this.removeMaterial(m.id) })),
