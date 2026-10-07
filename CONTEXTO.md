@@ -9,8 +9,8 @@ Negocio real en Paraná, Entre Ríos. Dueña: Belén.
 index.html        ← el sitio entero (Design Component: template + lógica en un solo archivo)
 support.js        ← runtime que hace funcionar el archivo. No editar.
 assets/
-  logo-bc-bordo.svg     ← monograma BC bordó (header con fondo blanco)
-  logo-bc-clarito.svg   ← monograma BC claro (header sobre la portada, y footer)
+  logo-bc-bordo.svg     ← monograma BC bordó (el que se usa siempre: barra de arriba y pie)
+  logo-bc-clarito.svg   ← monograma BC claro (sin usar en el sitio; queda para fondos oscuros en redes)
   logo-bc-negro.svg     ← monograma BC negro (para impresos o fondos claros)
   logo-bc-cuadrado.svg  ← monograma sobre fondo crema, cuadrado (favicon)
   logo-bc-cuadrado.png  ← lo mismo en PNG 1024px (vista previa al compartir el link, foto de perfil)
@@ -25,30 +25,55 @@ Se abre haciendo doble clic en `index.html` para probar el diseño, pero **el ca
 
 El sitio se conecta a un proyecto de Firebase real (no es un mock). Se usan tres productos, todos del plan gratuito Spark:
 
-- **Firestore** (base de datos): guarda productos, categorías y materiales en un único documento `store/main`, compartido por todos los visitantes — así lo que carga Belén se ve al instante desde cualquier celular, en tiempo real (vía `onSnapshot`).
+- **Firestore** (base de datos), con tres lugares:
+  - `store/main`: productos, categorías, materiales y la estética del sitio (`settings`). Compartido por todos los visitantes, así lo que carga Belén se ve al instante desde cualquier celular (vía `onSnapshot`).
+  - `orders`: un documento por cada pedido enviado por WhatsApp desde la web.
+  - `stats_daily/<AAAA-MM-DD>`: cuántas veces se abrió y se agregó al carrito cada producto, por día (hora argentina).
 - **Authentication**: maneja el login de verdad (correo/contraseña). Reemplaza por completo el sistema casero que se armó antes (ya no existe ningún hash propio en el código — Google se encarga de guardar las contraseñas de forma segura).
 - **Cloudinary** (no es un producto de Firebase): guarda las fotos que la dueña sube desde el panel de admin. Se usa en vez de Firebase Storage porque, desde febrero de 2026, Storage exige tener una tarjeta de banco vinculada (plan Blaze) — Cloudinary no pide tarjeta y tiene un plan gratis de sobra para esta tienda (25GB/mes entre almacenamiento y tráfico).
 
 Las claves (`firebaseConfig` en `index.html`, líneas cerca del inicio del `<script>`) **no son secretas** — Firebase está diseñado para que vayan en el código público del sitio. La seguridad real está en las **reglas de seguridad** configuradas en la consola de Firebase (Firestore → Reglas, y Storage → Reglas):
 
+### Reglas de Firestore
+
+Se pegan en Firebase → Firestore Database → pestaña **Reglas** → **Publicar**. Reemplazan a las anteriores (incluyen lo de antes más pedidos y estadísticas):
+
 ```
-// Firestore
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    function esDuena() {
+      return request.auth != null && request.auth.token.email == 'belengrimaldidb1@gmail.com';
+    }
+    // Catálogo y estética: todos leen, solo la dueña escribe.
     match /store/main {
       allow read: if true;
-      allow write: if request.auth != null && request.auth.token.email == 'belengrimaldidb1@gmail.com';
+      allow write: if esDuena();
+    }
+    // Pedidos: cualquiera crea uno al tocar "Enviar pedido"; solo la dueña los ve y los cambia.
+    match /orders/{pedido} {
+      allow create: if request.resource.data.keys().hasOnly(['code', 'items', 'total', 'status', 'source', 'customer', 'createdAt'])
+        && request.resource.data.status == 'pendiente'
+        && request.resource.data.code is string && request.resource.data.code.size() <= 12
+        && request.resource.data.items is list && request.resource.data.items.size() > 0 && request.resource.data.items.size() <= 60
+        && request.resource.data.total is number
+        && request.resource.data.createdAt == request.time;
+      allow read, update, delete: if esDuena();
+    }
+    // Visitas y agregados al carrito por día: cualquiera suma, solo la dueña los ve.
+    match /stats_daily/{dia} {
+      allow read, delete: if esDuena();
+      allow create, update: if dia.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+        && request.resource.data.day == dia
+        && request.resource.data.keys().hasOnly(['day', 'views', 'carts']);
     }
   }
 }
 ```
 
-```
-// Storage — SIN USAR. Ver más abajo por qué se pasó a Cloudinary en vez de Firebase Storage.
-```
+Con esto, cualquiera puede *leer* el catálogo (para que el sitio funcione) y *crear* pedidos o sumar visitas, pero solo la cuenta de Belén puede cambiar el catálogo y ver pedidos y estadísticas. Se controla del lado del servidor, no solo en el código del navegador. Si las reglas no están pegadas, el sitio sigue funcionando, pero los pedidos y visitas no se guardan y la pestaña Ventas muestra un aviso.
 
-Con esto: cualquiera puede *leer* el catálogo (para que el sitio funcione para las clientas), pero sólo la cuenta de Belén puede *escribir* — reforzado del lado del servidor, no sólo en el código del navegador.
+Firebase Storage no se usa (ver abajo).
 
 ### Por qué las fotos van a Cloudinary y no a Firebase Storage
 Desde el 3 de febrero de 2026, Google exige tener una tarjeta de banco vinculada (plan de pago por uso "Blaze") para usar Firebase Storage, aunque el uso real sea $0. Belén no tiene una tarjeta de banco (sólo prepagas, que Google no acepta), así que las fotos de producto se suben a **Cloudinary** en cambio — un servicio aparte, gratis hasta 25GB/mes, sin pedir tarjeta nunca.
@@ -75,7 +100,7 @@ La primera vez que Belén entra con su cuenta admin, el sitio detecta que el cat
 ## Qué puede hacer cada uno
 
 **Visitante / clienta**
-- Portada con carrusel automático de 3 fotos (rota cada 7s, con puntos para cambiar a mano)
+- Portada con carrusel automático de hasta 5 fotos o videos (rota cada 7s, con puntos para cambiar a mano)
 - Banda de garantías: waterproof, acero inoxidable, hipoalergénico, uso diario
 - Grilla de categorías que filtra al hacer clic
 - Sección de destacados
@@ -84,14 +109,14 @@ La primera vez que Belén entra con su cuenta admin, el sitio detecta que el cat
 - Menú lateral (3 rayitas): todos los productos, Sale, categorías, FAQ, cuenta
 - Logo centrado = volver al inicio
 - Página de productos: filtro por categoría (incluye Sale), por material, orden por precio o destacados, botón "Agregar" rápido
-- Página de producto: foto grande, precio (tachado + rebajado si está en oferta), descripción, cantidad, agregar al carrito, consultar por WhatsApp, datos de envío/cambios, relacionados
-- Carrito lateral: sumar/restar/quitar, subtotal, botón que arma el pedido completo en WhatsApp
+- Página de producto: foto grande, precio (tachado + rebajado si está en oferta), selector de color si el producto viene en varios, descripción, cantidad, agregar al carrito, consultar por WhatsApp, datos de envío/cambios, relacionados
+- Carrito lateral: sumar/restar/quitar, subtotal, botón que arma el pedido completo en WhatsApp (con el color de cada producto y un código de pedido)
 - Registro e inicio de sesión de clientas (Firebase Authentication)
 - Etiquetas de "Agotado", "Destacado" y porcentaje de descuento
 
 **Dueña (con su cuenta admin)**
-- Aparece "Administrar tienda" en el menú lateral y en su cuenta; nadie más lo ve
-- Agregar producto: nombre, precio, precio de oferta (opcional), categoría, material, descripción, foto (botón "Subir foto", sube a Firebase Storage)
+- Aparece "Administrar tienda" en el menú lateral y en su cuenta; nadie más lo ve. El panel tiene cuatro pestañas: **Ventas** (se abre primero), **Productos**, **Estética** y **Categorías y materiales**
+- Agregar producto: nombre, precio, precio de oferta (opcional), categoría, material, descripción, fotos y videos (suben a Cloudinary), y otros colores con su propio precio, fotos y stock
 - Editar y eliminar productos
 - Marcar/desmarcar destacado o agotado con un clic
 - Crear y eliminar categorías nuevas (ej. tobilleras) sin tocar código
@@ -109,6 +134,41 @@ La primera vez que Belén entra con su cuenta admin, el sitio detecta que el cat
 
 Cada producto tiene `price` y `salePrice`. Si `salePrice` existe y es menor a `price`, el producto se considera en oferta: entra en la sección Sale, en el filtro Sale, muestra el precio viejo tachado y una etiqueta con el % calculado. El carrito y el mensaje de WhatsApp usan siempre el precio con descuento.
 Métodos: `onSale(p)` y `effPrice(p)`.
+
+## Colores por producto (dorado / plateado)
+
+Un mismo producto puede venir en varios colores. El **color 1** son los datos propios del producto (`materialId`, `price`, `salePrice`, `media`, `outOfStock`). Los demás van en `variants`: `[{ materialId, price, salePrice, media, image, outOfStock }]`. Cada color usa un material distinto (no se repiten).
+
+- Funciones: `productColors(p)` devuelve la lista completa de colores; `pickColor(p, key)` el elegido (o el primero con stock); `cartColor(p, key)` el de una línea del carrito. La clave de cada color es su `materialId`.
+- Si un color no tiene fotos propias, muestra las del color 1.
+- **Tarjetas:** si los colores tienen precios distintos dice "Desde $…"; el botón dice "Elegir color" y lleva a la página del producto. El texto de material muestra todos los colores. Al pasar el mouse se ven las fotos del color 1 y la principal de cada otro color.
+- **Filtros:** el filtro por material encuentra el producto si cualquiera de sus colores es de ese material. Sale incluye productos con algún color en oferta.
+- **Página de producto:** botones de color con una muestra (dorada, plateada, rosé o negra, deducida del nombre del material). Al elegir, cambian precio, fotos y stock, y la dirección pasa a `#/producto/<id>/<color>` (sirve para compartir un color puntual).
+- **Carrito:** cada línea es `{ productId, color, qty }`. El mismo producto en dos colores son dos líneas. Los carritos viejos sin color se toman como color 1.
+- **Panel:** el casillero "Agotado" de la lista marca o desmarca todos los colores juntos; para agotar un color solo, se edita el producto. No deja borrar un material que se use en cualquier color.
+
+Para unir dos productos que hoy están separados (ej. "Anillo Amore" dorado y plateado): editar uno, agregar el otro color con su precio y fotos, guardar, y borrar el producto que sobra.
+
+## Panel de ventas
+
+- **Pedidos:** al tocar "Enviar pedido por WhatsApp", el sitio guarda el pedido en `orders` con un código (ej. `BC-7K2Q`) que también va en el mensaje de WhatsApp. Si la clienta vuelve a tocar el botón sin cambiar el carrito, no se duplica; si cambia el carrito, el próximo pedido lleva un código nuevo (`checkoutCode`, guardado en `blublub_checkout_v1`).
+- **Estados:** Sin confirmar (`pendiente`), Vendido, Entregado, Cancelado. Solo Vendido y Entregado cuentan como ventas e ingresos. La pestaña muestra un numerito con los pedidos sin confirmar.
+- **Estadísticas:** cada producto abierto suma una vista (una por visita, para no inflar), y cada "Agregar" suma uno al carrito, en `stats_daily`. Las visitas de la dueña no se cuentan.
+- **Qué muestra:** período (7, 30, 90 días o todo), resumen (ingresos, pedidos recibidos, ticket promedio, visitas), gráfico de ingresos o pedidos por día/semana/mes, rankings (más vendidos, más pedidos, más vistos, más agregados al carrito), colores más pedidos y la lista de pedidos con filtro por estado.
+- Los pedidos se leen en vivo (`startAdminData()` al entrar al panel, `stopAdminData()` al salir).
+
+## Estética editable
+
+En la pestaña **Estética** del panel la dueña cambia, sin tocar código:
+- **Portada:** hasta 5 fotos o videos, cada uno con texto chico, título y bajada (si un texto queda vacío, no se muestra); se pueden reordenar y quitar.
+- **Fotos de categorías** (las 4 primeras se ven en el inicio), **bloque de presentación** (foto o video + textos) y las **6 fotos de Instagram**.
+- **Tipografía:** 5 combinaciones (`FONT_PAIRS`): Clásica (Cormorant Garamond + Jost), Editorial (Playfair Display + Manrope), Moderna (Bodoni Moda + Figtree), Suave (Fraunces + DM Sans) y Minimal (Marcellus + Nunito Sans). Cada una tiene un ajuste de tamaño (`font-size-adjust`, medido sobre cada fuente) para que se vea del mismo tamaño que la original.
+- **Color de detalles:** precios, botones al pasar el mouse y detalles (`--bc-accent`). 7 opciones o uno a elección. El logo no cambia: siempre bordó.
+- **Barra de arriba:** blanca siempre (por defecto) o transparente sobre la portada.
+
+Se edita un borrador (`lookDraft`): letra y color se ven enseguida en el panel, y el sitio cambia para todas recién al tocar **Guardar cambios** (se guarda en `store/main` → `settings`). Si se sale del panel sin guardar, el borrador queda y el navegador avisa antes de cerrar. La estética guardada también se recuerda en el navegador (`blublub_look_v1`) para que al volver la página aparezca directo con la letra y el color elegidos.
+
+Técnicamente, tipografía y color son variables CSS (`--bc-title`, `--bc-body`, `--bc-accent`, `--bc-title-adjust`, `--bc-body-adjust`) que aplica `applyLook()`. Las fuentes que no son la clásica se cargan de Google Fonts solo cuando se eligen.
 
 ## Fotos y videos de productos
 
@@ -139,12 +199,12 @@ Los productos de ejemplo usan placeholders de Pexels (función `PX(id, ancho)`).
 
 Inspirado en caitlynminimalist.com: minimalista, editorial, **todo recto — cero esquinas redondeadas**.
 
-- Títulos: Cormorant Garamond (serif, peso 300)
-- Texto e interfaz: Jost (sans, 300/400/500)
+- Títulos: Cormorant Garamond (serif, peso 300) por defecto; se puede cambiar desde Estética
+- Texto e interfaz: Jost (sans, 300/400/500) por defecto; se puede cambiar desde Estética
 - Mayúsculas chicas con mucho espaciado (`letter-spacing: 0.2em`) para etiquetas y botones
-- Negro `#1C1A19` · Bordó `#7C2620` · Rojo oferta `#A6322A` · Beige `#F6F1EC` · Dorado `#C7A98C`
-- Header transparente sobre el hero, se vuelve blanco al scrollear (estado `scrolled`)
-- El logo cambia entre claro y oscuro según eso
+- Negro `#1C1A19` · Bordó `#7C2620` (color de detalles por defecto, editable) · Rojo oferta `#A6322A` · Beige `#F6F1EC` · Dorado `#C7A98C`
+- Barra de arriba blanca por defecto; si en Estética se elige "transparente", es transparente sobre la portada y se vuelve blanca al scrollear (estado `scrolled`)
+- Logo siempre en bordó, en la barra de arriba y en el pie. El pie es claro (`#F4EEE6`) para que el logo bordó se lea
 - Logo: monograma "BC" vectorizado (color `#5F291E`, sacado de la imagen original). En el footer va el monograma con "The Blu Club" escrito abajo. Se vectorizó desde una imagen de 1024px: sirve para web, stickers y tarjetas; para impresiones muy grandes conviene redibujarlo.
 
 ## Pendientes / decisiones tomadas
@@ -156,11 +216,12 @@ Inspirado en caitlynminimalist.com: minimalista, editorial, **todo recto — cer
 - Cambios: 30 días.
 - Moneda: pesos argentinos.
 - **SEO / metadata**: resuelto — `index.html` tiene `<title>`, meta description, favicon (`logo-cuadrado.png`) y etiquetas Open Graph. Cuando tengan el dominio definitivo, conviene cambiar las URLs relativas de `og:image` por la URL absoluta.
-- **Repo público en GitHub**: `index.html`, `support.js` y `assets/` pueden ser públicos sin problema — no hay ninguna clave secreta ni contraseña en el código. Este archivo (`CONTEXTO.md`) sigue afuera del repo (ver `.gitignore`) porque tiene notas internas del negocio, no porque tenga datos sensibles.
+- **Repo público en GitHub** (`Joaco03/BeluClub`): `index.html`, `support.js` y `assets/` pueden ser públicos sin problema — no hay ninguna clave secreta ni contraseña en el código. Este archivo (`CONTEXTO.md`) está en el `.gitignore`, pero eso solo funciona al subir con git o GitHub Desktop: si se sube a mano desde la web de GitHub, se publica igual. No tiene datos sensibles, solo notas internas.
+- **Cómo se suben los cambios:** con GitHub Desktop, sobre la carpeta clonada del repo. Se reemplazan los archivos, se escribe un resumen, **Commit to main** y **Push origin**. Si alguna vez se sube algo a mano desde la web, antes de seguir hay que tocar **Pull origin**.
 - **Plan gratuito de Firebase (Spark)**: alcanza de sobra para el volumen de esta tienda. Si en algún momento crece mucho el tráfico, hay que revisar los límites de lecturas/escrituras de Firestore y el almacenamiento de Storage.
 
 ## Notas técnicas
 
 Es un Design Component: `<x-dc>` con el template, y abajo un `<script>` con `class Component extends DCLogic`. El template usa `{{ }}` solo para valores (nada de expresiones), `<sc-for>` para listas y `<sc-if>` para condicionales. Todos los estilos son inline — no hay hojas de estilo ni clases CSS. La lógica va en `renderVals()`, que devuelve todo lo que el template consume por nombre.
 
-Los SDK de Firebase se cargan a mano con una función `loadScript()` al principio del `<script>` (en vez de tags `<script>` dentro de `<helmet>`), para garantizar que `firebase-app` termine de cargar antes que los módulos que dependen de él (Firestore, Auth, Storage). La promesa `firebaseReady` se espera antes de cualquier operación que toque Firebase.
+Los SDK de Firebase se cargan a mano con una función `loadScript()` al principio del `<script>` (en vez de tags `<script>` dentro de `<helmet>`), para garantizar que `firebase-app` termine de cargar antes que los módulos que dependen de él (Firestore y Auth). La promesa `firebaseReady` se espera antes de cualquier operación que toque Firebase.
