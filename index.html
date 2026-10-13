@@ -199,7 +199,7 @@
 
   <!-- TOAST -->
   <sc-if value="{{ toast }}">
-    <div style="position:fixed;bottom:26px;left:50%;transform:translateX(-50%);background:#1C1A19;color:#fff;padding:13px 26px;font-size:11.5px;letter-spacing:0.16em;text-transform:uppercase;z-index:70;">{{ toast }}</div>
+    <div role="status" style="position:fixed;bottom:26px;left:50%;transform:translateX(-50%);background:#1C1A19;color:#fff;padding:13px 26px;font-size:11.5px;letter-spacing:0.16em;text-transform:uppercase;z-index:70;width:max-content;max-width:calc(100vw - 32px);text-align:center;line-height:1.6;">{{ toast }}</div>
   </sc-if>
 
   <!-- ============ HOME ============ -->
@@ -309,6 +309,9 @@
                 <sc-if value="{{ p.lastUnit }}">
                   <div style="position:absolute;top:0;left:0;background:#fff;color:var(--bc-accent);box-shadow:inset 0 0 0 1px var(--bc-accent);font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;padding:6px 12px;pointer-events:none;">Última unidad</div>
                 </sc-if>
+                <sc-if value="{{ p.canEdit }}">
+                  <span role="button" tabIndex="0" aria-label="Editar {{ p.name }}" title="Editar producto" onClick="{{ p.editHere }}" onKeyDown="{{ p.editKey }}" data-edit-chip="1" style="position:absolute;right:8px;bottom:8px;z-index:3;display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.94);color:#1C1A19;font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;padding:7px 10px;box-shadow:0 1px 6px rgba(28,26,25,0.18);cursor:pointer;transition:background .2s ease,color .2s ease;" style-hover="background:#1C1A19;color:#fff;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path><path d="M13.5 6.5l4 4" stroke="currentColor" stroke-width="1.6"></path></svg>Editar</span>
+                </sc-if>
                 <sc-if value="{{ p.outOfStock }}">
                   <div style="position:absolute;top:0;left:0;background:#1C1A19;color:#fff;font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;padding:6px 12px;">Agotado</div>
                 </sc-if>
@@ -361,6 +364,9 @@
                 </sc-if>
                 <sc-if value="{{ p.lastUnit }}">
                   <div style="position:absolute;bottom:0;left:0;background:#fff;color:var(--bc-accent);box-shadow:inset 0 0 0 1px var(--bc-accent);font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;padding:6px 12px;pointer-events:none;">Última unidad</div>
+                </sc-if>
+                <sc-if value="{{ p.canEdit }}">
+                  <span role="button" tabIndex="0" aria-label="Editar {{ p.name }}" title="Editar producto" onClick="{{ p.editHere }}" onKeyDown="{{ p.editKey }}" data-edit-chip="1" style="position:absolute;right:8px;bottom:8px;z-index:3;display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.94);color:#1C1A19;font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;padding:7px 10px;box-shadow:0 1px 6px rgba(28,26,25,0.18);cursor:pointer;transition:background .2s ease,color .2s ease;" style-hover="background:#1C1A19;color:#fff;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path><path d="M13.5 6.5l4 4" stroke="currentColor" stroke-width="1.6"></path></svg>Editar</span>
                 </sc-if>
                     <div style="position:absolute;top:0;left:0;background:#A6322A;color:#fff;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;padding:7px 13px;">{{ p.discountLabel }}</div>
                   </div>
@@ -494,6 +500,9 @@
                 <sc-if value="{{ p.lastUnit }}">
                   <div style="position:absolute;top:0;left:0;background:#fff;color:var(--bc-accent);box-shadow:inset 0 0 0 1px var(--bc-accent);font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;padding:6px 12px;pointer-events:none;">Última unidad</div>
                 </sc-if>
+                <sc-if value="{{ p.canEdit }}">
+                  <span role="button" tabIndex="0" aria-label="Editar {{ p.name }}" title="Editar producto" onClick="{{ p.editHere }}" onKeyDown="{{ p.editKey }}" data-edit-chip="1" style="position:absolute;right:8px;bottom:8px;z-index:3;display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.94);color:#1C1A19;font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;padding:7px 10px;box-shadow:0 1px 6px rgba(28,26,25,0.18);cursor:pointer;transition:background .2s ease,color .2s ease;" style-hover="background:#1C1A19;color:#fff;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path><path d="M13.5 6.5l4 4" stroke="currentColor" stroke-width="1.6"></path></svg>Editar</span>
+                </sc-if>
               <sc-if value="{{ p.outOfStock }}">
                 <div style="position:absolute;top:0;left:0;background:#1C1A19;color:#fff;font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;padding:6px 12px;">Agotado</div>
               </sc-if>
@@ -584,6 +593,12 @@
           </sc-if>
         </div>
         <div style="position:sticky;top:112px;align-self:start;">
+          <sc-if value="{{ isAdminUser }}">
+            <div data-admin-box="1" style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border:1px dashed #CFC6BE;background:#FBF8F5;padding:12px 14px;margin-bottom:22px;">
+              <div style="font-size:12px;line-height:1.6;color:#5B554F;min-width:0;"><span style="font-size:9.5px;letter-spacing:0.18em;text-transform:uppercase;color:#9A938D;display:block;">Solo lo ves vos</span>{{ adminProductInfo }}</div>
+              <span role="button" tabIndex="0" onClick="{{ editSelectedProduct }}" onKeyDown="{{ editSelectedKey }}" style="cursor:pointer;display:inline-flex;align-items:center;gap:7px;background:#1C1A19;color:#fff;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;padding:10px 16px;white-space:nowrap;" style-hover="background:var(--bc-accent);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path><path d="M13.5 6.5l4 4" stroke="currentColor" stroke-width="1.6"></path></svg>Editar producto</span>
+            </div>
+          </sc-if>
           <div style="font-size:10px;letter-spacing:0.26em;text-transform:uppercase;color:#7A736E;margin-bottom:16px;">{{ selectedProduct.materialName }}</div>
           <h1 style="font-family:var(--bc-title);font-size-adjust:var(--bc-title-adjust);font-weight:300;font-size:46px;margin:0 0 14px;line-height:1.08;">{{ selectedProduct.name }}</h1>
           <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:26px;flex-wrap:wrap;">
@@ -660,6 +675,9 @@
                 <sc-if value="{{ p.lastUnit }}">
                   <div style="position:absolute;top:0;left:0;background:#fff;color:var(--bc-accent);box-shadow:inset 0 0 0 1px var(--bc-accent);font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;padding:6px 12px;pointer-events:none;">Última unidad</div>
                 </sc-if>
+                <sc-if value="{{ p.canEdit }}">
+                  <span role="button" tabIndex="0" aria-label="Editar {{ p.name }}" title="Editar producto" onClick="{{ p.editHere }}" onKeyDown="{{ p.editKey }}" data-edit-chip="1" style="position:absolute;right:8px;bottom:8px;z-index:3;display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.94);color:#1C1A19;font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;padding:7px 10px;box-shadow:0 1px 6px rgba(28,26,25,0.18);cursor:pointer;transition:background .2s ease,color .2s ease;" style-hover="background:#1C1A19;color:#fff;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path><path d="M13.5 6.5l4 4" stroke="currentColor" stroke-width="1.6"></path></svg>Editar</span>
+                </sc-if>
                 </div>
                 <div style="padding-top:14px;text-align:center;font-size:14px;">{{ p.name }}</div>
                 <div style="display:flex;align-items:baseline;justify-content:center;gap:8px;margin-top:4px;">
@@ -686,6 +704,10 @@
           <p style="color:#5B554F;font-size:14px;font-weight:300;line-height:1.8;margin:0 0 26px;">Iniciá sesión con tu cuenta de administradora para gestionar la tienda.</p>
           <div onClick="{{ openAccount }}" style="cursor:pointer;background:#1C1A19;color:#fff;padding:15px;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;">Iniciar sesión</div>
         </div>
+      </sc-if>
+
+      <sc-if value="{{ adminCheckingView }}">
+        <div role="status" style="max-width:440px;margin:60px auto;text-align:center;font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;animation:bcPulse 1.6s ease-in-out infinite;">Verificando acceso…</div>
       </sc-if>
 
       <sc-if value="{{ adminAllowed }}">
@@ -841,6 +863,7 @@
                       <div style="font-size:12px;color:#7A736E;margin-top:4px;">{{ o.date }}</div>
                       <div style="font-size:12px;color:#7A736E;margin-top:2px;">{{ o.who }}</div>
                       <sc-if value="{{ o.hasStockNote }}"><div style="font-size:11.5px;color:#4E7B4F;margin-top:6px;">Descontado del stock</div></sc-if>
+                      <sc-if value="{{ o.hasCheck }}"><div role="note" style="font-size:11.5px;line-height:1.5;color:#A6322A;margin-top:6px;max-width:240px;">Revisalo antes de confirmar: {{ o.checkText }}</div></sc-if>
                     </div>
                     <div style="flex:1;min-width:220px;font-size:13px;line-height:1.75;">
                       <sc-for list="{{ o.lines }}" as="ln" hint-placeholder-count="2">
@@ -881,6 +904,9 @@
           <sc-if value="{{ formOpen }}">
             <div style="border:1px solid #E4DED8;padding:32px;margin-bottom:34px;">
               <h3 style="font-family:var(--bc-title);font-size-adjust:var(--bc-title-adjust);font-weight:400;font-size:26px;margin:0 0 26px;">{{ formTitle }}</h3>
+              <sc-if value="{{ costsNeedRules }}">
+                <div role="status" style="border:1px solid #E8C9A8;background:#FBF4EC;color:#7A4A1A;padding:12px 16px;font-size:12.5px;line-height:1.6;margin:-8px 0 22px;">El costo todavía no se puede guardar: falta pegar las reglas nuevas en Firebase (Firestore → Reglas). Lo demás del producto se guarda igual.</div>
+              </sc-if>
               <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-bottom:18px;">
                 <div>
                   <label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Nombre</label>
@@ -893,6 +919,11 @@
                 <div>
                   <label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Precio de oferta — opcional</label>
                   <input value="{{ form.salePrice }}" onChange="{{ onFormSalePriceChange }}" placeholder="Dejalo vacío si no está en oferta" style="width:100%;padding:11px 13px;border:1px solid #D8D1CA;font-family:var(--bc-body);font-size:14px;">
+                </div>
+                <div>
+                  <label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">{{ formCostLabel }} — solo vos</label>
+                  <input value="{{ form.cost }}" onChange="{{ onFormCostChange }}" inputMode="numeric" placeholder="Lo que te costó" aria-describedby="bc-margin-1" style="width:100%;padding:11px 13px;border:1px solid #D8D1CA;font-family:var(--bc-body);font-size:14px;background:#fff;">
+                  <div id="bc-margin-1" aria-live="polite" style="font-size:11.5px;line-height:1.5;margin-top:6px;min-height:17px;color:{{ formMargin.color }};">{{ formMargin.text }}</div>
                 </div>
                 <div>
                   <label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Categoría</label>
@@ -923,7 +954,7 @@
                   </select>
                 </div>
               </div>
-              <p style="font-size:12px;font-weight:300;color:#7A736E;line-height:1.7;margin:-4px 0 20px;max-width:680px;">El stock lo ves solo vos. Cuando llega a 0 ese color se marca agotado solo, y al marcar un pedido como vendido se descuenta.</p>
+              <p style="font-size:12px;font-weight:300;color:#7A736E;line-height:1.7;margin:-4px 0 20px;max-width:680px;">El stock y el costo los ves solo vos: las clientas no los ven en ningún lado. Cuando el stock llega a 0 ese color se marca agotado solo, y al marcar un pedido como vendido se descuenta.</p>
               <div style="margin-bottom:18px;">
                 <label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Descripción</label>
                 <textarea value="{{ form.description }}" onChange="{{ onFormDescriptionChange }}" rows="3" placeholder="Contá de qué material es, cómo se usa, qué lo hace especial." style="width:100%;padding:11px 13px;border:1px solid #D8D1CA;font-family:var(--bc-body);font-size:14px;resize:vertical;"></textarea>
@@ -996,6 +1027,11 @@
                       <div>
                         <label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Oferta — opcional</label>
                         <input value="{{ v.salePrice }}" onChange="{{ v.onSalePrice }}" inputMode="numeric" placeholder="Vacío si no está en oferta" style="width:100%;padding:11px 13px;border:1px solid #D8D1CA;font-family:var(--bc-body);font-size:14px;background:#fff;">
+                      </div>
+                      <div>
+                        <label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Costo — solo vos</label>
+                        <input value="{{ v.cost }}" onChange="{{ v.onCost }}" inputMode="numeric" placeholder="Lo que te costó" style="width:100%;padding:11px 13px;border:1px solid #D8D1CA;font-family:var(--bc-body);font-size:14px;background:#fff;">
+                        <div aria-live="polite" style="font-size:11.5px;line-height:1.5;margin-top:6px;min-height:17px;color:{{ v.marginColor }};">{{ v.marginText }}</div>
                       </div>
                       <div>
                         <label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Stock (unidades)</label>
@@ -1087,6 +1123,7 @@
                   <div style="font-size:14px;">{{ p.name }}</div>
                   <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#9A938D;margin-top:3px;">{{ p.categoryName }} · {{ p.materialName }}</div>
                   <div style="font-size:12px;color:{{ p.stockColor }};margin-top:5px;">{{ p.stockText }}</div>
+                  <div style="font-size:12px;color:{{ p.costColor }};margin-top:3px;">{{ p.costText }}</div>
                 </div>
                 <div style="width:104px;">
                   <sc-if value="{{ p.isOnSale }}">
@@ -1411,9 +1448,11 @@ function cldPoster(url, w) {
 function mediaThumb(m, w) { return m.type === 'video' ? cldPoster(m.url, w) : cldImage(m.url, w); }
 
 // Fotos y videos de un producto. Los productos viejos tenían una sola foto en `image`.
+// Solo direcciones https (o imágenes incrustadas): nunca otro tipo de enlace.
+function safeUrl(u) { return typeof u === 'string' && /^(https:\/\/|data:image\/)/i.test(u.trim()) ? u.trim() : ''; }
 function productMedia(p) {
-  if (p && Array.isArray(p.media) && p.media.length) return p.media.filter(m => m && m.url);
-  return p && p.image ? [{ url: p.image, type: 'image' }] : [];
+  if (p && Array.isArray(p.media) && p.media.length) return p.media.filter(m => m && safeUrl(m.url));
+  return p && safeUrl(p.image) ? [{ url: safeUrl(p.image), type: 'image' }] : [];
 }
 
 // ---------- Pedidos y fechas ----------
@@ -1451,6 +1490,20 @@ function productColors(p) {
   }).map(v => { const own = productMedia(v); const st = stockOf(v); return { key: v.materialId, materialId: v.materialId, price: +v.price || 0, salePrice: +v.salePrice || 0, stock: st, outOfStock: !!v.outOfStock || st === 0, media: own.length ? own : base.media, ownMedia: own.length > 0 }; });
   return [base, ...extra];
 }
+// Costos internos: { idProducto: { color: número } }. Descarta cualquier cosa rara.
+function cleanCosts(raw) {
+  const out = {};
+  if (!raw || typeof raw !== 'object') return out;
+  Object.keys(raw).forEach(pid => {
+    const m = raw[pid];
+    if (!m || typeof m !== 'object') return;
+    const inner = {};
+    Object.keys(m).forEach(k => { const n = m[k]; if (typeof n === 'number' && isFinite(n) && n >= 0) inner[k] = n; });
+    if (Object.keys(inner).length) out[pid] = inner;
+  });
+  return out;
+}
+function toCost(v) { const t = String(v == null ? '' : v).replace(/[^0-9]/g, ''); return t === '' ? null : parseInt(t, 10); }
 // Cartel "Última unidad": 'no' (por defecto), 'auto' (cuando queda 1) o 'siempre'.
 // Para un color puntual (página de producto):
 function lastUnitForColor(p, c) {
@@ -1525,7 +1578,7 @@ async function uploadToCloudinary(file) {
   return { url: data.secure_url, type: isVideo ? 'video' : 'image' };
 }
 
-let db, auth, STORE_DOC;
+let db, auth, STORE_DOC, COSTS_DOC;
 
 const firebaseReady = (async () => {
   const base = 'https://www.gstatic.com/firebasejs/10.14.1/';
@@ -1538,6 +1591,8 @@ const firebaseReady = (async () => {
   db = firebase.firestore();
   auth = firebase.auth();
   STORE_DOC = db.collection('store').doc('main');
+  // Costos: documento aparte que solo puede leer la dueña (el catálogo lo descarga cualquiera).
+  COSTS_DOC = db.collection('private').doc('costs');
 })();
 
 
@@ -1590,7 +1645,7 @@ function normalizeLook(raw) {
   const d = defaultLook();
   const r = (raw && typeof raw === 'object') ? raw : {};
   const str = (v, fb) => (typeof v === 'string' ? v : fb);
-  const media = (m, fb) => ({ url: str(m && m.url, fb.url) || fb.url, type: (m && m.type === 'video') ? 'video' : 'image' });
+  const media = (m, fb) => ({ url: safeUrl(str(m && m.url, fb.url)) || fb.url, type: (m && m.type === 'video') ? 'video' : 'image' });
   const hero = Array.isArray(r.hero) && r.hero.length
     ? r.hero.slice(0, 5).map((h, i) => ({ ...media(h, d.hero[i] || d.hero[0]), kicker: str(h && h.kicker, ''), headline: str(h && h.headline, ''), sub: str(h && h.sub, '') }))
     : d.hero;
@@ -1601,7 +1656,7 @@ function normalizeLook(raw) {
     header: r.header === 'transparente' ? 'transparente' : 'blanco',
     hero,
     editorial: { ...media(e, d.editorial), kicker: str(e.kicker, d.editorial.kicker), title: str(e.title, d.editorial.title), text: str(e.text, d.editorial.text) },
-    instagram: d.instagram.map((u, i) => str(Array.isArray(r.instagram) ? r.instagram[i] : '', '') || u)
+    instagram: d.instagram.map((u, i) => safeUrl(str(Array.isArray(r.instagram) ? r.instagram[i] : '', '')) || u)
   };
 }
 function fontPair(id) { return FONT_PAIRS.find(f => f.id === id) || FONT_PAIRS[0]; }
@@ -1730,11 +1785,14 @@ class Component extends DCLogic {
     salesMetric: 'ingresos',
     chartHover: -1,
     orderFilter: 'todos',
-    ordersShown: 25
+    ordersShown: 25,
+    adminChecking: true,
+    costs: {},
+    costsLoaded: false,
+    costsError: ''
   };
 
   static STORE_VERSION = 7;
-  static ADMIN_EMAIL = 'belengrimaldidb1@gmail.com';
   static CART_KEY = 'blublub_cart_v1';
 
   readCachedLook() {
@@ -1742,6 +1800,8 @@ class Component extends DCLogic {
   }
 
   componentDidMount() {
+    // Se cumple cuando ya se sabe si quien navega es la dueña o no.
+    this._authKnown = new Promise(res => { this._authKnownDone = () => res(); });
     applyLook(this.state.look);
     this._onBeforeUnload = (e) => { if (this.state.lookDirty) { e.preventDefault(); e.returnValue = ''; } };
     window.addEventListener('beforeunload', this._onBeforeUnload);
@@ -1766,10 +1826,17 @@ class Component extends DCLogic {
 
       // Escucha la sesión de Firebase Authentication (reemplaza el login casero).
       this._unsubAuth = auth.onAuthStateChanged(async (fbUser) => {
-        if (!fbUser) { this.stopAdminData(); this.setState({ user: null }); return; }
-        const admin = fbUser.email === Component.ADMIN_EMAIL;
-        this.setState({ user: { name: fbUser.displayName || (fbUser.email || '').split('@')[0], email: fbUser.email, admin } }, () => {
+        if (!fbUser) { this.stopAdminData(); this.stopCosts(); this.setState({ user: null, costs: {}, costsLoaded: false, adminChecking: false }, this._authKnownDone); return; }
+        const base = { name: fbUser.displayName || (fbUser.email || '').split('@')[0], email: fbUser.email, admin: false };
+        this.setState({ user: base, adminChecking: true });
+        // ¿Es la dueña? Su correo no está escrito en el código público: lo decide Firebase,
+        // probando leer los pedidos (según las reglas, solo ella puede).
+        const admin = await this.checkOwner();
+        if (!auth.currentUser || auth.currentUser.uid !== fbUser.uid) return; // la sesión cambió mientras tanto
+        this.setState({ user: { ...base, admin }, adminChecking: false }, () => {
+          this._authKnownDone();
           if (admin && this.state.view === 'admin') this.startAdminData();
+          if (admin) this.startCosts(); else this.stopCosts();
         });
         if (admin) {
           // Primera vez que la dueña entra: si el catálogo compartido todavía no existe, lo crea.
@@ -1780,9 +1847,13 @@ class Component extends DCLogic {
           } catch (e) {}
         }
       });
-    }).catch((e) => { console.error('No se pudo conectar con Firebase:', e); this.setState({ storeLoaded: true }); this.showToast('No se pudo conectar. Revisá tu conexión.'); });
+    }).catch((e) => { console.error('No se pudo conectar con Firebase:', e); this.setState({ storeLoaded: true, adminChecking: false }); this.showToast('No se pudo conectar. Revisá tu conexión.'); });
     // Si Firebase tarda demasiado, mostramos lo que haya en vez de quedarnos cargando.
-    this._loadTimeout = setTimeout(() => { if (!this.state.storeLoaded) this.setState({ storeLoaded: true }); }, 7000);
+    this._loadTimeout = setTimeout(() => {
+      if (!this.state.storeLoaded) this.setState({ storeLoaded: true });
+      if (this.state.adminChecking && !this.state.user) this.setState({ adminChecking: false });
+      this._authKnownDone();
+    }, 7000);
 
     // Código del próximo pedido (se mantiene mientras el carrito no cambie).
     try {
@@ -1833,6 +1904,7 @@ class Component extends DCLogic {
     if (this._unsubStore) this._unsubStore();
     if (this._unsubAuth) this._unsubAuth();
     this.stopAdminData();
+    this.stopCosts();
     if (this._onHashChange) window.removeEventListener('hashchange', this._onHashChange);
     if (this._onKey) window.removeEventListener('keydown', this._onKey);
     if (this._onBeforeUnload) window.removeEventListener('beforeunload', this._onBeforeUnload);
@@ -1876,16 +1948,36 @@ class Component extends DCLogic {
   showToast(msg) {
     this.setState({ toast: msg });
     clearTimeout(this._toastTimer);
-    this._toastTimer = setTimeout(() => this.setState({ toast: '' }), 2200);
+    this._toastTimer = setTimeout(() => this.setState({ toast: '' }), String(msg).length > 40 ? 5200 : 2200);
   }
 
   fmt(n) { return '$' + Math.round(n || 0).toLocaleString('es-AR'); }
+  // Texto de ganancia para el formulario: precio (o el de oferta, si hay) menos el costo.
+  marginInfo(price, salePrice, cost) {
+    const c = toCost(cost);
+    const pr = parseFloat(price) || 0, sp = parseFloat(salePrice) || 0;
+    if (c === null || !pr) return { text: '', color: '#7A736E' };
+    const eff = sp && sp < pr ? sp : pr;
+    const gain = eff - c;
+    if (gain <= 0) return { text: gain === 0 ? 'Ojo: lo vendés al mismo precio que te costó' : `Ojo: perdés ${this.fmt(-gain)} por unidad`, color: '#A6322A' };
+    return { text: `${eff !== pr ? 'Con la oferta ganás' : 'Ganás'} ${this.fmt(gain)} por unidad (${Math.round(gain / eff * 100)}% del precio)`, color: '#3E6B47' };
+  }
   onSale(p) { const sp = parseFloat(p.salePrice); return !!(sp && sp > 0 && sp < p.price); }
   effPrice(p) { return this.onSale(p) ? parseFloat(p.salePrice) : (+p.price || 0); }
   anyOnSale(p) { return productColors(p).some(c => this.onSale(c)); }
   categoryName(id) { const c = this.state.categories.find(x => x.id === id); return c ? c.name : ''; }
   materialName(id) { const m = this.state.materials.find(x => x.id === id); return m ? m.name : ''; }
   isAdminUser() { return !!(this.state.user && this.state.user.admin); }
+  async checkOwner() {
+    for (let i = 0; i < 3; i++) {
+      try { await db.collection('orders').limit(1).get(); return true; }
+      catch (e) {
+        if (e && e.code === 'permission-denied') return false;
+        await new Promise(r => setTimeout(r, 1200 * (i + 1))); // sin conexión: reintenta
+      }
+    }
+    return false;
+  }
 
   top() { try { window.scrollTo(0, 0); } catch (e) {} this.stopAllHover(); }
 
@@ -1921,6 +2013,7 @@ class Component extends DCLogic {
     const key = location.hash || '#/';
     if (next.view === 'product') this.trackStat('views', next.selectedProductId);
     if (next.view === 'admin') this.startAdminData(); else this.stopAdminData();
+    this._editReturn = null;
     this.setState({ ...next, menuOpen: false, cartOpen: false, authOpen: false, hoverKey: '', hoverIdx: 0 }, () => {
       if (after) { after(); return; }
       // Al ir hacia atrás, vuelve a la misma altura donde estaba la clienta.
@@ -1940,6 +2033,24 @@ class Component extends DCLogic {
   });
   goAdmin = () => this.navigate('#/admin');
   openProduct = (id) => this.navigate('#/producto/' + encodeURIComponent(id));
+  // Botón "Editar" de la tienda (solo la dueña): abre el producto en el panel y,
+  // al guardar o cancelar, vuelve a donde estaba.
+  editFromStore(id) {
+    if (!this.isAdminUser()) return;
+    const p = this.state.products.find(x => x.id === id);
+    if (!p) return;
+    const back = location.hash || '#/';
+    this.stopAllHover();
+    this.navigate('#/admin', () => {
+      this._editReturn = back;
+      this.setState({ adminTab: 'productos' }, () => this.editProduct(p));
+    });
+  }
+  returnAfterEdit() {
+    const back = this._editReturn;
+    this._editReturn = null;
+    if (back) this.navigate(back);
+  }
   setCatFilter = (id) => this.navigate(id && id !== 'all' ? '#/productos/' + encodeURIComponent(id) : '#/productos');
 
   // ---- Tarjetas: al pasar el mouse se van pasando las fotos y videos ----
@@ -2036,7 +2147,7 @@ class Component extends DCLogic {
     const code = e && e.code;
     if (code === 'auth/email-already-in-use') return 'Ya existe una cuenta con ese email. Iniciá sesión.';
     if (code === 'auth/invalid-email') return 'El email no es válido.';
-    if (code === 'auth/weak-password') return 'La contraseña necesita al menos 6 caracteres.';
+    if (code === 'auth/weak-password' || code === 'auth/password-does-not-meet-requirements') return 'Elegí una contraseña más segura: al menos 8 caracteres, con letras y números.';
     if (code === 'auth/user-not-found' || code === 'auth/wrong-password' || code === 'auth/invalid-credential') return 'Email o contraseña incorrectos.';
     if (code === 'auth/too-many-requests') return 'Demasiados intentos. Probá de nuevo en unos minutos.';
     return 'Ocurrió un error. Probá de nuevo.';
@@ -2052,7 +2163,7 @@ class Component extends DCLogic {
       if (this.state.authMode === 'register') {
         const name = (this.state.authName || '').trim();
         if (!name) { this.setState({ authError: 'Decinos tu nombre.' }); return; }
-        if (pass.length < 6) { this.setState({ authError: 'La contraseña necesita al menos 6 caracteres.' }); return; }
+        if (pass.length < 8 || !/[0-9]/.test(pass) || !/[a-zA-Z]/.test(pass)) { this.setState({ authError: 'Elegí una contraseña más segura: al menos 8 caracteres, con letras y números.' }); return; }
         const cred = await auth.createUserWithEmailAndPassword(email, pass);
         await cred.user.updateProfile({ displayName: name });
         this.setState({ authOpen: false, authError: '', authPassword: '', authName: '', authEmail: '' });
@@ -2127,9 +2238,12 @@ class Component extends DCLogic {
       try { const k = 'bc_seen_' + productId; if (sessionStorage.getItem(k)) return; sessionStorage.setItem(k, '1'); } catch (e) {}
     }
     const day = dayKey(new Date());
-    firebaseReady.then(() => db.collection('stats_daily').doc(day).set(
-      { day, [kind]: { [productId]: firebase.firestore.FieldValue.increment(1) } }, { merge: true }
-    )).catch(() => {});
+    // Espera a saber quién es (las visitas de la dueña no cuentan).
+    Promise.all([firebaseReady, this._authKnown]).then(() => {
+      if (this.isAdminUser()) return null;
+      return db.collection('stats_daily').doc(day).set(
+        { day, [kind]: { [productId]: firebase.firestore.FieldValue.increment(1) } }, { merge: true });
+    }).catch(() => {});
   }
   startAdminData() {
     if (this._unsubOrders || !this.isAdminUser()) return;
@@ -2162,6 +2276,55 @@ class Component extends DCLogic {
     if (this._unsubOrders) { this._unsubOrders(); this._unsubOrders = null; }
     if (this._unsubStats) { this._unsubStats(); this._unsubStats = null; }
   }
+
+  // ---- Costos (solo la dueña) ----
+  // Se guardan en private/costs como { costs: { <idProducto>: { <color>: costo } } }.
+  startCosts() {
+    if (this._unsubCosts || !this.isAdminUser()) return;
+    this._unsubCosts = () => {};
+    firebaseReady.then(() => {
+      if (!this.isAdminUser()) { this._unsubCosts = null; return; }
+      this._unsubCosts = COSTS_DOC.onSnapshot((snap) => {
+        const d = snap.exists ? (snap.data() || {}) : {};
+        const costs = cleanCosts(d.costs);
+        this.setState(st => {
+          const upd = { costs, costsLoaded: true, costsError: '' };
+          // Si el formulario se abrió antes de que llegaran los costos, los completa.
+          if (st.form && st.form.id && !st.form.costsFilled) upd.form = this.fillFormCosts(st.form, costs);
+          return upd;
+        });
+      }, (err) => {
+        console.warn('No se pudieron leer los costos:', err);
+        this.setState({ costsLoaded: false, costsError: err && err.code === 'permission-denied' ? 'rules' : 'other' });
+      });
+    });
+  }
+  stopCosts() { if (this._unsubCosts) { this._unsubCosts(); this._unsubCosts = null; } }
+  // Completa los campos de costo vacíos del formulario con lo guardado.
+  fillFormCosts(form, costs) {
+    const m = (costs || {})[form.id] || {};
+    const val = (k, cur) => (cur !== '' && cur != null) ? cur : (typeof m[k] === 'number' ? String(m[k]) : '');
+    return {
+      ...form,
+      cost: val(form.materialId || 'base', form.cost),
+      variants: (form.variants || []).map(v => ({ ...v, cost: val(v.materialId, v.cost) })),
+      costsFilled: true
+    };
+  }
+  // Guarda (o borra, si map es null) los costos de un producto. Devuelve false si no se pudo.
+  saveCosts(pid, map) {
+    if (!this.state.costsLoaded) return false;
+    const costs = { ...this.state.costs };
+    if (map && Object.keys(map).length) costs[pid] = map; else delete costs[pid];
+    this.setState({ costs });
+    firebaseReady.then(() => COSTS_DOC.set({ costs }))
+      .catch((e) => { console.error('No se pudo guardar el costo:', e); this.showToast('No se pudo guardar el costo'); });
+    return true;
+  }
+  costOf(productId, colorKey) {
+    const m = this.state.costs[productId];
+    return m && typeof m[colorKey] === 'number' ? m[colorKey] : null;
+  }
   setSalesRange(r) { this.setState({ salesRange: r, chartHover: -1, ordersShown: 25 }, () => { if (this._unsubStats) this.loadStats(); }); }
   // Al pasar un pedido a Vendido o Entregado se descuenta del stock; si vuelve a Sin confirmar o
   // Cancelado, se devuelve. `stockApplied` en el pedido recuerda si ya se descontó.
@@ -2191,7 +2354,10 @@ class Component extends DCLogic {
     const products = this.state.products.map(p => {
       let np = p;
       (items || []).filter(it => it.productId === p.id).forEach(it => {
-        const q = (+it.qty || 0) * sign;
+        // Solo cantidades normales (1 a 99): un pedido alterado no puede vaciar ni inflar el stock.
+        const n = +it.qty;
+        if (!(Number.isInteger(n) && n >= 1 && n <= 99)) return;
+        const q = n * sign;
         const key = it.colorId || '';
         const vs = Array.isArray(np.variants) ? np.variants : [];
         const vi = key ? vs.findIndex(v => v.materialId === key) : -1;
@@ -2357,27 +2523,28 @@ class Component extends DCLogic {
   onAdminMatFilterChange = (e) => this.setState({ adminMatFilter: e.target.value });
   onAdminSearchChange = (e) => this.setState({ adminSearch: e.target.value });
 
-  openNewProductForm = () => this.setState({
+  openNewProductForm = () => (this._editReturn = null, this.setState({
     form: {
       id: null, name: '', price: '', salePrice: '',
       categoryId: (this.state.categories[0] || {}).id || '',
       materialId: (this.state.materials[0] || {}).id || '',
       description: '', featured: false, outOfStock: false,
-      imageId: 'p-new-' + Date.now(), image: '', media: [], variants: [], stock: '', lastUnitBadge: 'no'
+      imageId: 'p-new-' + Date.now(), image: '', media: [], variants: [], stock: '', lastUnitBadge: 'no', cost: '', costsFilled: true
     }
-  });
+  }));
   editProduct(p) {
     const variants = (Array.isArray(p.variants) ? p.variants : []).map(v => ({
       materialId: v.materialId || '', price: v.price ? String(v.price) : '', salePrice: v.salePrice ? String(v.salePrice) : '',
-      outOfStock: !!v.outOfStock, media: productMedia(v), stock: stockOf(v) === null ? '' : String(stockOf(v))
+      outOfStock: !!v.outOfStock, media: productMedia(v), stock: stockOf(v) === null ? '' : String(stockOf(v)), cost: ''
     }));
-    this.setState({ form: {
+    const form = {
       ...p, media: productMedia(p), variants, price: String(p.price), salePrice: p.salePrice ? String(p.salePrice) : '',
-      stock: stockOf(p) === null ? '' : String(stockOf(p)), lastUnitBadge: p.lastUnitBadge || 'no'
-    } });
+      stock: stockOf(p) === null ? '' : String(stockOf(p)), lastUnitBadge: p.lastUnitBadge || 'no', cost: '', costsFilled: false
+    };
+    this.setState({ form: this.state.costsLoaded ? this.fillFormCosts(form, this.state.costs) : form });
     try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) {}
   }
-  cancelForm = () => this.setState({ form: null });
+  cancelForm = () => this.setState({ form: null }, () => this.returnAfterEdit());
 
   // Sube una o varias fotos/videos a Cloudinary, de a uno, y los va sumando al producto.
   // `target` es 'base' (el primer color) o el número de otro color del producto.
@@ -2415,7 +2582,7 @@ class Component extends DCLogic {
       const f = s.form;
       const used = [f.materialId, ...(f.variants || []).map(v => v.materialId)];
       const free = s.materials.find(m => !used.includes(m.id));
-      return { form: { ...f, variants: [...(f.variants || []), { materialId: free ? free.id : '', price: f.price || '', salePrice: '', outOfStock: false, media: [], stock: '' }] } };
+      return { form: { ...f, variants: [...(f.variants || []), { materialId: free ? free.id : '', price: f.price || '', salePrice: '', outOfStock: false, media: [], stock: '', cost: '' }] } };
     });
   };
   removeVariant(i) {
@@ -2438,6 +2605,7 @@ class Component extends DCLogic {
   onFormOutOfStockChange = (e) => this.setState(s => ({ form: { ...s.form, outOfStock: e.target.checked } }));
   onFormStockChange = (e) => this.setState(s => ({ form: { ...s.form, stock: e.target.value.replace(/[^0-9]/g, '') } }));
   onFormBadgeChange = (e) => this.setState(s => ({ form: { ...s.form, lastUnitBadge: e.target.value } }));
+  onFormCostChange = (e) => this.setState(s => ({ form: { ...s.form, cost: e.target.value.replace(/[^0-9]/g, '') } }));
 
   saveProduct = () => {
     const f = this.state.form;
@@ -2469,16 +2637,31 @@ class Component extends DCLogic {
       variants.push({ materialId: v.materialId, price: vp, salePrice: vs, outOfStock: !!v.outOfStock, stock: toStock(v.stock), media: vm, image: mainImage(vm) });
     }
     const lastUnitBadge = ['auto', 'siempre'].includes(f.lastUnitBadge) ? f.lastUnitBadge : 'no';
-    const clean = { ...f, media, image, variants, price: priceNum, salePrice: saleNum, stock: toStock(f.stock), lastUnitBadge };
+    // El costo y los campos del formulario se quitan: el catálogo lo puede leer cualquiera.
+    const { cost: _cost, costsFilled: _cf, ...rest } = f;
+    const clean = { ...rest, media, image, variants, price: priceNum, salePrice: saleNum, stock: toStock(f.stock), lastUnitBadge };
+    const id = f.id || ('prod-' + Date.now());
+    // Costos de cada color, guardados aparte (solo los ve la dueña).
+    const costMap = {};
+    const bc = toCost(f.cost);
+    if (bc !== null) costMap[f.materialId || 'base'] = bc;
+    (f.variants || []).forEach(v => { const c = toCost(v.cost); if (c !== null && v.materialId) costMap[v.materialId] = c; });
+    const prevCosts = (this.state.costs || {})[id] || {};
+    const costsChanged = JSON.stringify(prevCosts) !== JSON.stringify(costMap);
+    let costOk = true;
+    if (costsChanged) costOk = this.saveCosts(id, costMap);
     this.setState(s => {
       let products;
       if (f.id) products = s.products.map(p => p.id === f.id ? clean : p);
-      else {
-        const id = 'prod-' + Date.now();
-        products = [...s.products, { ...clean, id, imageId: f.imageId || ('p-' + id) }];
-      }
+      else products = [...s.products, { ...clean, id, imageId: f.imageId || ('p-' + id) }];
       return { products, form: null };
-    }, () => { this.persist(); this.showToast('Producto guardado'); });
+    }, () => {
+      this.persist();
+      this.returnAfterEdit();
+      this.showToast(costOk ? 'Producto guardado'
+        : this.state.costsError === 'rules' ? 'Producto guardado. El costo no se guardó: faltan las reglas nuevas en Firebase'
+        : 'Producto guardado. El costo no se guardó: probá editarlo de nuevo en unos segundos');
+    });
   };
 
   toggleFeatured(id) { this.setState(s => ({ products: s.products.map(p => p.id === id ? { ...p, featured: !p.featured } : p) }), () => this.persist()); }
@@ -2497,6 +2680,7 @@ class Component extends DCLogic {
   deleteProduct(id) {
     if (!confirm('¿Eliminar este producto?')) return;
     this.setState(s => ({ products: s.products.filter(p => p.id !== id), cart: s.cart.filter(c => c.productId !== id) }), () => { this.persist(); this.saveCart(); });
+    if ((this.state.costs || {})[id]) this.saveCosts(id, null);
   }
 
   onNewCategoryChange = (e) => this.setState({ newCategoryName: e.target.value });
@@ -2566,10 +2750,26 @@ class Component extends DCLogic {
           const min = Math.min(...t.map(c => c.stock));
           return min === 0 ? '#A6322A' : min <= 2 ? '#A0701A' : '#5B554F';
         })(),
+        ...(admin ? (() => {
+          // Costo y ganancia, solo en el panel.
+          if (s.costsError === 'rules') return { costText: 'Costo: faltan las reglas nuevas de Firebase', costColor: '#A0701A' };
+          const rows = colors.map(c => ({ c, cost: this.costOf(p.id, c.key) }));
+          if (!rows.some(r => r.cost !== null)) return { costText: 'Costo sin cargar', costColor: '#9A938D' };
+          const part = (r) => {
+            if (r.cost === null) return 'sin costo';
+            const g = this.effPrice(r.c) - r.cost;
+            return `costo ${this.fmt(r.cost)}, ${g > 0 ? 'ganás ' + this.fmt(g) : g === 0 ? 'sin ganancia' : 'perdés ' + this.fmt(-g)}`;
+          };
+          const loss = rows.some(r => r.cost !== null && this.effPrice(r.c) - r.cost <= 0);
+          return {
+            costText: multi ? rows.map(r => `${this.materialName(r.c.materialId)}: ${part(r)}`).join(' · ') : part(rows[0]).replace(/^c/, 'C'),
+            costColor: loss ? '#A6322A' : '#5B554F'
+          };
+        })() : { costText: '', costColor: '#9A938D' }),
         open: () => this.openProduct(p.id),
         toggleFeatured: () => this.toggleFeatured(p.id),
         toggleOutOfStock: () => this.toggleOutOfStock(p.id),
-        edit: () => this.editProduct(p),
+        edit: () => { this._editReturn = null; this.editProduct(p); },
         remove: () => this.deleteProduct(p.id)
       };
     };
@@ -2597,6 +2797,9 @@ class Component extends DCLogic {
         dots: hovered ? media.map((_, i) => ({ bg: i === idx ? '#fff' : 'rgba(255,255,255,0.5)' })) : [],
         hoverStart: () => this.startCardHover(key, media),
         hoverEnd: () => this.stopCardHover(key),
+        canEdit: admin,
+        editHere: (e) => { if (e && e.stopPropagation) e.stopPropagation(); this.editFromStore(p.id); },
+        editKey: (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); this.editFromStore(p.id); } },
         quickAdd: (e) => {
           if (e && e.stopPropagation) e.stopPropagation();
           if (base.hasColors) { this.openProduct(p.id); return; }
@@ -2624,7 +2827,7 @@ class Component extends DCLogic {
     }));
 
     const categoryTiles = s.categories.slice(0, 4).map(c => ({
-      name: c.name, imageId: SLOT + 'cat-' + c.id, image: cldImage(c.image || '', 900), select: () => this.setCatFilter(c.id)
+      name: c.name, imageId: SLOT + 'cat-' + c.id, image: cldImage(safeUrl(c.image), 900), select: () => this.setCatFilter(c.id)
     }));
     const menuCategories = s.categories.map(c => ({ name: c.name, select: () => this.setCatFilter(c.id) }));
 
@@ -2715,6 +2918,9 @@ class Component extends DCLogic {
         onOut: (e) => this.setVariantField(i, 'outOfStock', e.target.checked),
         stock: v.stock == null ? '' : v.stock,
         onStock: (e) => this.setVariantField(i, 'stock', e.target.value.replace(/[^0-9]/g, '')),
+        cost: v.cost == null ? '' : v.cost,
+        onCost: (e) => this.setVariantField(i, 'cost', e.target.value.replace(/[^0-9]/g, '')),
+        ...(() => { const m = this.marginInfo(v.price, v.salePrice, v.cost); return { marginText: m.text, marginColor: m.color }; })(),
         onFiles: (e) => this.uploadFormMedia(i, e),
         remove: () => this.removeVariant(i)
       };
@@ -2775,7 +2981,25 @@ class Component extends DCLogic {
         { label: 'Ingresos', value: this.fmt(revenue), sub: sold.length === 1 ? 'en 1 venta confirmada' : `en ${nf(sold.length)} ventas confirmadas` },
         { label: 'Pedidos recibidos', value: nf(live.length), sub: pending ? (pending === 1 ? '1 sin confirmar' : `${nf(pending)} sin confirmar`) : 'ninguno sin confirmar' },
         { label: 'Ticket promedio', value: sold.length ? this.fmt(revenue / sold.length) : '—', sub: 'por venta confirmada' },
-        { label: 'Visitas a productos', value: nf(total(views)), sub: `${nf(total(carts))} agregados al carrito` }
+        { label: 'Visitas a productos', value: nf(total(views)), sub: `${nf(total(carts))} agregados al carrito` },
+        (() => {
+          // Ganancia de las ventas confirmadas, con el costo que hoy tiene cargado cada producto.
+          if (s.costsError === 'rules') return { label: 'Ganancia estimada', value: '—', sub: 'faltan las reglas nuevas de Firebase' };
+          let units = 0, costed = 0, gain = 0;
+          sold.forEach(o => o.items.forEach(it => {
+            const q = Math.max(0, +it.qty || 0);
+            units += q;
+            const p = s.products.find(x => x.id === it.productId);
+            const key = it.colorId || (p ? (productColors(p)[0] || {}).key : '');
+            const c = key ? this.costOf(it.productId, key) : null;
+            if (c === null) return;
+            costed += q;
+            gain += ((+it.price || 0) - c) * q;
+          }));
+          if (!units) return { label: 'Ganancia estimada', value: '—', sub: 'todavía no hay ventas confirmadas' };
+          if (!costed) return { label: 'Ganancia estimada', value: '—', sub: 'cargá el costo de tus productos' };
+          return { label: 'Ganancia estimada', value: this.fmt(gain), sub: costed === units ? 'ventas menos costos' : `con costo en ${nf(costed)} de ${nf(units)} unidades` };
+        })()
       ];
 
       // Gráfico: por día (7 y 30 días), por semana (90 días) o por mes (todo).
@@ -2906,7 +3130,24 @@ class Component extends DCLogic {
         onStatus: (e) => this.setOrderStatus(o.id, e.target.value),
         isPending: o.status === 'pendiente', markSold: () => this.setOrderStatus(o.id, 'vendido'),
         remove: () => this.deleteOrder(o.id, o.code || ''), faded: o.status === 'cancelado' ? 0.55 : 1,
-        hasStockNote: !!o.stockApplied
+        hasStockNote: !!o.stockApplied,
+        // Los pedidos los arma el navegador de la clienta: si alguien los modifica a mano,
+        // acá se avisa (solo en los que todavía no confirmaste).
+        ...(() => {
+          if (o.status !== 'pendiente') return { hasCheck: false, checkText: '' };
+          const why = [];
+          const sum = o.items.reduce((a, it) => a + (+it.price || 0) * (+it.qty || 0), 0);
+          if (Math.round(sum) !== Math.round(o.total)) why.push('el total no coincide con la suma de los productos');
+          if (o.items.some(it => !(Number.isInteger(+it.qty) && +it.qty >= 1 && +it.qty <= 99))) why.push('tiene una cantidad rara');
+          const priceOff = o.items.some(it => {
+            const p = s.products.find(x => x.id === it.productId);
+            if (!p) return false;
+            const c = productColors(p).find(x => x.key === it.colorId) || productColors(p)[0];
+            return c && Math.round(this.effPrice(c)) !== Math.round(+it.price || 0);
+          });
+          if (priceOff) why.push('algún precio es distinto al de la tienda hoy');
+          return { hasCheck: why.length > 0, checkText: why.join(', ') + '.' };
+        })()
       }));
       salesVals.ordersMore = filtered.length > s.ordersShown;
       salesVals.showMoreOrders = () => this.setState(st => ({ ordersShown: st.ordersShown + 25 }));
@@ -2970,7 +3211,8 @@ class Component extends DCLogic {
       isHome: s.view === 'home', isCatalog: s.view === 'catalog', isProduct: s.view === 'product', isAdmin: s.view === 'admin',
       showFooter: s.view !== 'admin',
       adminAllowed: s.view === 'admin' && admin,
-      adminDenied: s.view === 'admin' && !admin,
+      adminDenied: s.view === 'admin' && !admin && !s.adminChecking,
+      adminCheckingView: s.view === 'admin' && !admin && !!s.adminChecking,
 
       headerBg: transparentHeader ? 'transparent' : '#fff',
       headerBorder: transparentHeader ? 'transparent' : '#E4DED8',
@@ -3016,6 +3258,22 @@ class Component extends DCLogic {
       catalogProducts, catalogEmpty: !loading && catalogProducts.length === 0, catalogTitle,
 
       selectedProduct, selectedProductInStock: !selColor.outOfStock,
+      // Datos internos del color elegido, solo para la dueña.
+      adminProductInfo: admin && foundProduct ? (() => {
+        const bits = [];
+        const nm = this.materialName(selColor.materialId);
+        if (selColors.length > 1 && nm) bits.push(nm);
+        bits.push(selColor.stock === null || selColor.stock === undefined ? 'Stock sin contar' : `Stock: ${selColor.stock}`);
+        if (s.costsError === 'rules') bits.push('costo: faltan las reglas nuevas');
+        else {
+          const c = this.costOf(foundProduct.id, selColor.key);
+          if (c === null) bits.push('costo sin cargar');
+          else { const g = this.effPrice(selColor) - c; bits.push(`costo ${this.fmt(c)}`, g > 0 ? `ganás ${this.fmt(g)}` : `perdés ${this.fmt(-g)}`); }
+        }
+        return bits.join(' · ');
+      })() : '',
+      editSelectedProduct: () => foundProduct && this.editFromStore(foundProduct.id),
+      editSelectedKey: (e) => { if ((e.key === 'Enter' || e.key === ' ') && foundProduct) { e.preventDefault(); this.editFromStore(foundProduct.id); } },
       colorChoices, hasColorChoice: colorChoices.length > 1, selectedColorName: this.materialName(selColor.materialId),
       outOfStockMsg: colorChoices.length > 1 ? 'Este color está agotado por ahora. Elegí otro o escribinos y te avisamos cuando vuelva.' : 'Este producto está agotado por ahora. Escribinos y te avisamos cuando vuelva.',
       selectedQty: s.selectedQty, incQty: this.incQty, decQty: this.decQty, addSelectedToCart: this.addSelectedToCart,
@@ -3047,6 +3305,10 @@ class Component extends DCLogic {
       onFormDescriptionChange: this.onFormDescriptionChange, onFormSalePriceChange: this.onFormSalePriceChange,
       onFormFeaturedChange: this.onFormFeaturedChange, onFormOutOfStockChange: this.onFormOutOfStockChange,
       onFormStockChange: this.onFormStockChange, onFormBadgeChange: this.onFormBadgeChange,
+      onFormCostChange: this.onFormCostChange,
+      formCostLabel: (s.form && s.form.variants && s.form.variants.length) ? 'Costo del color 1' : 'Costo',
+      formMargin: s.form ? this.marginInfo(s.form.price, s.form.salePrice, s.form.cost) : { text: '', color: '#7A736E' },
+      costsNeedRules: s.costsError === 'rules',
       formStockFieldLabel: (s.form && s.form.variants && s.form.variants.length) ? 'Stock del color 1' : 'Stock (unidades)',
       onProductMediaFilesChange: this.onProductMediaFilesChange,
       uploadLabel: (s.uploadTarget === 'base' && s.uploadStatus) || 'Agregar fotos o videos',
