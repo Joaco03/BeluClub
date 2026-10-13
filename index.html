@@ -97,7 +97,7 @@
           <span onClick="{{ c.select }}" style="cursor:pointer;font-size:13.5px;letter-spacing:0.06em;padding:9px 0;color:#3A3532;" style-hover="color:var(--bc-accent);">{{ c.name }}</span>
         </sc-for>
         <div style="height:1px;background:#E4DED8;margin:18px 0;"></div>
-        <span onClick="{{ goFaq }}" style="cursor:pointer;font-size:13.5px;letter-spacing:0.06em;padding:9px 0;color:#3A3532;" style-hover="color:var(--bc-accent);">Preguntas frecuentes</span>
+        <sc-if value="{{ hasFaq }}"><span onClick="{{ goFaq }}" style="cursor:pointer;font-size:13.5px;letter-spacing:0.06em;padding:9px 0;color:#3A3532;" style-hover="color:var(--bc-accent);">Preguntas frecuentes</span></sc-if>
         <span onClick="{{ openAccount }}" style="cursor:pointer;font-size:13.5px;letter-spacing:0.06em;padding:9px 0;color:#3A3532;" style-hover="color:var(--bc-accent);">{{ accountLabel }}</span>
         <sc-if value="{{ isAdminUser }}">
           <span onClick="{{ goAdmin }}" style="cursor:pointer;font-size:13.5px;letter-spacing:0.06em;padding:9px 0;color:var(--bc-accent);font-weight:500;">Administrar tienda</span>
@@ -422,6 +422,7 @@
       </sc-if>
 
       <!-- FAQ -->
+      <sc-if value="{{ hasFaq }}">
       <div id="faq-section" style="max-width:860px;margin:0 auto;padding:96px 24px 110px;">
         <div style="text-align:center;margin-bottom:44px;">
           <div style="font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:#7A736E;margin-bottom:14px;">Todo lo que necesitás saber</div>
@@ -434,11 +435,12 @@
               <span style="font-size:18px;font-weight:300;color:var(--bc-accent);">{{ faq.sign }}</span>
             </div>
             <sc-if value="{{ faq.open }}">
-              <p style="margin:0 2px 26px;color:#5B554F;font-size:14px;font-weight:300;line-height:1.85;max-width:660px;">{{ faq.a }}</p>
+              <p style="margin:0 2px 26px;color:#5B554F;font-size:14px;font-weight:300;line-height:1.85;max-width:660px;white-space:pre-line;">{{ faq.a }}</p>
             </sc-if>
           </div>
         </sc-for>
       </div>
+      </sc-if>
     </div>
   </sc-if>
 
@@ -1238,6 +1240,32 @@
             </section>
 
             <section style="border-top:1px solid #E4DED8;padding-top:40px;">
+              <h3 style="font-family:var(--bc-title);font-size-adjust:var(--bc-title-adjust);font-weight:400;font-size:28px;line-height:1.15;margin:0 0 6px;">Preguntas frecuentes</h3>
+              <p style="font-size:13px;font-weight:300;color:#7A736E;line-height:1.7;margin:0 0 22px;max-width:640px;">Las que aparecen al final de la página de inicio. Podés cambiar el texto, ordenarlas, sacar las que no sirvan y agregar hasta {{ lookFaqMax }}. Si las quitás todas, la sección no se muestra.</p>
+              <div style="display:flex;flex-direction:column;gap:14px;">
+                <sc-for list="{{ lookFaq }}" as="q" hint-placeholder-count="5">
+                  <div style="border:1px solid #EFEAE4;padding:18px;display:flex;flex-direction:column;gap:12px;">
+                    <div style="display:flex;align-items:center;gap:18px;font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;">
+                      <span style="color:#9A938D;">Pregunta {{ q.num }}</span>
+                      <sc-if value="{{ q.canUp }}"><span role="button" tabIndex="0" onClick="{{ q.up }}" style="cursor:pointer;color:#3A3532;">Antes</span></sc-if>
+                      <sc-if value="{{ q.canDown }}"><span role="button" tabIndex="0" onClick="{{ q.down }}" style="cursor:pointer;color:#3A3532;">Después</span></sc-if>
+                      <span role="button" tabIndex="0" onClick="{{ q.remove }}" style="cursor:pointer;color:#A6322A;margin-left:auto;">Quitar</span>
+                    </div>
+                    <div><label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Pregunta</label><input data-faq-q="1" value="{{ q.q }}" onChange="{{ q.onQ }}" maxLength="200" placeholder="Ej: ¿Hacen envíos fuera de Paraná?" style="width:100%;box-sizing:border-box;padding:11px 13px;border:1px solid #D8D1CA;font-family:var(--bc-body);font-size:14px;background:#fff;"></div>
+                    <div><label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Respuesta</label><textarea value="{{ q.a }}" onChange="{{ q.onA }}" maxLength="2000" rows="4" placeholder="Lo que le contestarías a una clienta" style="width:100%;box-sizing:border-box;padding:11px 13px;border:1px solid #D8D1CA;font-family:var(--bc-body);font-size:14px;background:#fff;resize:vertical;line-height:1.6;"></textarea></div>
+                    <sc-if value="{{ q.noQuestion }}"><div style="font-size:11.5px;color:#A0701A;">Sin pregunta escrita no se muestra en el sitio.</div></sc-if>
+                  </div>
+                </sc-for>
+              </div>
+              <sc-if value="{{ lookFaqEmpty }}">
+                <div style="border:1px dashed #D8D1CA;padding:18px;font-size:13px;color:#7A736E;">No hay preguntas: la sección no aparece en el sitio.</div>
+              </sc-if>
+              <sc-if value="{{ lookCanAddFaq }}">
+                <span role="button" tabIndex="0" onClick="{{ addFaq }}" style="cursor:pointer;display:inline-block;margin-top:16px;border:1px solid #D8D1CA;padding:12px 24px;font-size:10.5px;letter-spacing:0.16em;text-transform:uppercase;color:#3A3532;" style-hover="border-color:#1C1A19;">+ Agregar pregunta</span>
+              </sc-if>
+            </section>
+
+            <section style="border-top:1px solid #E4DED8;padding-top:40px;">
               <h3 style="font-family:var(--bc-title);font-size-adjust:var(--bc-title-adjust);font-weight:400;font-size:28px;line-height:1.15;margin:0 0 6px;">Tipografía</h3>
               <p style="font-size:13px;font-weight:300;color:#7A736E;line-height:1.7;margin:0 0 22px;max-width:640px;">La letra de los títulos y la de los textos, en todo el sitio. Cada opción ya viene combinada para que queden bien juntas.</p>
               <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;">
@@ -1374,7 +1402,7 @@
         <div>
           <div style="font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:var(--bc-accent);margin-bottom:18px;">Ayuda</div>
           <div style="display:flex;flex-direction:column;gap:12px;font-size:13px;font-weight:300;color:#5B554F;">
-            <span onClick="{{ goFaq }}" style="cursor:pointer;">Preguntas frecuentes</span>
+            <sc-if value="{{ hasFaq }}"><span onClick="{{ goFaq }}" style="cursor:pointer;">Preguntas frecuentes</span></sc-if>
             <span onClick="{{ openAccount }}" style="cursor:pointer;">{{ accountLabel }}</span>
           </div>
         </div>
@@ -1622,6 +1650,15 @@ const ACCENTS = [
   { hex: '#1C1A19', name: 'Negro' }
 ];
 const LOOK_KEY = 'blublub_look_v1';
+// Preguntas frecuentes de fábrica (la dueña las cambia desde Estética).
+const MAX_FAQ = 12;
+const DEFAULT_FAQ = [
+  { q: '¿Cómo cuido mis joyas?', a: 'Son de acero inoxidable, así que podés bañarte, nadar o entrenar sin sacártelas. Para que duren más brillantes, evitá aplicar perfumes o cremas directamente sobre la pieza.' },
+  { q: '¿Cuánto tarda el envío?', a: 'Dentro de Paraná, los envíos salen en 1 a 3 días hábiles desde que confirmamos el pago. Te avisamos por WhatsApp con el seguimiento.' },
+  { q: '¿Puedo cambiar mi producto?', a: 'Sí. Tenés 30 días desde que lo recibís para cambiarlo por otro modelo o talle si no es lo que esperabas.' },
+  { q: '¿Son realmente hipoalergénicos?', a: 'Sí, todas las piezas son de acero inoxidable quirúrgico, apto para pieles sensibles. No se oxidan ni dejan marcas verdes.' },
+  { q: '¿Cómo puedo pagar?', a: 'Coordinamos el pago por WhatsApp: transferencia, efectivo o link de pago. Cuando finalizás el carrito nos llega tu pedido y te escribimos.' }
+];
 
 function defaultLook() {
   return {
@@ -1637,7 +1674,8 @@ function defaultLook() {
       url: PX(6153885, 1200), type: 'image', kicker: 'Hecho para durar', title: 'Joyas que no te sacás nunca',
       text: 'Cada pieza es de acero inoxidable quirúrgico: resiste el agua, la transpiración y el uso de todos los días sin oxidarse ni cambiar de color. Elegí tu combinación en dorado o plateado y usala siempre.'
     },
-    instagram: [13530465, 1616096, 12144990, 12124662, 17298636, 16689780].map(id => PX(id, 600))
+    instagram: [13530465, 1616096, 12144990, 12124662, 17298636, 16689780].map(id => PX(id, 600)),
+    faq: DEFAULT_FAQ.map(f => ({ ...f }))
   };
 }
 // Completa lo que falte con los valores por defecto y descarta datos raros.
@@ -1656,7 +1694,11 @@ function normalizeLook(raw) {
     header: r.header === 'transparente' ? 'transparente' : 'blanco',
     hero,
     editorial: { ...media(e, d.editorial), kicker: str(e.kicker, d.editorial.kicker), title: str(e.title, d.editorial.title), text: str(e.text, d.editorial.text) },
-    instagram: d.instagram.map((u, i) => safeUrl(str(Array.isArray(r.instagram) ? r.instagram[i] : '', '')) || u)
+    instagram: d.instagram.map((u, i) => safeUrl(str(Array.isArray(r.instagram) ? r.instagram[i] : '', '')) || u),
+    // Si nunca se guardaron preguntas, van las de fábrica; si se guardó una lista (aunque esté vacía), se respeta.
+    faq: Array.isArray(r.faq)
+      ? r.faq.slice(0, MAX_FAQ).map(f => ({ q: str(f && f.q, '').slice(0, 200), a: str(f && f.a, '').slice(0, 2000) })).filter(f => f.q.trim() || f.a.trim())
+      : d.faq
   };
 }
 function fontPair(id) { return FONT_PAIRS.find(f => f.id === id) || FONT_PAIRS[0]; }
@@ -1719,15 +1761,8 @@ class Component extends DCLogic {
     ];
   }
   getDefaultFaq() {
-    return [
-      { q: '¿Cómo cuido mis joyas?', a: 'Son de acero inoxidable, así que podés bañarte, nadar o entrenar sin sacártelas. Para que duren más brillantes, evitá aplicar perfumes o cremas directamente sobre la pieza.' },
-      { q: '¿Cuánto tarda el envío?', a: 'Dentro de Paraná, los envíos salen en 1 a 3 días hábiles desde que confirmamos el pago. Te avisamos por WhatsApp con el seguimiento.' },
-      { q: '¿Puedo cambiar mi producto?', a: 'Sí. Tenés 30 días desde que lo recibís para cambiarlo por otro modelo o talle si no es lo que esperabas.' },
-      { q: '¿Son realmente hipoalergénicos?', a: 'Sí, todas las piezas son de acero inoxidable quirúrgico, apto para pieles sensibles. No se oxidan ni dejan marcas verdes.' },
-      { q: '¿Cómo puedo pagar?', a: 'Coordinamos el pago por WhatsApp: transferencia, efectivo o link de pago. Cuando finalizás el carrito nos llega tu pedido y te escribimos.' }
-    ];
+    return DEFAULT_FAQ.map(f => ({ ...f }));
   }
-
   state = {
     view: 'home',
     products: this.getDefaultProducts(),
@@ -2443,6 +2478,7 @@ class Component extends DCLogic {
   editLook(fn) {
     this.setState(s => {
       const d = cloneLook(s.lookDraft || s.look);
+      if (!Array.isArray(d.faq)) d.faq = DEFAULT_FAQ.map(f => ({ ...f }));
       fn(d);
       return { lookDraft: d, lookDirty: true };
     }, () => applyLook(this.state.lookDraft));
@@ -2471,6 +2507,25 @@ class Component extends DCLogic {
     });
   }
   setEditorialText(field, value) { this.editLook(d => { d.editorial[field] = value; }); }
+  // Preguntas frecuentes
+  setFaqText(i, field, value) { this.editLook(d => { if (d.faq[i]) d.faq[i][field] = value; }); }
+  addFaq = () => {
+    this.editLook(d => { if (d.faq.length < MAX_FAQ) d.faq.push({ q: '', a: '' }); });
+    setTimeout(() => { const els = document.querySelectorAll('[data-faq-q]'); const el = els[els.length - 1]; if (el) { try { el.focus({ preventScroll: true }); el.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (e) {} } }, 80);
+  };
+  removeFaq(i) {
+    const f = (this.state.lookDraft || this.state.look).faq[i];
+    if (f && (f.q.trim() || f.a.trim()) && !confirm('¿Quitar esta pregunta?')) return;
+    this.editLook(d => { d.faq.splice(i, 1); });
+    this.setState({ faqOpen: 0 });
+  }
+  moveFaq(i, dir) {
+    this.editLook(d => {
+      const j = i + dir;
+      if (j < 0 || j >= d.faq.length) return;
+      [d.faq[i], d.faq[j]] = [d.faq[j], d.faq[i]];
+    });
+  }
   async onLookFile(key, e) {
     const file = e && e.target && e.target.files && e.target.files[0];
     if (e && e.target) e.target.value = '';
@@ -2835,7 +2890,7 @@ class Component extends DCLogic {
 
     const instagramTiles = L.instagram.map((u, i) => ({ imageId: SLOT + 'ig-' + i, image: cldImage(u, 600) }));
 
-    const faqItems = this.getDefaultFaq().map((f, i) => ({
+    const faqItems = (L.faq || []).filter(f => f.q && f.q.trim()).map((f, i) => ({
       ...f, open: s.faqOpen === i, sign: s.faqOpen === i ? '−' : '+', toggle: () => this.toggleFaq(i)
     }));
 
@@ -3252,7 +3307,7 @@ class Component extends DCLogic {
       showInstagram: this.props.showInstagramSection !== false, instagramTiles,
       instagramHandleDisplay: '@' + instagramHandle,
       instagramUrl: `https://instagram.com/${instagramHandle}`,
-      faqItems,
+      faqItems, hasFaq: faqItems.length > 0,
 
       categoryChips, materialChips, sortBy: s.sortBy, onSortChange: this.onSortChange,
       catalogProducts, catalogEmpty: !loading && catalogProducts.length === 0, catalogTitle,
@@ -3291,6 +3346,13 @@ class Component extends DCLogic {
       lookEdThumb: thumbOf(D.editorial, 900), lookEdIsVideo: D.editorial.type === 'video', lookEdBusy: s.lookUploading === 'editorial',
       lookEdKicker: D.editorial.kicker, lookEdTitle: D.editorial.title, lookEdText: D.editorial.text,
       onLookEdFile: (e) => this.onLookFile('editorial', e),
+      lookFaq: (D.faq || []).map((f, i, arr) => ({
+        num: i + 1, q: f.q, a: f.a, noQuestion: !f.q.trim() && !!f.a.trim(),
+        onQ: (e) => this.setFaqText(i, 'q', e.target.value), onA: (e) => this.setFaqText(i, 'a', e.target.value),
+        canUp: i > 0, canDown: i < arr.length - 1,
+        up: () => this.moveFaq(i, -1), down: () => this.moveFaq(i, 1), remove: () => this.removeFaq(i)
+      })),
+      lookFaqEmpty: !(D.faq || []).length, lookCanAddFaq: (D.faq || []).length < MAX_FAQ, lookFaqMax: MAX_FAQ, addFaq: this.addFaq,
       onLookEdKicker: (e) => this.setEditorialText('kicker', e.target.value),
       onLookEdTitle: (e) => this.setEditorialText('title', e.target.value),
       onLookEdText: (e) => this.setEditorialText('text', e.target.value),
