@@ -12,7 +12,13 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="The Blu Club">
 <meta property="og:description" content="Anillos, collares, aros y pulseras de acero inoxidable. Waterproof e hipoalergénicos, para usar todos los días.">
-<meta property="og:image" content="assets/logo-bc-cuadrado.png">
+<meta property="og:url" content="https://blushop.com.ar/">
+<meta property="og:site_name" content="The Blu Club">
+<meta property="og:locale" content="es_AR">
+<meta property="og:image" content="https://blushop.com.ar/assets/logo-bc-cuadrado.png">
+<meta property="og:image:width" content="1024">
+<meta property="og:image:height" content="1024">
+<link rel="canonical" href="https://blushop.com.ar/">
 <meta name="twitter:card" content="summary">
 <script src="./support.js"></script>
 </head>
@@ -46,13 +52,22 @@
     [data-arrow-glass]{background:rgba(255,255,255,.34);-webkit-backdrop-filter:blur(7px) saturate(1.5) brightness(1.1);backdrop-filter:blur(7px) saturate(1.5) brightness(1.1);-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 25 44'%3E%3Cpath d='M3.72 20.04 L3.45 20.49 L3.26 20.97 L3.14 21.48 L3.10 22.00 L3.14 22.52 L3.26 23.03 L3.45 23.51 L3.72 23.96 L15.72 40.96 L16.06 41.37 L16.46 41.72 L16.92 42.01 L17.41 42.22 L17.92 42.35 L18.45 42.40 L18.99 42.37 L19.51 42.25 L20.00 42.05 L20.46 41.78 L20.87 41.44 L21.22 41.04 L21.51 40.58 L21.72 40.09 L21.85 39.58 L21.90 39.05 L21.87 38.51 L21.75 37.99 L21.55 37.50 L21.28 37.04 L10.66 22.00 L21.28 6.96 L21.55 6.50 L21.75 6.01 L21.87 5.49 L21.90 4.95 L21.85 4.42 L21.72 3.91 L21.51 3.42 L21.22 2.96 L20.87 2.56 L20.46 2.22 L20.00 1.95 L19.51 1.75 L18.99 1.63 L18.45 1.60 L17.92 1.65 L17.41 1.78 L16.92 1.99 L16.46 2.28 L16.06 2.63 L15.72 3.04Z' fill='black'/%3E%3C/svg%3E") center/100% 100% no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 25 44'%3E%3Cpath d='M3.72 20.04 L3.45 20.49 L3.26 20.97 L3.14 21.48 L3.10 22.00 L3.14 22.52 L3.26 23.03 L3.45 23.51 L3.72 23.96 L15.72 40.96 L16.06 41.37 L16.46 41.72 L16.92 42.01 L17.41 42.22 L17.92 42.35 L18.45 42.40 L18.99 42.37 L19.51 42.25 L20.00 42.05 L20.46 41.78 L20.87 41.44 L21.22 41.04 L21.51 40.58 L21.72 40.09 L21.85 39.58 L21.90 39.05 L21.87 38.51 L21.75 37.99 L21.55 37.50 L21.28 37.04 L10.66 22.00 L21.28 6.96 L21.55 6.50 L21.75 6.01 L21.87 5.49 L21.90 4.95 L21.85 4.42 L21.72 3.91 L21.51 3.42 L21.22 2.96 L20.87 2.56 L20.46 2.22 L20.00 1.95 L19.51 1.75 L18.99 1.63 L18.45 1.60 L17.92 1.65 L17.41 1.78 L16.92 1.99 L16.46 2.28 L16.06 2.63 L15.72 3.04Z' fill='black'/%3E%3C/svg%3E") center/100% 100% no-repeat;transition:background .3s ease;}
     [data-arrow]:hover [data-arrow-glass]{background:rgba(255,255,255,.52);}
     :focus-visible{outline:1px solid var(--bc-accent);outline-offset:3px;}
+    @media (max-width:640px){
+      /* Celular: siempre 2 productos (y 2 categorías) por fila */
+      [data-pgrid]{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:30px 12px!important;}
+      [data-tgrid]{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
+      [data-pgrid] [data-badge]{font-size:8px!important;letter-spacing:.1em!important;padding:5px 7px!important;}
+      [data-pgrid] [data-badge="destacado"]{display:none!important;}
+      [data-pgrid] [data-edit-chip]{right:6px!important;bottom:6px!important;padding:6px 8px!important;}
+      [data-pgrid] [data-quick]{padding:9px 12px!important;letter-spacing:.12em!important;}
+    }
     @media (prefers-reduced-motion: reduce){
       *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important;}
     }
   </style>
 </helmet>
 
-<div style="font-family:var(--bc-body);font-size-adjust:var(--bc-body-adjust);color:#1C1A19;background:#fff;min-height:100vh;position:relative;overflow-x:hidden;">
+<div style="font-family:var(--bc-body);font-size-adjust:var(--bc-body-adjust);color:#1C1A19;background:#fff;min-height:100vh;position:relative;overflow-x:hidden;padding-bottom:{{ previewPad }};">
 
   <!-- HEADER -->
   <header style="position:fixed;top:0;left:0;right:0;z-index:40;background:{{ headerBg }};border-bottom:1px solid {{ headerBorder }};transition:background .3s ease, border-color .3s ease;">
@@ -94,7 +109,8 @@
         <span onClick="{{ goSale }}" style="cursor:pointer;font-family:var(--bc-title);font-size-adjust:var(--bc-title-adjust);font-size:24px;padding:10px 0;color:#A6322A;" style-hover="color:var(--bc-accent);">Sale</span>
         <div style="height:1px;background:#E4DED8;margin:14px 0 18px;"></div>
         <sc-for list="{{ menuCategories }}" as="c" hint-placeholder-count="4">
-          <span onClick="{{ c.select }}" style="cursor:pointer;font-size:13.5px;letter-spacing:0.06em;padding:9px 0;color:#3A3532;" style-hover="color:var(--bc-accent);">{{ c.name }}</span>
+          <sc-if value="{{ c.ready }}"><span onClick="{{ c.select }}" style="cursor:pointer;font-size:13.5px;letter-spacing:0.06em;padding:9px 0;color:#3A3532;" style-hover="color:var(--bc-accent);">{{ c.name }}</span></sc-if>
+          <sc-if value="{{ c.soon }}"><span aria-disabled="true" style="cursor:default;font-size:13.5px;letter-spacing:0.06em;padding:9px 0;color:#B5ADA6;display:flex;align-items:center;gap:10px;">{{ c.name }}<span style="font-size:8.5px;letter-spacing:0.16em;text-transform:uppercase;color:#9A938D;border:1px solid #E4DED8;padding:3px 7px;">¡Próximamente!</span></span></sc-if>
         </sc-for>
         <div style="height:1px;background:#E4DED8;margin:18px 0;"></div>
         <sc-if value="{{ hasFaq }}"><span onClick="{{ goFaq }}" style="cursor:pointer;font-size:13.5px;letter-spacing:0.06em;padding:9px 0;color:#3A3532;" style-hover="color:var(--bc-accent);">Preguntas frecuentes</span></sc-if>
@@ -198,6 +214,18 @@
   </sc-if>
 
   <!-- TOAST -->
+  <sc-if value="{{ previewBar }}">
+    <div data-preview-bar="1" role="region" aria-label="Vista previa" style="position:fixed;left:0;right:0;bottom:0;z-index:66;background:#1C1A19;color:#fff;box-shadow:0 -10px 30px rgba(0,0,0,0.18);animation:bcRise .3s ease;">
+      <div style="max-width:1240px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:220px;font-size:13px;font-weight:300;line-height:1.5;"><span style="display:block;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:#C7A98C;margin-bottom:3px;">Vista previa · solo la ves vos</span>{{ previewText }}</div>
+        <span role="button" tabIndex="0" onClick="{{ backToLook }}" style="cursor:pointer;border:1px solid rgba(255,255,255,0.45);padding:13px 24px;font-size:10.5px;letter-spacing:0.18em;text-transform:uppercase;" style-hover="border-color:#fff;">Seguir editando</span>
+        <sc-if value="{{ previewDirty }}">
+          <span role="button" tabIndex="0" onClick="{{ saveFromPreview }}" style="cursor:pointer;background:#fff;color:#1C1A19;padding:14px 26px;font-size:10.5px;letter-spacing:0.18em;text-transform:uppercase;" style-hover="background:#F0E6DC;">{{ previewSaveLabel }}</span>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
   <sc-if value="{{ toast }}">
     <div role="status" style="position:fixed;bottom:26px;left:50%;transform:translateX(-50%);background:#1C1A19;color:#fff;padding:13px 26px;font-size:11.5px;letter-spacing:0.16em;text-transform:uppercase;z-index:70;width:max-content;max-width:calc(100vw - 32px);text-align:center;line-height:1.6;">{{ toast }}</div>
   </sc-if>
@@ -260,11 +288,14 @@
           <div style="font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:#7A736E;margin-bottom:14px;">Elegí tu favorito</div>
           <h2 style="font-family:var(--bc-title);font-size-adjust:var(--bc-title-adjust);font-weight:300;font-size:44px;margin:0;line-height:1.1;">Nuestros productos</h2>
         </div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:4px;">
+        <div data-tgrid="1" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:4px;">
           <sc-for list="{{ categoryTiles }}" as="tile" hint-placeholder-count="4">
-            <div onClick="{{ tile.select }}" style="cursor:pointer;position:relative;overflow:hidden;aspect-ratio:3/4;background:#F6F1EC;">
-              <img src="{{ tile.image }}" alt="Foto de categoría" style="width:100%;height:100%;object-fit:cover;display:block;">
+            <div onClick="{{ tile.select }}" data-soon="{{ tile.soon }}" style="cursor:{{ tile.cursor }};position:relative;overflow:hidden;aspect-ratio:3/4;background:#F6F1EC;">
+              <img src="{{ tile.image }}" alt="Foto de categoría" style="width:100%;height:100%;object-fit:cover;display:block;filter:{{ tile.filter }};opacity:{{ tile.fade }};">
               <div style="position:absolute;inset:0;background:linear-gradient(0deg, rgba(28,26,25,0.55) 0%, rgba(28,26,25,0) 55%);pointer-events:none;"></div>
+              <sc-if value="{{ tile.soon }}">
+                <div style="position:absolute;top:14px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.94);color:#5B554F;font-size:9.5px;letter-spacing:0.18em;text-transform:uppercase;padding:6px 12px;white-space:nowrap;pointer-events:none;">¡Próximamente!</div>
+              </sc-if>
               <div style="position:absolute;left:0;right:0;bottom:24px;text-align:center;color:#fff;font-size:11px;letter-spacing:0.24em;text-transform:uppercase;pointer-events:none;">{{ tile.name }}</div>
             </div>
           </sc-for>
@@ -280,7 +311,7 @@
           </div>
           <span onClick="{{ goCatalogAll }}" style="cursor:pointer;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#1C1A19;border-bottom:1px solid #1C1A19;padding-bottom:4px;">Ver todo</span>
         </div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:30px 22px;">
+        <div data-pgrid="1" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,330px));justify-content:center;gap:30px 22px;">
           <sc-for list="{{ skeletonCards }}" as="k">
             <div>
               <div style="aspect-ratio:4/5;background:#F6F1EC;animation:bcPulse 1.6s ease-in-out infinite;"></div>
@@ -291,11 +322,12 @@
             <div onClick="{{ p.open }}" style="cursor:pointer;">
               <div data-card-media="1" onMouseEnter="{{ p.hoverStart }}" onMouseLeave="{{ p.hoverEnd }}" style="position:relative;overflow:hidden;aspect-ratio:4/5;background:#F6F1EC;">
                 <img src="{{ p.image }}" alt="{{ p.name }}" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block;">
+                <sc-if value="{{ p.baseVideo }}"><video data-card-video="1" src="{{ p.baseVideo }}" poster="{{ p.image }}" muted="{{ p.on }}" loop="{{ p.on }}" playsInline="{{ p.on }}" preload="none" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none;"></video></sc-if>
                 <sc-for list="{{ p.slides }}" as="sl">
                   <div style="position:absolute;inset:0;opacity:{{ sl.opacity }};transition:opacity .7s ease;pointer-events:none;">
                     <img src="{{ sl.poster }}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">
                     <sc-if value="{{ sl.playVideo }}">
-                      <video src="{{ sl.video }}" autoPlay="{{ sl.on }}" muted="{{ sl.on }}" loop="{{ sl.on }}" playsInline="{{ sl.on }}" onLoadedData="{{ sl.onReady }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"></video>
+                      <video src="{{ sl.video }}" autoPlay="{{ sl.on }}" muted="{{ sl.on }}" loop="{{ sl.loop }}" playsInline="{{ sl.on }}" onLoadedData="{{ sl.onReady }}" onEnded="{{ sl.onEnded }}" data-hover-video="1" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"></video>
                     </sc-if>
                   </div>
                 </sc-for>
@@ -307,13 +339,13 @@
                   </div>
                 </sc-if>
                 <sc-if value="{{ p.lastUnit }}">
-                  <div style="position:absolute;top:0;left:0;background:#fff;color:var(--bc-accent);box-shadow:inset 0 0 0 1px var(--bc-accent);font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;padding:6px 12px;pointer-events:none;">Última unidad</div>
+                  <div data-badge="1" style="position:absolute;top:0;left:0;background:#fff;color:var(--bc-accent);box-shadow:inset 0 0 0 1px var(--bc-accent);font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;padding:6px 12px;pointer-events:none;">Última unidad</div>
                 </sc-if>
                 <sc-if value="{{ p.canEdit }}">
                   <span role="button" tabIndex="0" aria-label="Editar {{ p.name }}" title="Editar producto" onClick="{{ p.editHere }}" onKeyDown="{{ p.editKey }}" data-edit-chip="1" style="position:absolute;right:8px;bottom:8px;z-index:3;display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.94);color:#1C1A19;font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;padding:7px 10px;box-shadow:0 1px 6px rgba(28,26,25,0.18);cursor:pointer;transition:background .2s ease,color .2s ease;" style-hover="background:#1C1A19;color:#fff;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path><path d="M13.5 6.5l4 4" stroke="currentColor" stroke-width="1.6"></path></svg>Editar</span>
                 </sc-if>
                 <sc-if value="{{ p.outOfStock }}">
-                  <div style="position:absolute;top:0;left:0;background:#1C1A19;color:#fff;font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;padding:6px 12px;">Agotado</div>
+                  <div data-badge="1" style="position:absolute;top:0;left:0;background:#1C1A19;color:#fff;font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;padding:6px 12px;">Agotado</div>
                 </sc-if>
               </div>
               <div style="padding-top:16px;text-align:center;">
@@ -342,16 +374,17 @@
               </div>
               <span onClick="{{ goSale }}" style="cursor:pointer;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#fff;border-bottom:1px solid #fff;padding-bottom:4px;">Ver todo el sale</span>
             </div>
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:30px 22px;">
+            <div data-pgrid="1" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,330px));justify-content:center;gap:30px 22px;">
               <sc-for list="{{ saleProducts }}" as="p" hint-placeholder-count="4">
                 <div onClick="{{ p.open }}" style="cursor:pointer;">
                   <div data-card-media="1" onMouseEnter="{{ p.hoverStart }}" onMouseLeave="{{ p.hoverEnd }}" style="position:relative;overflow:hidden;aspect-ratio:4/5;background:#2A2623;">
                     <img src="{{ p.image }}" alt="{{ p.name }}" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block;">
+                    <sc-if value="{{ p.baseVideo }}"><video data-card-video="1" src="{{ p.baseVideo }}" poster="{{ p.image }}" muted="{{ p.on }}" loop="{{ p.on }}" playsInline="{{ p.on }}" preload="none" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none;"></video></sc-if>
                 <sc-for list="{{ p.slides }}" as="sl">
                   <div style="position:absolute;inset:0;opacity:{{ sl.opacity }};transition:opacity .7s ease;pointer-events:none;">
                     <img src="{{ sl.poster }}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">
                     <sc-if value="{{ sl.playVideo }}">
-                      <video src="{{ sl.video }}" autoPlay="{{ sl.on }}" muted="{{ sl.on }}" loop="{{ sl.on }}" playsInline="{{ sl.on }}" onLoadedData="{{ sl.onReady }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"></video>
+                      <video src="{{ sl.video }}" autoPlay="{{ sl.on }}" muted="{{ sl.on }}" loop="{{ sl.loop }}" playsInline="{{ sl.on }}" onLoadedData="{{ sl.onReady }}" onEnded="{{ sl.onEnded }}" data-hover-video="1" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"></video>
                     </sc-if>
                   </div>
                 </sc-for>
@@ -363,12 +396,12 @@
                   </div>
                 </sc-if>
                 <sc-if value="{{ p.lastUnit }}">
-                  <div style="position:absolute;bottom:0;left:0;background:#fff;color:var(--bc-accent);box-shadow:inset 0 0 0 1px var(--bc-accent);font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;padding:6px 12px;pointer-events:none;">Última unidad</div>
+                  <div data-badge="1" style="position:absolute;bottom:0;left:0;background:#fff;color:var(--bc-accent);box-shadow:inset 0 0 0 1px var(--bc-accent);font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;padding:6px 12px;pointer-events:none;">Última unidad</div>
                 </sc-if>
                 <sc-if value="{{ p.canEdit }}">
                   <span role="button" tabIndex="0" aria-label="Editar {{ p.name }}" title="Editar producto" onClick="{{ p.editHere }}" onKeyDown="{{ p.editKey }}" data-edit-chip="1" style="position:absolute;right:8px;bottom:8px;z-index:3;display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.94);color:#1C1A19;font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;padding:7px 10px;box-shadow:0 1px 6px rgba(28,26,25,0.18);cursor:pointer;transition:background .2s ease,color .2s ease;" style-hover="background:#1C1A19;color:#fff;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path><path d="M13.5 6.5l4 4" stroke="currentColor" stroke-width="1.6"></path></svg>Editar</span>
                 </sc-if>
-                    <div style="position:absolute;top:0;left:0;background:#A6322A;color:#fff;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;padding:7px 13px;">{{ p.discountLabel }}</div>
+                    <div data-badge="1" style="position:absolute;top:0;left:0;background:#A6322A;color:#fff;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;padding:7px 13px;">{{ p.discountLabel }}</div>
                   </div>
                   <div style="padding-top:16px;text-align:center;">
                     <div style="font-size:14.5px;letter-spacing:0.03em;color:#fff;">{{ p.name }}</div>
@@ -454,7 +487,8 @@
 
       <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
         <sc-for list="{{ categoryChips }}" as="chip" hint-placeholder-count="5">
-          <span onClick="{{ chip.select }}" style="cursor:pointer;padding:10px 20px;font-size:10.5px;letter-spacing:0.16em;text-transform:uppercase;border:1px solid {{ chip.border }};background:{{ chip.bg }};color:{{ chip.color }};">{{ chip.name }}</span>
+          <sc-if value="{{ chip.ready }}"><span onClick="{{ chip.select }}" style="cursor:pointer;padding:10px 20px;font-size:10.5px;letter-spacing:0.16em;text-transform:uppercase;border:1px solid {{ chip.border }};background:{{ chip.bg }};color:{{ chip.color }};">{{ chip.name }}</span></sc-if>
+          <sc-if value="{{ chip.soon }}"><span aria-disabled="true" title="Próximamente" style="cursor:default;display:inline-flex;align-items:center;gap:8px;padding:10px 16px 10px 20px;font-size:10.5px;letter-spacing:0.16em;text-transform:uppercase;border:1px solid #EFEAE4;background:#F7F5F3;color:#B5ADA6;">{{ chip.name }}<span style="font-size:8px;letter-spacing:0.12em;color:#9A938D;">¡Próximamente!</span></span></sc-if>
         </sc-for>
       </div>
       <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center;margin-bottom:44px;">
@@ -473,7 +507,13 @@
       <sc-if value="{{ catalogEmpty }}">
         <p style="text-align:center;color:#7A736E;padding:80px 0;font-size:14px;">No hay productos en esta selección todavía.</p>
       </sc-if>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:40px 22px;">
+      <sc-if value="{{ catalogSoon }}">
+        <div style="text-align:center;padding:80px 0;">
+          <div style="font-size:10.5px;letter-spacing:0.24em;text-transform:uppercase;color:#9A938D;margin-bottom:12px;">¡Próximamente!</div>
+          <p style="margin:0;color:#7A736E;font-size:14px;font-weight:300;">Estamos preparando esta categoría. Muy pronto vas a poder verla acá.</p>
+        </div>
+      </sc-if>
+      <div data-pgrid="1" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:40px 22px;">
         <sc-for list="{{ skeletonCards }}" as="k">
             <div>
               <div style="aspect-ratio:4/5;background:#F6F1EC;animation:bcPulse 1.6s ease-in-out infinite;"></div>
@@ -484,11 +524,12 @@
           <div data-card="1">
             <div onClick="{{ p.open }}" data-card-media="1" onMouseEnter="{{ p.hoverStart }}" onMouseLeave="{{ p.hoverEnd }}" style="cursor:pointer;position:relative;overflow:hidden;aspect-ratio:4/5;background:#F6F1EC;">
               <img src="{{ p.image }}" alt="{{ p.name }}" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block;">
+              <sc-if value="{{ p.baseVideo }}"><video data-card-video="1" src="{{ p.baseVideo }}" poster="{{ p.image }}" muted="{{ p.on }}" loop="{{ p.on }}" playsInline="{{ p.on }}" preload="none" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none;"></video></sc-if>
                 <sc-for list="{{ p.slides }}" as="sl">
                   <div style="position:absolute;inset:0;opacity:{{ sl.opacity }};transition:opacity .7s ease;pointer-events:none;">
                     <img src="{{ sl.poster }}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">
                     <sc-if value="{{ sl.playVideo }}">
-                      <video src="{{ sl.video }}" autoPlay="{{ sl.on }}" muted="{{ sl.on }}" loop="{{ sl.on }}" playsInline="{{ sl.on }}" onLoadedData="{{ sl.onReady }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"></video>
+                      <video src="{{ sl.video }}" autoPlay="{{ sl.on }}" muted="{{ sl.on }}" loop="{{ sl.loop }}" playsInline="{{ sl.on }}" onLoadedData="{{ sl.onReady }}" onEnded="{{ sl.onEnded }}" data-hover-video="1" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"></video>
                     </sc-if>
                   </div>
                 </sc-for>
@@ -500,19 +541,19 @@
                   </div>
                 </sc-if>
                 <sc-if value="{{ p.lastUnit }}">
-                  <div style="position:absolute;top:0;left:0;background:#fff;color:var(--bc-accent);box-shadow:inset 0 0 0 1px var(--bc-accent);font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;padding:6px 12px;pointer-events:none;">Última unidad</div>
+                  <div data-badge="1" style="position:absolute;top:0;left:0;background:#fff;color:var(--bc-accent);box-shadow:inset 0 0 0 1px var(--bc-accent);font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;padding:6px 12px;pointer-events:none;">Última unidad</div>
                 </sc-if>
                 <sc-if value="{{ p.canEdit }}">
                   <span role="button" tabIndex="0" aria-label="Editar {{ p.name }}" title="Editar producto" onClick="{{ p.editHere }}" onKeyDown="{{ p.editKey }}" data-edit-chip="1" style="position:absolute;right:8px;bottom:8px;z-index:3;display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.94);color:#1C1A19;font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;padding:7px 10px;box-shadow:0 1px 6px rgba(28,26,25,0.18);cursor:pointer;transition:background .2s ease,color .2s ease;" style-hover="background:#1C1A19;color:#fff;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path><path d="M13.5 6.5l4 4" stroke="currentColor" stroke-width="1.6"></path></svg>Editar</span>
                 </sc-if>
               <sc-if value="{{ p.outOfStock }}">
-                <div style="position:absolute;top:0;left:0;background:#1C1A19;color:#fff;font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;padding:6px 12px;">Agotado</div>
+                <div data-badge="1" style="position:absolute;top:0;left:0;background:#1C1A19;color:#fff;font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;padding:6px 12px;">Agotado</div>
               </sc-if>
               <sc-if value="{{ p.featured }}">
-                <div style="position:absolute;top:0;right:0;background:var(--bc-accent);color:#fff;font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;padding:6px 12px;">Destacado</div>
+                <div data-badge="destacado" style="position:absolute;top:0;right:0;background:var(--bc-accent);color:#fff;font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;padding:6px 12px;">Destacado</div>
               </sc-if>
               <sc-if value="{{ p.isOnSale }}">
-                <div style="position:absolute;bottom:0;left:0;background:#A6322A;color:#fff;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;padding:7px 13px;">{{ p.discountLabel }}</div>
+                <div data-badge="1" style="position:absolute;bottom:0;left:0;background:#A6322A;color:#fff;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;padding:7px 13px;">{{ p.discountLabel }}</div>
               </sc-if>
             </div>
             <div style="padding-top:16px;text-align:center;">
@@ -525,10 +566,10 @@
                 <span style="font-size:14px;color:{{ p.priceColor }};">{{ p.priceFormatted }}</span>
               </div>
               <sc-if value="{{ p.canQuickAdd }}">
-                <span onClick="{{ p.quickAdd }}" style="cursor:pointer;display:inline-block;border:1px solid #D8D1CA;padding:10px 22px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#3A3532;transition:background .2s ease,color .2s ease,border-color .2s ease;" style-hover="background:#1C1A19;color:#fff;border-color:#1C1A19;">{{ p.quickLabel }}</span>
+                <span data-quick="1" onClick="{{ p.quickAdd }}" style="cursor:pointer;display:inline-block;border:1px solid #D8D1CA;padding:10px 22px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#3A3532;transition:background .2s ease,color .2s ease,border-color .2s ease;" style-hover="background:#1C1A19;color:#fff;border-color:#1C1A19;">{{ p.quickLabel }}</span>
               </sc-if>
               <sc-if value="{{ p.outOfStock }}">
-                <span style="display:inline-block;border:1px solid #EFEAE4;padding:10px 22px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#B5ADA6;">Sin stock</span>
+                <span data-quick="1" style="display:inline-block;border:1px solid #EFEAE4;padding:10px 22px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#B5ADA6;">Sin stock</span>
               </sc-if>
             </div>
           </div>
@@ -568,7 +609,7 @@
               <div data-active="{{ g.activeFlag }}" style="position:absolute;inset:0;opacity:{{ g.opacity }};transition:opacity .45s ease;pointer-events:{{ g.pe }};">
                 <img src="{{ g.still }}" alt="{{ g.alt }}" style="width:100%;height:100%;object-fit:cover;display:block;">
                 <sc-if value="{{ g.showVideo }}">
-                  <video src="{{ g.video }}" poster="{{ g.still }}" controls="{{ g.on }}" playsInline="{{ g.on }}" preload="metadata" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#F6F1EC;"></video>
+                  <video src="{{ g.video }}" poster="{{ g.still }}" controls="{{ g.on }}" autoPlay="{{ g.on }}" muted="{{ g.on }}" loop="{{ g.on }}" playsInline="{{ g.on }}" preload="metadata" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#F6F1EC;"></video>
                 </sc-if>
               </div>
             </sc-for>
@@ -595,7 +636,7 @@
           </sc-if>
         </div>
         <div style="position:sticky;top:112px;align-self:start;">
-          <sc-if value="{{ isAdminUser }}">
+          <sc-if value="{{ showAdminBox }}">
             <div data-admin-box="1" style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border:1px dashed #CFC6BE;background:#FBF8F5;padding:12px 14px;margin-bottom:22px;">
               <div style="font-size:12px;line-height:1.6;color:#5B554F;min-width:0;"><span style="font-size:9.5px;letter-spacing:0.18em;text-transform:uppercase;color:#9A938D;display:block;">Solo lo ves vos</span>{{ adminProductInfo }}</div>
               <span role="button" tabIndex="0" onClick="{{ editSelectedProduct }}" onKeyDown="{{ editSelectedKey }}" style="cursor:pointer;display:inline-flex;align-items:center;gap:7px;background:#1C1A19;color:#fff;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;padding:10px 16px;white-space:nowrap;" style-hover="background:var(--bc-accent);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path><path d="M13.5 6.5l4 4" stroke="currentColor" stroke-width="1.6"></path></svg>Editar producto</span>
@@ -654,16 +695,17 @@
       <sc-if value="{{ hasRelated }}">
         <div style="margin-top:110px;">
           <h2 style="font-family:var(--bc-title);font-size-adjust:var(--bc-title-adjust);font-weight:300;font-size:34px;margin:0 0 34px;text-align:center;">También te puede gustar</h2>
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:22px;">
+          <div data-pgrid="1" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,300px));justify-content:center;gap:22px;">
             <sc-for list="{{ relatedProducts }}" as="p" hint-placeholder-count="4">
               <div onClick="{{ p.open }}" style="cursor:pointer;">
                 <div data-card-media="1" onMouseEnter="{{ p.hoverStart }}" onMouseLeave="{{ p.hoverEnd }}" style="position:relative;aspect-ratio:4/5;overflow:hidden;background:#F6F1EC;">
                   <img src="{{ p.image }}" alt="{{ p.name }}" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block;">
+                  <sc-if value="{{ p.baseVideo }}"><video data-card-video="1" src="{{ p.baseVideo }}" poster="{{ p.image }}" muted="{{ p.on }}" loop="{{ p.on }}" playsInline="{{ p.on }}" preload="none" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none;"></video></sc-if>
                 <sc-for list="{{ p.slides }}" as="sl">
                   <div style="position:absolute;inset:0;opacity:{{ sl.opacity }};transition:opacity .7s ease;pointer-events:none;">
                     <img src="{{ sl.poster }}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">
                     <sc-if value="{{ sl.playVideo }}">
-                      <video src="{{ sl.video }}" autoPlay="{{ sl.on }}" muted="{{ sl.on }}" loop="{{ sl.on }}" playsInline="{{ sl.on }}" onLoadedData="{{ sl.onReady }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"></video>
+                      <video src="{{ sl.video }}" autoPlay="{{ sl.on }}" muted="{{ sl.on }}" loop="{{ sl.loop }}" playsInline="{{ sl.on }}" onLoadedData="{{ sl.onReady }}" onEnded="{{ sl.onEnded }}" data-hover-video="1" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"></video>
                     </sc-if>
                   </div>
                 </sc-for>
@@ -675,7 +717,7 @@
                   </div>
                 </sc-if>
                 <sc-if value="{{ p.lastUnit }}">
-                  <div style="position:absolute;top:0;left:0;background:#fff;color:var(--bc-accent);box-shadow:inset 0 0 0 1px var(--bc-accent);font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;padding:6px 12px;pointer-events:none;">Última unidad</div>
+                  <div data-badge="1" style="position:absolute;top:0;left:0;background:#fff;color:var(--bc-accent);box-shadow:inset 0 0 0 1px var(--bc-accent);font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;padding:6px 12px;pointer-events:none;">Última unidad</div>
                 </sc-if>
                 <sc-if value="{{ p.canEdit }}">
                   <span role="button" tabIndex="0" aria-label="Editar {{ p.name }}" title="Editar producto" onClick="{{ p.editHere }}" onKeyDown="{{ p.editKey }}" data-edit-chip="1" style="position:absolute;right:8px;bottom:8px;z-index:3;display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.94);color:#1C1A19;font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;padding:7px 10px;box-shadow:0 1px 6px rgba(28,26,25,0.18);cursor:pointer;transition:background .2s ease,color .2s ease;" style-hover="background:#1C1A19;color:#fff;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path><path d="M13.5 6.5l4 4" stroke="currentColor" stroke-width="1.6"></path></svg>Editar</span>
@@ -1149,7 +1191,10 @@
         <!-- LOOK TAB -->
         <sc-if value="{{ isAdminLook }}">
           <div style="display:flex;flex-direction:column;gap:44px;padding-bottom:96px;">
-            <p style="margin:-8px 0 0;font-size:13px;font-weight:300;color:#5B554F;line-height:1.7;max-width:680px;">Los cambios de letra y color se ven enseguida en este panel. El sitio se actualiza para todas recién cuando tocás <strong style="font-weight:500;">Guardar cambios</strong>.</p>
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:16px 24px;flex-wrap:wrap;margin-top:-8px;">
+              <p style="margin:0;font-size:13px;font-weight:300;color:#5B554F;line-height:1.7;max-width:640px;flex:1;min-width:240px;">Tocá <strong style="font-weight:500;">Ver cómo queda</strong> cuando quieras para recorrer el sitio exactamente como va a quedar con tus cambios. Las clientas lo ven recién cuando tocás <strong style="font-weight:500;">Guardar cambios</strong>.</p>
+              <span role="button" tabIndex="0" onClick="{{ openLookPreview }}" style="cursor:pointer;display:inline-flex;align-items:center;gap:9px;border:1px solid #1C1A19;padding:13px 24px;font-size:10.5px;letter-spacing:0.18em;text-transform:uppercase;color:#1C1A19;white-space:nowrap;" style-hover="background:#1C1A19;color:#fff;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z" stroke="currentColor" stroke-width="1.5"></path><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"></circle></svg>Ver cómo queda</span>
+            </div>
 
             <section>
               <h3 style="font-family:var(--bc-title);font-size-adjust:var(--bc-title-adjust);font-weight:400;font-size:28px;line-height:1.15;margin:0 0 6px;">Portada</h3>
@@ -1267,9 +1312,9 @@
 
             <section style="border-top:1px solid #E4DED8;padding-top:40px;">
               <h3 style="font-family:var(--bc-title);font-size-adjust:var(--bc-title-adjust);font-weight:400;font-size:28px;line-height:1.15;margin:0 0 6px;">Tipografía</h3>
-              <p style="font-size:13px;font-weight:300;color:#7A736E;line-height:1.7;margin:0 0 22px;max-width:640px;">La letra de los títulos y la de los textos, en todo el sitio. Cada opción ya viene combinada para que queden bien juntas.</p>
+              <p style="font-size:13px;font-weight:300;color:#7A736E;line-height:1.7;margin:0 0 22px;max-width:640px;">La letra de los títulos y la de los textos, en todo el sitio. Son 10 combinaciones conocidas y probadas, cada una con un estilo distinto. Tocá una y se aplica enseguida en este panel para que la compares.</p>
               <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;">
-                <sc-for list="{{ lookFonts }}" as="f" hint-placeholder-count="5">
+                <sc-for list="{{ lookFonts }}" as="f" hint-placeholder-count="10">
                   <div onClick="{{ f.pick }}" style="cursor:pointer;border:1px solid {{ f.border }};padding:22px 20px 18px;background:#fff;transition:border-color .2s ease;" style-hover="border-color:#9A938D;">
                     <div style="font-family:{{ f.title }};font-size-adjust:{{ f.ta }};font-weight:300;font-size:30px;line-height:1.1;margin-bottom:10px;color:#1C1A19;">Joyas para todos los días</div>
                     <div style="font-family:{{ f.body }};font-size-adjust:{{ f.ba }};font-size:13px;font-weight:300;color:#5B554F;line-height:1.6;margin-bottom:18px;">Anillos, collares y aros de acero inoxidable.</div>
@@ -1277,6 +1322,7 @@
                       <span>{{ f.name }}</span>
                       <sc-if value="{{ f.selected }}"><span style="color:#1C1A19;">Elegida</span></sc-if>
                     </div>
+                    <div style="font-size:11px;color:#9A938D;margin-top:6px;">{{ f.fonts }}</div>
                   </div>
                 </sc-for>
               </div>
@@ -1335,6 +1381,7 @@
               <div style="max-width:1240px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
                 <span style="flex:1;min-width:200px;font-size:13px;font-weight:300;color:#5B554F;">Tenés cambios sin guardar.</span>
                 <span onClick="{{ discardLook }}" style="cursor:pointer;border:1px solid #D8D1CA;padding:13px 26px;font-size:10.5px;letter-spacing:0.18em;text-transform:uppercase;color:#3A3532;">Descartar</span>
+                <span onClick="{{ openLookPreview }}" style="cursor:pointer;border:1px solid #1C1A19;padding:13px 26px;font-size:10.5px;letter-spacing:0.18em;text-transform:uppercase;color:#1C1A19;">Ver cómo queda</span>
                 <span onClick="{{ saveLook }}" style="cursor:pointer;background:#1C1A19;color:#fff;padding:14px 30px;font-size:10.5px;letter-spacing:0.18em;text-transform:uppercase;transition:background .2s ease;" style-hover="background:var(--bc-accent);">{{ lookSaveLabel }}</span>
               </div>
             </div>
@@ -1345,12 +1392,15 @@
         <sc-if value="{{ isAdminCats }}">
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:44px;">
             <div>
-              <h3 style="font-family:var(--bc-title);font-size-adjust:var(--bc-title-adjust);font-weight:400;font-size:24px;margin:0 0 18px;">Categorías</h3>
+              <h3 style="font-family:var(--bc-title);font-size-adjust:var(--bc-title-adjust);font-weight:400;font-size:24px;margin:0 0 8px;">Categorías</h3>
+              <p style="font-size:12.5px;font-weight:300;color:#7A736E;line-height:1.7;margin:0 0 16px;">Tildá <strong style="font-weight:500;">Próximamente</strong> para mostrar una categoría en gris con el cartel "¡Próximamente!". No se puede tocar, y sus productos no se ven hasta que la destildes: podés ir cargándolos antes.</p>
               <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:20px;">
                 <sc-for list="{{ categories }}" as="c" hint-placeholder-count="4">
-                  <div style="display:flex;align-items:center;justify-content:space-between;border:1px solid #EFEAE4;padding:13px 16px;">
-                    <span style="font-size:14px;">{{ c.name }}</span>
+                  <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px 18px;border:1px solid #EFEAE4;padding:13px 16px;">
+                    <span style="font-size:14px;flex:1;min-width:110px;">{{ c.name }}</span>
+                    <label style="display:flex;align-items:center;gap:7px;font-size:12px;color:#5B554F;cursor:pointer;"><input type="checkbox" checked="{{ c.soon }}" onChange="{{ c.toggleSoon }}"> Próximamente</label>
                     <span onClick="{{ c.remove }}" style="cursor:pointer;font-size:10.5px;letter-spacing:0.16em;text-transform:uppercase;color:#A6322A;">Eliminar</span>
+                    <sc-if value="{{ c.soonNote }}"><div style="flex-basis:100%;font-size:11.5px;color:#A0701A;">{{ c.soonText }}</div></sc-if>
                   </div>
                 </sc-for>
               </div>
@@ -1395,7 +1445,8 @@
             <span onClick="{{ goCatalogAll }}" style="cursor:pointer;">Todos los productos</span>
             <span onClick="{{ goSale }}" style="cursor:pointer;">Sale</span>
             <sc-for list="{{ menuCategories }}" as="c" hint-placeholder-count="4">
-              <span onClick="{{ c.select }}" style="cursor:pointer;">{{ c.name }}</span>
+              <sc-if value="{{ c.ready }}"><span onClick="{{ c.select }}" style="cursor:pointer;">{{ c.name }}</span></sc-if>
+              <sc-if value="{{ c.soon }}"><span aria-disabled="true" style="cursor:default;color:#B5ADA6;">{{ c.name }} <span style="font-size:10px;letter-spacing:0.1em;">· ¡Próximamente!</span></span></sc-if>
             </sc-for>
           </div>
         </div>
@@ -1628,18 +1679,33 @@ const firebaseReady = (async () => {
 // ---------- Estética editable desde el panel ----------
 // Combinaciones de tipografía. `ta` y `ba` ajustan el tamaño (font-size-adjust) para que cada
 // combinación se vea del mismo tamaño que la original, aunque las letras sean más grandes o chicas.
+// 10 combinaciones conocidas y bien distintas entre sí (de las listas de pares de Google Fonts más
+// recomendadas). ta/ba = font-size-adjust medido sobre cada fuente para que, a igual tamaño,
+// ocupe parecido a la Clásica (promedio entre el ancho y la altura de las mayúsculas).
 const FONT_PAIRS = [
   { id: 'clasica', name: 'Clásica', title: "'Cormorant Garamond', serif", body: "'Jost', sans-serif", ta: 'none', ba: 'none',
     q: 'family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500;600' },
-  { id: 'editorial', name: 'Editorial', title: "'Playfair Display', serif", body: "'Manrope', sans-serif", ta: '0.426', ba: '0.497',
-    q: 'family=Playfair+Display:wght@400;500&family=Manrope:wght@300;400;500;600' },
-  { id: 'moderna', name: 'Moderna', title: "'Bodoni Moda', serif", body: "'Figtree', sans-serif", ta: '0.384', ba: '0.483',
-    q: 'family=Bodoni+Moda:wght@400;500&family=Figtree:wght@300;400;500;600' },
-  { id: 'suave', name: 'Suave', title: "'Fraunces', serif", body: "'DM Sans', sans-serif", ta: '0.406', ba: '0.486',
-    q: 'family=Fraunces:wght@300;400&family=DM+Sans:wght@300;400;500' },
-  { id: 'minimal', name: 'Minimal', title: "'Marcellus', serif", body: "'Nunito Sans', sans-serif", ta: '0.421', ba: '0.473',
-    q: 'family=Marcellus&family=Nunito+Sans:wght@300;400;600' }
+  { id: 'editorial', name: 'Editorial', title: "'Playfair Display', serif", body: "'Source Sans 3', sans-serif", ta: '0.45', ba: '0.509',
+    q: 'family=Playfair+Display:wght@400;500&family=Source+Sans+3:wght@300;400;500;600' },
+  { id: 'lujo', name: 'Lujo', title: "'Cinzel', serif", body: "'Cardo', serif", ta: '0.394', ba: '0.448',
+    q: 'family=Cinzel:wght@400;500&family=Cardo:ital,wght@0,400;0,700;1,400' },
+  { id: 'costura', name: 'Alta costura', title: "'Antic Didone', serif", body: "'Open Sans', sans-serif", ta: '0.432', ba: '0.51',
+    q: 'family=Antic+Didone&family=Open+Sans:wght@300;400;500;600' },
+  { id: 'geometrica', name: 'Geométrica', title: "'Montserrat', sans-serif", body: "'Merriweather', serif", ta: '0.437', ba: '0.51',
+    q: 'family=Montserrat:wght@300;400;500&family=Merriweather:wght@300;400;700' },
+  { id: 'liviana', name: 'Liviana', title: "'Raleway', sans-serif", body: "'Lato', sans-serif", ta: '0.443', ba: '0.499',
+    q: 'family=Raleway:wght@300;400;500&family=Lato:wght@300;400;700' },
+  { id: 'urbana', name: 'Urbana', title: "'Oswald', sans-serif", body: "'Quattrocento', serif", ta: '0.527', ba: '0.463',
+    q: 'family=Oswald:wght@300;400;500&family=Quattrocento:wght@400;700' },
+  { id: 'impacto', name: 'Impacto', title: "'Abril Fatface', serif", body: "'Roboto', sans-serif", ta: '0.416', ba: '0.515',
+    q: 'family=Abril+Fatface&family=Roboto:wght@300;400;500' },
+  { id: 'manuscrita', name: 'Manuscrita', title: "'Dancing Script', cursive", body: "'Josefin Sans', sans-serif", ta: '0.324', ba: '0.366',
+    q: 'family=Dancing+Script:wght@400;500;600&family=Josefin+Sans:wght@300;400;600' },
+  { id: 'redonda', name: 'Redonda', title: "'Quicksand', sans-serif", body: "'Antic Slab', serif", ta: '0.432', ba: '0.478',
+    q: 'family=Quicksand:wght@300;400;500&family=Antic+Slab' }
 ];
+// Opciones viejas que ya no existen: se pasan a la más parecida.
+const OLD_FONTS = { moderna: 'costura', suave: 'editorial', minimal: 'lujo' };
 const ACCENTS = [
   { hex: '#7C2620', name: 'Bordó' },
   { hex: '#5F291E', name: 'Vino' },
@@ -1689,7 +1755,7 @@ function normalizeLook(raw) {
     : d.hero;
   const e = r.editorial || {};
   return {
-    font: FONT_PAIRS.some(f => f.id === r.font) ? r.font : d.font,
+    font: FONT_PAIRS.some(f => f.id === (OLD_FONTS[r.font] || r.font)) ? (OLD_FONTS[r.font] || r.font) : d.font,
     accent: /^#[0-9a-fA-F]{6}$/.test(r.accent || '') ? r.accent : d.accent,
     header: r.header === 'transparente' ? 'transparente' : 'blanco',
     hero,
@@ -1803,6 +1869,9 @@ class Component extends DCLogic {
     look: this.readCachedLook(),
     lookDraft: null,
     lookCatDraft: null,
+    lookBase: null,
+    lookCatBase: null,
+    lookPreview: false,
     lookDirty: false,
     lookUploading: '',
     lookSaving: false,
@@ -1834,6 +1903,27 @@ class Component extends DCLogic {
     try { return normalizeLook(JSON.parse(localStorage.getItem(LOOK_KEY) || 'null')); } catch (e) { return normalizeLook(null); }
   }
 
+  // Los videos de las tarjetas se reproducen solo mientras están en pantalla (ahorra datos en el celular).
+  watchCardVideos() {
+    if (!this._vidObs) {
+      if (!('IntersectionObserver' in window)) return;
+      this._vidSeen = new WeakSet();
+      this._vidObs = new IntersectionObserver((entries) => entries.forEach((en) => {
+        const v = en.target;
+        if (en.isIntersecting && en.intersectionRatio >= 0.3) {
+          v.muted = true; v.playsInline = true;
+          const pr = v.play(); if (pr && pr.catch) pr.catch(() => {});
+        } else { try { v.pause(); } catch (e) {} }
+      }), { threshold: [0, 0.3, 0.6] });
+    }
+    document.querySelectorAll('video[data-card-video]').forEach((v) => {
+      if (this._vidSeen.has(v)) return;
+      this._vidSeen.add(v);
+      this._vidObs.observe(v);
+    });
+  }
+  componentDidUpdate() { this.watchCardVideos(); }
+
   componentDidMount() {
     // Se cumple cuando ya se sabe si quien navega es la dueña o no.
     this._authKnown = new Promise(res => { this._authKnownDone = () => res(); });
@@ -1848,9 +1938,15 @@ class Component extends DCLogic {
         if (data && data.version === Component.STORE_VERSION && Array.isArray(data.products)) {
           const look = normalizeLook(data.settings);
           try { localStorage.setItem(LOOK_KEY, JSON.stringify(look)); } catch (e) {}
-          this.setState({ ...this.migrate(data), look, storeLoaded: true }, () => {
-            // Si la dueña está editando la estética, no le pisamos la vista previa.
-            if (!(this.state.view === 'admin' && this.state.adminTab === 'estetica' && this.state.lookDirty)) applyLook(look);
+          const migrated = this.migrate(data);
+          this.setState(st => ({
+            ...migrated, look, storeLoaded: true,
+            ...((st.lookDraft && !st.lookDirty) ? this.freshLookDrafts(look, migrated.categories) : {})
+          }), () => {
+            // Si la dueña está editando la estética o mirando la vista previa, no se le pisa.
+            const st = this.state;
+            if (this.isPreviewing() || (st.view === 'admin' && st.adminTab === 'estetica')) applyLook(st.lookDraft || look);
+            else applyLook(look);
           });
         } else {
           // Si todavía no existe el documento, se muestran los productos de ejemplo
@@ -1934,6 +2030,7 @@ class Component extends DCLogic {
   }
 
   componentWillUnmount() {
+    if (this._vidObs) { this._vidObs.disconnect(); this._vidObs = null; }
     if (this._heroTimer) clearInterval(this._heroTimer);
     if (this._onScroll) window.removeEventListener('scroll', this._onScroll);
     if (this._unsubStore) this._unsubStore();
@@ -2023,6 +2120,7 @@ class Component extends DCLogic {
   // Cada pantalla tiene su dirección (#/productos, #/producto/<id>, #/admin). Así funciona
   // el botón "Atrás" del navegador y se puede compartir el link de un producto.
   navigate(hash, after) {
+    if (hash !== '#/admin' && !this.state.lookPreview) this.confirmLeaveLook();
     const cur = location.hash || '#/';
     this._scrolls[cur] = window.scrollY || 0;
     this._navAfter = after || null;
@@ -2039,9 +2137,9 @@ class Component extends DCLogic {
     let next;
     if (a === 'producto' && b) next = { view: 'product', selectedProductId: b, selectedColor: parts[2] ? decodeURIComponent(parts[2]) : '', selectedQty: 1, mediaIndex: 0 };
     else if (a === 'productos') next = { view: 'catalog', catFilter: b || 'all', matFilter: 'all' };
-    else if (a === 'admin') next = { view: 'admin', form: null, adminTab: 'ventas' };
+    else if (a === 'admin') next = { view: 'admin', form: null, adminTab: 'ventas', lookPreview: false };
     else next = { view: 'home' };
-    applyLook(this.state.look);
+    applyLook(this.isPreviewing({ ...this.state, ...next }) ? this.state.lookDraft : this.state.look);
     clearTimeout(this._hoverTimer);
     const after = this._navAfter;
     this._navAfter = null;
@@ -2089,20 +2187,35 @@ class Component extends DCLogic {
   setCatFilter = (id) => this.navigate(id && id !== 'all' ? '#/productos/' + encodeURIComponent(id) : '#/productos');
 
   // ---- Tarjetas: al pasar el mouse se van pasando las fotos y videos ----
+  // Fotos: 1,9 s cada una. Videos: se ven enteros y al terminar pasa al siguiente (tope 90 s por si falla).
   startCardHover(key, media) {
     if (!media || media.length < 2) return;
     if (window.matchMedia && !window.matchMedia('(hover: hover)').matches) return; // en celulares no
     clearTimeout(this._hoverTimer);
+    this._hoverMedia = media;
     this.setState({ hoverKey: key, hoverIdx: 0, hoverLeaving: false });
-    const tick = (delay) => {
-      this._hoverTimer = setTimeout(() => {
-        if (this.state.hoverKey !== key || this.state.hoverLeaving) return;
-        const next = (this.state.hoverIdx + 1) % media.length;
-        this.setState({ hoverIdx: next });
-        tick(media[next].type === 'video' ? 4500 : 1900);
-      }, delay);
-    };
-    tick(450);
+    if (media[0].type === 'video') this.scheduleVideoHover(key); else this.scheduleHover(key, 450);
+  }
+  scheduleHover(key, delay) {
+    clearTimeout(this._hoverTimer);
+    this._hoverTimer = setTimeout(() => this.advanceHover(key), delay);
+  }
+  // Un video sigue hasta que termina (onEnded). Si a los 5 s no arrancó (sin conexión o error), pasa al siguiente.
+  scheduleVideoHover(key) {
+    clearTimeout(this._hoverTimer);
+    this._hoverTimer = setTimeout(() => {
+      if (this.state.hoverKey !== key) return;
+      const v = document.querySelector('video[data-hover-video]');
+      if (!v || v.error || v.readyState < 2) { this.advanceHover(key); return; }
+      this.scheduleHover(key, 90000);
+    }, 5000);
+  }
+  advanceHover(key) {
+    const media = this._hoverMedia || [];
+    if (this.state.hoverKey !== key || this.state.hoverLeaving || media.length < 2) return;
+    const next = (this.state.hoverIdx + 1) % media.length;
+    this.setState({ hoverIdx: next });
+    if (media[next].type === 'video') this.scheduleVideoHover(key); else this.scheduleHover(key, 1900);
   }
   stopCardHover(key) {
     if (this.state.hoverKey !== key) return;
@@ -2460,6 +2573,7 @@ class Component extends DCLogic {
   setAdminTab(id) {
     if (id === this.state.adminTab) return;
     if (id === 'estetica') { this.openLookEditor(); return; }
+    this.confirmLeaveLook();
     // Al salir de Estética, el panel vuelve a mostrarse con la estética guardada.
     if (this.state.adminTab === 'estetica') applyLook(this.state.look);
     this.setState({ adminTab: id });
@@ -2467,14 +2581,40 @@ class Component extends DCLogic {
 
   // ---- Estética: se edita un borrador y se aplica al sitio recién al guardar ----
   catImageMap(cats) { const m = {}; (cats || []).forEach(c => { m[c.id] = c.image || ''; }); return m; }
+  // Borrador nuevo, tomado de lo que está publicado ahora. `lookBase`/`lookCatBase` guardan
+  // desde dónde se empezó a editar: al guardar solo se pisan las partes que se tocaron.
+  freshLookDrafts(look, categories) {
+    return {
+      lookDraft: cloneLook(look), lookBase: cloneLook(look),
+      lookCatDraft: this.catImageMap(categories), lookCatBase: this.catImageMap(categories),
+      lookDirty: false
+    };
+  }
   openLookEditor() {
     FONT_PAIRS.forEach(f => loadFontPair(f.id)); // para ver cada opción con su letra real
     this.setState(s => ({
       adminTab: 'estetica',
-      lookDraft: s.lookDraft || cloneLook(s.look),
-      lookCatDraft: s.lookCatDraft || this.catImageMap(s.categories)
+      // Si no hay cambios a medio hacer, se arranca de lo último publicado (puede haber cambiado en otro dispositivo).
+      ...((s.lookDraft && s.lookDirty) ? {} : this.freshLookDrafts(s.look, s.categories))
     }), () => applyLook(this.state.lookDraft));
   }
+  // Pregunta si guardar antes de salir de Estética con cambios sin guardar.
+  confirmLeaveLook() {
+    const s = this.state;
+    if (!(s.view === 'admin' && s.adminTab === 'estetica' && s.lookDirty)) return;
+    if (confirm('Tenés cambios sin guardar en Estética.\n\nAceptar: guardarlos ahora.\nCancelar: dejarlos como borrador para seguir después.')) this.saveLook();
+  }
+  // Vista previa: el sitio entero se ve con el borrador, solo para la dueña.
+  openLookPreview = () => {
+    if (this.state.lookUploading) { alert('Esperá a que termine de subirse el archivo.'); return; }
+    this.setState({ lookPreview: true }, () => this.navigate('#/'));
+  };
+  backToLook = () => this.navigate('#/admin', () => { this.setState({ lookPreview: false }); this.openLookEditor(); });
+  saveFromPreview = async () => {
+    await this.saveLook();
+    if (!this.state.lookDirty) this.setState({ lookPreview: false });
+  };
+  isPreviewing(s = this.state) { return !!(s.lookPreview && s.lookDraft && s.user && s.user.admin && s.view !== 'admin'); }
   editLook(fn) {
     this.setState(s => {
       const d = cloneLook(s.lookDraft || s.look);
@@ -2554,16 +2694,23 @@ class Component extends DCLogic {
   saveLook = async () => {
     if (this.state.lookUploading) { alert('Esperá a que termine de subirse el archivo.'); return; }
     if (this.state.lookSaving) return;
-    const look = normalizeLook(this.state.lookDraft || this.state.look);
+    // Solo se guardan las partes que se tocaron en este borrador; el resto queda como está publicado
+    // (así un cambio hecho desde otro dispositivo no se pisa con datos viejos).
+    const draft = normalizeLook(this.state.lookDraft || this.state.look);
+    const base = this.state.lookBase ? normalizeLook(this.state.lookBase) : null;
+    const cur = this.state.look;
+    const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+    const look = base ? Object.keys(draft).reduce((o, k) => { o[k] = same(draft[k], base[k]) ? (cur[k] !== undefined ? cur[k] : draft[k]) : draft[k]; return o; }, {}) : draft;
     const catMap = this.state.lookCatDraft || {};
-    const categories = this.state.categories.map(c => (typeof catMap[c.id] === 'string' && catMap[c.id] !== (c.image || '')) ? { ...c, image: catMap[c.id] } : c);
+    const catBase = this.state.lookCatBase || {};
+    const categories = this.state.categories.map(c => (typeof catMap[c.id] === 'string' && catMap[c.id] !== (catBase[c.id] || '') && catMap[c.id] !== (c.image || '')) ? { ...c, image: catMap[c.id] } : c);
     this.setState({ lookSaving: true });
     try {
       await firebaseReady;
       const { products, materials } = this.state;
       await STORE_DOC.set({ version: Component.STORE_VERSION, products, categories, materials, settings: look }, { merge: true });
       try { localStorage.setItem(LOOK_KEY, JSON.stringify(look)); } catch (e) {}
-      this.setState({ look, categories, lookDraft: cloneLook(look), lookCatDraft: this.catImageMap(categories), lookDirty: false, lookSaving: false, heroSlide: 0 });
+      this.setState({ look, categories, ...this.freshLookDrafts(look, categories), lookSaving: false, heroSlide: 0 }, () => applyLook(this.isPreviewing() || (this.state.view === 'admin' && this.state.adminTab === 'estetica') ? this.state.lookDraft : look));
       this.showToast('Cambios guardados. Ya se ven en el sitio.');
     } catch (e) {
       console.error('No se pudo guardar la estética:', e);
@@ -2572,7 +2719,7 @@ class Component extends DCLogic {
     }
   };
   discardLook = () => {
-    this.setState(s => ({ lookDraft: cloneLook(s.look), lookCatDraft: this.catImageMap(s.categories), lookDirty: false }), () => applyLook(this.state.look));
+    this.setState(s => this.freshLookDrafts(s.look, s.categories), () => applyLook(this.state.look));
   };
   onAdminCatFilterChange = (e) => this.setState({ adminCatFilter: e.target.value });
   onAdminMatFilterChange = (e) => this.setState({ adminMatFilter: e.target.value });
@@ -2594,7 +2741,12 @@ class Component extends DCLogic {
     }));
     const form = {
       ...p, media: productMedia(p), variants, price: String(p.price), salePrice: p.salePrice ? String(p.salePrice) : '',
-      stock: stockOf(p) === null ? '' : String(stockOf(p)), lastUnitBadge: p.lastUnitBadge || 'no', cost: '', costsFilled: false
+      stock: stockOf(p) === null ? '' : String(stockOf(p)), lastUnitBadge: p.lastUnitBadge || 'no', cost: '', costsFilled: false,
+      // Cómo estaban stock, agotado y destacado al abrir el formulario.
+      _base: {
+        stock: stockOf(p), outOfStock: !!p.outOfStock, featured: !!p.featured,
+        variants: (Array.isArray(p.variants) ? p.variants : []).reduce((o, v) => { if (v && v.materialId) o[v.materialId] = { stock: stockOf(v), outOfStock: !!v.outOfStock }; return o; }, {})
+      }
     };
     this.setState({ form: this.state.costsLoaded ? this.fillFormCosts(form, this.state.costs) : form });
     try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) {}
@@ -2693,8 +2845,23 @@ class Component extends DCLogic {
     }
     const lastUnitBadge = ['auto', 'siempre'].includes(f.lastUnitBadge) ? f.lastUnitBadge : 'no';
     // El costo y los campos del formulario se quitan: el catálogo lo puede leer cualquiera.
-    const { cost: _cost, costsFilled: _cf, ...rest } = f;
+    const { cost: _cost, costsFilled: _cf, _base: fb, ...rest } = f;
     const clean = { ...rest, media, image, variants, price: priceNum, salePrice: saleNum, stock: toStock(f.stock), lastUnitBadge };
+    // Si mientras estaba abierto el formulario cambió el stock, el agotado o el destacado (por ejemplo,
+    // al marcar una venta desde otro dispositivo) y acá no se tocaron, se respeta el valor nuevo.
+    const curP = f.id ? this.state.products.find(x => x.id === f.id) : null;
+    if (curP && fb) {
+      const rawStock = (x) => (typeof x.stock === 'number' && isFinite(x.stock)) ? x.stock : null;
+      if (clean.stock === fb.stock) clean.stock = rawStock(curP);
+      if (!!clean.outOfStock === fb.outOfStock) clean.outOfStock = !!curP.outOfStock;
+      if (!!clean.featured === fb.featured) clean.featured = !!curP.featured;
+      clean.variants = clean.variants.map(v => {
+        const b = fb.variants[v.materialId];
+        const c = (Array.isArray(curP.variants) ? curP.variants : []).find(x => x && x.materialId === v.materialId);
+        if (!b || !c) return v;
+        return { ...v, stock: v.stock === b.stock ? rawStock(c) : v.stock, outOfStock: v.outOfStock === b.outOfStock ? !!c.outOfStock : v.outOfStock };
+      });
+    }
     const id = f.id || ('prod-' + Date.now());
     // Costos de cada color, guardados aparte (solo los ve la dueña).
     const costMap = {};
@@ -2752,6 +2919,16 @@ class Component extends DCLogic {
     const id = 'mat-' + Date.now();
     this.setState(s => ({ materials: [...s.materials, { id, name }], newMaterialName: '' }), () => this.persist());
   };
+  toggleCategorySoon(id) {
+    const c = this.state.categories.find(x => x.id === id);
+    if (!c) return;
+    const n = this.state.products.filter(p => p.categoryId === id).length;
+    if (!c.soon && n && !confirm(`"${c.name}" tiene ${n === 1 ? '1 producto' : n + ' productos'}. Mientras esté en "Próximamente" no se van a ver en la tienda. ¿Seguir?`)) return;
+    this.setState(s => ({ categories: s.categories.map(x => x.id === id ? { ...x, soon: !x.soon } : x) }), () => {
+      this.persist();
+      this.showToast(c.soon ? `${c.name} ya se puede ver en la tienda` : `${c.name} se muestra como "¡Próximamente!"`);
+    });
+  }
   removeCategory(id) {
     if (this.state.products.some(p => p.categoryId === id)) { alert('No podés eliminar una categoría que tiene productos asignados.'); return; }
     this.setState(s => ({ categories: s.categories.filter(c => c.id !== id) }), () => this.persist());
@@ -2767,7 +2944,15 @@ class Component extends DCLogic {
     const instagramHandle = this.props.instagramHandle || 'theblu.shop';
     const admin = this.isAdminUser();
 
-    const L = s.look;
+    // En la vista previa, el sitio se arma con el borrador de Estética.
+    const previewing = this.isPreviewing();
+    const L = previewing ? normalizeLook(s.lookDraft) : s.look;
+    const catImage = (c) => (previewing && s.lookCatDraft && typeof s.lookCatDraft[c.id] === 'string') ? s.lookCatDraft[c.id] : c.image;
+    // Categorías "próximamente": se ven en gris y sus productos no aparecen en la tienda.
+    const soonIds = {};
+    s.categories.forEach(c => { if (c.soon) soonIds[c.id] = true; });
+    const shop = s.products.filter(p => !soonIds[p.categoryId]);
+    const reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
     const transparentHeader = L.header === 'transparente' && s.view === 'home' && !s.scrolled;
 
     const SLOT = 'v6-';
@@ -2836,8 +3021,11 @@ class Component extends DCLogic {
       const media = cardMedia(p);
       const hovered = s.hoverKey === key && media.length > 1;
       const idx = hovered ? (s.hoverIdx || 0) % media.length : 0;
+      const first = media[0];
       return {
         ...base,
+        // Si lo principal es un video, se reproduce solo en la tarjeta (sin sonido) cuando se ve en pantalla.
+        baseVideo: first && first.type === 'video' && !reduceMotion ? cldVideo(first.url, 720) : '', on: true,
         canQuickAdd: !base.outOfStock,
         quickLabel: base.hasColors ? 'Elegir color' : 'Agregar',
         slides: hovered ? media.map((m, i) => ({
@@ -2846,13 +3034,16 @@ class Component extends DCLogic {
           playVideo: m.type === 'video' && i === idx,
           opacity: i === idx ? 1 : 0,
           on: true,
+          // Con varias fotos, el video se ve entero y recién al terminar pasa a la siguiente.
+          loop: media.length < 2,
+          onEnded: () => { if (i === idx) this.advanceHover(key); },
           onReady: (e) => { try { e.target.muted = true; const pr = e.target.play(); if (pr && pr.catch) pr.catch(() => {}); } catch (err) {} }
         })) : [],
         showDots: hovered && !s.hoverLeaving,
         dots: hovered ? media.map((_, i) => ({ bg: i === idx ? '#fff' : 'rgba(255,255,255,0.5)' })) : [],
         hoverStart: () => this.startCardHover(key, media),
         hoverEnd: () => this.stopCardHover(key),
-        canEdit: admin,
+        canEdit: admin && !previewing,
         editHere: (e) => { if (e && e.stopPropagation) e.stopPropagation(); this.editFromStore(p.id); },
         editKey: (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); this.editFromStore(p.id); } },
         quickAdd: (e) => {
@@ -2881,12 +3072,15 @@ class Component extends DCLogic {
       dotColor: i === heroIdx ? '#fff' : 'rgba(255,255,255,0.45)'
     }));
 
+    const noop = () => {};
     const categoryTiles = s.categories.slice(0, 4).map(c => ({
-      name: c.name, imageId: SLOT + 'cat-' + c.id, image: cldImage(safeUrl(c.image), 900), select: () => this.setCatFilter(c.id)
+      name: c.name, imageId: SLOT + 'cat-' + c.id, image: cldImage(safeUrl(catImage(c)), 900),
+      soon: !!c.soon, ready: !c.soon, cursor: c.soon ? 'default' : 'pointer', filter: c.soon ? 'grayscale(1)' : 'none', fade: c.soon ? 0.55 : 1,
+      select: c.soon ? noop : () => this.setCatFilter(c.id)
     }));
-    const menuCategories = s.categories.map(c => ({ name: c.name, select: () => this.setCatFilter(c.id) }));
+    const menuCategories = s.categories.map(c => ({ name: c.name, soon: !!c.soon, ready: !c.soon, select: c.soon ? noop : () => this.setCatFilter(c.id) }));
 
-    const featuredProducts = loading ? [] : s.products.filter(p => p.featured).slice(0, 4).map(p => withCard(p, 'feat'));
+    const featuredProducts = loading ? [] : shop.filter(p => p.featured).slice(0, 4).map(p => withCard(p, 'feat'));
 
     const instagramTiles = L.instagram.map((u, i) => ({ imageId: SLOT + 'ig-' + i, image: cldImage(u, 600) }));
 
@@ -2900,13 +3094,15 @@ class Component extends DCLogic {
       border: on ? '#1C1A19' : '#D8D1CA'
     });
     const categoryChips = [{ id: 'all', name: 'Todos' }, { id: 'sale', name: 'Sale' }, ...s.categories].map(c => ({
-      name: c.name, select: () => { this.setState({ catFilter: c.id }); this.replaceHash(c.id === 'all' ? '#/productos' : '#/productos/' + encodeURIComponent(c.id)); }, ...chipStyle(s.catFilter === c.id)
+      name: c.name, soon: !!c.soon, ready: !c.soon,
+      select: c.soon ? noop : () => { this.setState({ catFilter: c.id }); this.replaceHash(c.id === 'all' ? '#/productos' : '#/productos/' + encodeURIComponent(c.id)); }, ...chipStyle(s.catFilter === c.id)
     }));
     const materialChips = [{ id: 'all', name: 'Todos los materiales' }, ...s.materials].map(m => ({
       name: m.name, select: () => { this.setState({ matFilter: m.id }); }, ...chipStyle(s.matFilter === m.id)
     }));
 
-    let catalog = s.products.filter(p =>
+    const catalogSoon = !!soonIds[s.catFilter];
+    let catalog = shop.filter(p =>
       (s.catFilter === 'all' || (s.catFilter === 'sale' ? this.anyOnSale(p) : p.categoryId === s.catFilter)) &&
       (s.matFilter === 'all' || productColors(p).some(c => c.materialId === s.matFilter))
     );
@@ -2917,9 +3113,10 @@ class Component extends DCLogic {
     const catalogProducts = loading ? [] : catalog.map(p => withCard(p, 'cat'));
     const catalogTitle = s.catFilter === 'all' ? 'Todos los productos'
       : s.catFilter === 'sale' ? 'Sale' : this.categoryName(s.catFilter);
-    const saleProducts = loading ? [] : s.products.filter(p => productColors(p).some(c => this.onSale(c) && !c.outOfStock)).slice(0, 4).map(p => withCard(p, 'sale'));
+    const saleProducts = loading ? [] : shop.filter(p => productColors(p).some(c => this.onSale(c) && !c.outOfStock)).slice(0, 4).map(p => withCard(p, 'sale'));
 
-    const foundProduct = s.products.find(p => p.id === s.selectedProductId);
+    // Un producto de una categoría "próximamente" solo lo puede abrir la dueña.
+    const foundProduct = (admin ? s.products : shop).find(p => p.id === s.selectedProductId);
     const selectedRaw = foundProduct || {};
     const selColors = productColors(selectedRaw);
     const selColor = pickColor(selectedRaw, s.selectedColor) || { key: '', materialId: selectedRaw.materialId, price: selectedRaw.price, salePrice: selectedRaw.salePrice, outOfStock: !!selectedRaw.outOfStock, media: productMedia(selectedRaw) };
@@ -2985,7 +3182,7 @@ class Component extends DCLogic {
       isMain: i === 0, notMain: i !== 0,
       makeMain: () => this.makeFormMediaMain(i), remove: () => this.removeFormMedia(i)
     }));
-    const relatedProducts = s.products
+    const relatedProducts = shop
       .filter(p => p.categoryId === selectedRaw.categoryId && p.id !== selectedRaw.id)
       .slice(0, 4).map(p => withCard(p, 'rel'));
 
@@ -3226,6 +3423,7 @@ class Component extends DCLogic {
     const lookBusy = !!s.lookUploading;
     const lookFonts = FONT_PAIRS.map(f => ({
       name: f.name, title: f.title, body: f.body, ta: f.ta, ba: f.ba, selected: D.font === f.id,
+      fonts: [f.title, f.body].map(x => x.split(',')[0].replace(/'/g, '')).join(' + '),
       border: D.font === f.id ? '#1C1A19' : '#E4DED8', pick: () => this.pickFont(f.id)
     }));
     const accentIsPreset = ACCENTS.some(a => a.hex.toLowerCase() === D.accent.toLowerCase());
@@ -3310,10 +3508,11 @@ class Component extends DCLogic {
       faqItems, hasFaq: faqItems.length > 0,
 
       categoryChips, materialChips, sortBy: s.sortBy, onSortChange: this.onSortChange,
-      catalogProducts, catalogEmpty: !loading && catalogProducts.length === 0, catalogTitle,
+      catalogProducts, catalogEmpty: !loading && catalogProducts.length === 0 && !catalogSoon, catalogSoon, catalogTitle,
 
       selectedProduct, selectedProductInStock: !selColor.outOfStock,
       // Datos internos del color elegido, solo para la dueña.
+      showAdminBox: admin && !previewing,
       adminProductInfo: admin && foundProduct ? (() => {
         const bits = [];
         const nm = this.materialName(selColor.materialId);
@@ -3357,6 +3556,10 @@ class Component extends DCLogic {
       onLookEdTitle: (e) => this.setEditorialText('title', e.target.value),
       onLookEdText: (e) => this.setEditorialText('text', e.target.value),
       lookShowBar: s.view === 'admin' && s.adminTab === 'estetica' && s.lookDirty,
+      openLookPreview: this.openLookPreview, backToLook: this.backToLook, saveFromPreview: this.saveFromPreview,
+      previewBar: previewing, previewDirty: previewing && !!s.lookDirty, previewPad: previewing ? '150px' : '0px',
+      previewText: s.lookDirty ? 'Así va a quedar el sitio cuando guardes. Las clientas todavía ven la versión anterior.' : 'No hay cambios sin guardar: esto es lo mismo que ven las clientas.',
+      previewSaveLabel: s.lookSaving ? 'Guardando…' : 'Guardar cambios',
       saveLook: this.saveLook, discardLook: this.discardLook, lookSaveLabel: s.lookSaving ? 'Guardando…' : 'Guardar cambios',
       formOpen: !!s.form, formClosed: !s.form,
       form: s.form ? { ...s.form, imageId: SLOT + s.form.imageId } : {},
@@ -3412,7 +3615,13 @@ class Component extends DCLogic {
       onAdminCatFilterChange: this.onAdminCatFilterChange,
       onAdminMatFilterChange: this.onAdminMatFilterChange,
       onAdminSearchChange: this.onAdminSearchChange,
-      categories: s.categories.map(c => ({ ...c, remove: () => this.removeCategory(c.id) })),
+      categories: s.categories.map(c => {
+        const n = s.products.filter(p => p.categoryId === c.id).length;
+        return {
+          ...c, soon: !!c.soon, remove: () => this.removeCategory(c.id), toggleSoon: () => this.toggleCategorySoon(c.id),
+          soonNote: !!c.soon && n > 0, soonText: n === 1 ? '1 producto oculto hasta que la destildes' : `${n} productos ocultos hasta que la destildes`
+        };
+      }),
       materials: s.materials.map(m => ({ ...m, remove: () => this.removeMaterial(m.id) })),
       newCategoryName: s.newCategoryName, onNewCategoryChange: this.onNewCategoryChange, addCategory: this.addCategory,
       newMaterialName: s.newMaterialName, onNewMaterialChange: this.onNewMaterialChange, addMaterial: this.addMaterial
