@@ -775,7 +775,7 @@
           <div style="display:flex;flex-direction:column;gap:46px;">
             <sc-if value="{{ salesNeedsRules }}">
               <div role="alert" style="border:1px solid #E7CFC9;background:#FBF3F1;padding:20px 22px;font-size:13.5px;line-height:1.75;color:#5B2A22;">
-                <strong style="font-weight:500;">Falta un paso en Firebase para ver las ventas.</strong> Copiá las reglas que están en el archivo CONTEXTO.md (sección "Reglas de Firestore"), pegalas en Firebase → Firestore Database → Reglas y tocá Publicar. Hasta entonces los pedidos y las visitas no se guardan.
+                <strong style="font-weight:500;">Falta un paso en Firebase para ver las ventas.</strong> Pegá las reglas nuevas (archivo reglas-firestore.txt) en Firebase → Firestore Database → Reglas y tocá Publicar. Hasta entonces los pedidos y las visitas no se guardan.
               </div>
             </sc-if>
 
@@ -1471,7 +1471,7 @@
 
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900},&quot;whatsappNumber&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;5493434000000&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Contacto&quot;},&quot;instagramHandle&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;theblu.shop&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Contacto&quot;},&quot;showInstagramSection&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Secciones&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900},&quot;whatsappNumber&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;5493436114805&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Contacto&quot;},&quot;instagramHandle&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;theblu.shop&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Contacto&quot;},&quot;showInstagramSection&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Secciones&quot;}}">
 const PX = (id, w) => `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=${w || 900}`;
 
 // Conexión a Firebase: Firestore guarda el catálogo (compartido por todos los dispositivos) y
@@ -2940,7 +2940,7 @@ class Component extends DCLogic {
 
   renderVals() {
     const s = this.state;
-    const whatsappNumber = (this.props.whatsappNumber || '5493434000000').replace(/[^0-9]/g, '');
+    const whatsappNumber = (this.props.whatsappNumber || '5493436114805').replace(/[^0-9]/g, '');
     const instagramHandle = this.props.instagramHandle || 'theblu.shop';
     const admin = this.isAdminUser();
 
