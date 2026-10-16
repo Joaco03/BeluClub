@@ -214,6 +214,20 @@
   </sc-if>
 
   <!-- TOAST -->
+  <sc-if value="{{ zoomOpen }}">
+    <div data-zoom="1" role="dialog" aria-modal="true" aria-label="Foto ampliada" style="position:fixed;inset:0;z-index:95;background:#fff;animation:bcFade .2s ease;">
+      <div data-zoom-stage="1" onPointerDown="{{ zoomDown }}" onPointerMove="{{ zoomMove }}" onPointerUp="{{ zoomUp }}" onPointerCancel="{{ zoomUp }}" style="position:absolute;inset:0;overflow:hidden;touch-action:none;display:flex;align-items:center;justify-content:center;cursor:zoom-in;user-select:none;">
+        <img data-zoom-img="1" src="{{ zoomSrc }}" alt="{{ zoomAlt }}" draggable="false" style="max-width:100%;max-height:100%;object-fit:contain;transform-origin:0 0;will-change:transform;-webkit-user-drag:none;pointer-events:none;">
+      </div>
+      <span role="button" tabIndex="0" aria-label="Cerrar" onClick="{{ closeZoom }}" style="position:absolute;top:14px;right:14px;width:46px;height:46px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.92);box-shadow:0 1px 8px rgba(28,26,25,0.12);cursor:pointer;z-index:2;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" stroke="#1C1A19" stroke-width="1.6" stroke-linecap="round"></path></svg></span>
+      <sc-if value="{{ zoomMany }}">
+        <button type="button" data-arrow="prev" onClick="{{ zoomPrev }}" aria-label="Foto anterior" style="z-index:2;"><span data-arrow-inner="1"><svg data-arrow-shadow="1" viewBox="0 0 25 44" aria-hidden="true"><path d="M21.28 6.96 L10.66 22.00 L21.28 37.04" fill="none" stroke="#1C1A19" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path></svg><svg viewBox="0 0 25 44" aria-hidden="true"><path d="M21.28 6.96 L10.66 22.00 L21.28 37.04" fill="none" stroke="#1C1A19" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button>
+        <button type="button" data-arrow="next" onClick="{{ zoomNext }}" aria-label="Foto siguiente" style="z-index:2;"><span data-arrow-inner="1"><svg data-arrow-shadow="1" viewBox="0 0 25 44" aria-hidden="true"><path d="M21.28 6.96 L10.66 22.00 L21.28 37.04" fill="none" stroke="#1C1A19" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path></svg><svg viewBox="0 0 25 44" aria-hidden="true"><path d="M21.28 6.96 L10.66 22.00 L21.28 37.04" fill="none" stroke="#1C1A19" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button>
+      </sc-if>
+      <div style="position:absolute;left:0;right:0;bottom:16px;text-align:center;font-size:11px;letter-spacing:0.12em;color:#7A736E;pointer-events:none;z-index:2;">{{ zoomCounter }}{{ zoomHint }}</div>
+    </div>
+  </sc-if>
+
   <sc-if value="{{ previewBar }}">
     <div data-preview-bar="1" role="region" aria-label="Vista previa" style="position:fixed;left:0;right:0;bottom:0;z-index:66;background:#1C1A19;color:#fff;box-shadow:0 -10px 30px rgba(0,0,0,0.18);animation:bcRise .3s ease;">
       <div style="max-width:1240px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
@@ -311,7 +325,7 @@
           </div>
           <span onClick="{{ goCatalogAll }}" style="cursor:pointer;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#1C1A19;border-bottom:1px solid #1C1A19;padding-bottom:4px;">Ver todo</span>
         </div>
-        <div data-pgrid="1" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,330px));justify-content:center;gap:30px 22px;">
+        <div data-pgrid="1" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,245px));justify-content:center;gap:30px 22px;">
           <sc-for list="{{ skeletonCards }}" as="k">
             <div>
               <div style="aspect-ratio:4/5;background:#F6F1EC;animation:bcPulse 1.6s ease-in-out infinite;"></div>
@@ -320,7 +334,7 @@
           </sc-for>
           <sc-for list="{{ featuredProducts }}" as="p" hint-placeholder-count="4">
             <div onClick="{{ p.open }}" style="cursor:pointer;">
-              <div data-card-media="1" onMouseEnter="{{ p.hoverStart }}" onMouseLeave="{{ p.hoverEnd }}" style="position:relative;overflow:hidden;aspect-ratio:4/5;background:#F6F1EC;">
+              <div data-card-media="1" data-card-key="{{ p.cardKey }}" onMouseEnter="{{ p.hoverStart }}" onMouseLeave="{{ p.hoverEnd }}" style="position:relative;overflow:hidden;aspect-ratio:4/5;background:#F6F1EC;">
                 <img src="{{ p.image }}" alt="{{ p.name }}" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block;">
                 <sc-if value="{{ p.baseVideo }}"><video data-card-video="1" src="{{ p.baseVideo }}" poster="{{ p.image }}" muted="{{ p.on }}" loop="{{ p.on }}" playsInline="{{ p.on }}" preload="none" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none;"></video></sc-if>
                 <sc-for list="{{ p.slides }}" as="sl">
@@ -374,10 +388,10 @@
               </div>
               <span onClick="{{ goSale }}" style="cursor:pointer;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#fff;border-bottom:1px solid #fff;padding-bottom:4px;">Ver todo el sale</span>
             </div>
-            <div data-pgrid="1" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,330px));justify-content:center;gap:30px 22px;">
+            <div data-pgrid="1" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,245px));justify-content:center;gap:30px 22px;">
               <sc-for list="{{ saleProducts }}" as="p" hint-placeholder-count="4">
                 <div onClick="{{ p.open }}" style="cursor:pointer;">
-                  <div data-card-media="1" onMouseEnter="{{ p.hoverStart }}" onMouseLeave="{{ p.hoverEnd }}" style="position:relative;overflow:hidden;aspect-ratio:4/5;background:#2A2623;">
+                  <div data-card-media="1" data-card-key="{{ p.cardKey }}" onMouseEnter="{{ p.hoverStart }}" onMouseLeave="{{ p.hoverEnd }}" style="position:relative;overflow:hidden;aspect-ratio:4/5;background:#2A2623;">
                     <img src="{{ p.image }}" alt="{{ p.name }}" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block;">
                     <sc-if value="{{ p.baseVideo }}"><video data-card-video="1" src="{{ p.baseVideo }}" poster="{{ p.image }}" muted="{{ p.on }}" loop="{{ p.on }}" playsInline="{{ p.on }}" preload="none" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none;"></video></sc-if>
                 <sc-for list="{{ p.slides }}" as="sl">
@@ -513,7 +527,7 @@
           <p style="margin:0;color:#7A736E;font-size:14px;font-weight:300;">Estamos preparando esta categoría. Muy pronto vas a poder verla acá.</p>
         </div>
       </sc-if>
-      <div data-pgrid="1" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:40px 22px;">
+      <div data-pgrid="1" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:40px 22px;">
         <sc-for list="{{ skeletonCards }}" as="k">
             <div>
               <div style="aspect-ratio:4/5;background:#F6F1EC;animation:bcPulse 1.6s ease-in-out infinite;"></div>
@@ -522,7 +536,7 @@
           </sc-for>
           <sc-for list="{{ catalogProducts }}" as="p" hint-placeholder-count="8">
           <div data-card="1">
-            <div onClick="{{ p.open }}" data-card-media="1" onMouseEnter="{{ p.hoverStart }}" onMouseLeave="{{ p.hoverEnd }}" style="cursor:pointer;position:relative;overflow:hidden;aspect-ratio:4/5;background:#F6F1EC;">
+            <div onClick="{{ p.open }}" data-card-media="1" data-card-key="{{ p.cardKey }}" onMouseEnter="{{ p.hoverStart }}" onMouseLeave="{{ p.hoverEnd }}" style="cursor:pointer;position:relative;overflow:hidden;aspect-ratio:4/5;background:#F6F1EC;">
               <img src="{{ p.image }}" alt="{{ p.name }}" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block;">
               <sc-if value="{{ p.baseVideo }}"><video data-card-video="1" src="{{ p.baseVideo }}" poster="{{ p.image }}" muted="{{ p.on }}" loop="{{ p.on }}" playsInline="{{ p.on }}" preload="none" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none;"></video></sc-if>
                 <sc-for list="{{ p.slides }}" as="sl">
@@ -604,15 +618,18 @@
       <sc-if value="{{ productFound }}">
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:60px;">
         <div style="width:min(100%, calc((100svh - 290px) * 0.8));min-width:min(100%, 300px);margin:0 auto;">
-          <div data-product-media="1" onTouchStart="{{ onMediaTouchStart }}" onTouchEnd="{{ onMediaTouchEnd }}" style="position:relative;aspect-ratio:4/5;background:#F6F1EC;overflow:hidden;">
+          <div data-product-media="1" onTouchStart="{{ onMediaTouchStart }}" onTouchEnd="{{ onMediaTouchEnd }}" onClick="{{ onMediaClick }}" onMouseMove="{{ onMediaHoverZoom }}" onMouseLeave="{{ onMediaHoverOut }}" title="{{ mediaZoomHint }}" style="position:relative;aspect-ratio:4/5;background:#F6F1EC;overflow:hidden;cursor:{{ mediaCursor }};">
             <sc-for list="{{ galleryMain }}" as="g">
-              <div data-active="{{ g.activeFlag }}" style="position:absolute;inset:0;opacity:{{ g.opacity }};transition:opacity .45s ease;pointer-events:{{ g.pe }};">
-                <img src="{{ g.still }}" alt="{{ g.alt }}" style="width:100%;height:100%;object-fit:cover;display:block;">
+              <div data-active="{{ g.activeFlag }}" style="position:absolute;inset:0;opacity:{{ g.opacity }};transition:opacity .45s ease;pointer-events:{{ g.pe }};overflow:hidden;">
+                <img data-zoomable="{{ g.zoomable }}" src="{{ g.still }}" alt="{{ g.alt }}" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform .25s ease-out;">
                 <sc-if value="{{ g.showVideo }}">
-                  <video src="{{ g.video }}" poster="{{ g.still }}" controls="{{ g.on }}" autoPlay="{{ g.on }}" muted="{{ g.on }}" loop="{{ g.on }}" playsInline="{{ g.on }}" preload="metadata" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#F6F1EC;"></video>
+                  <video src="{{ g.video }}" poster="{{ g.still }}" autoPlay="{{ g.on }}" muted="{{ g.on }}" loop="{{ g.on }}" playsInline="{{ g.on }}" preload="metadata" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#F6F1EC;"></video>
                 </sc-if>
               </div>
             </sc-for>
+            <sc-if value="{{ mediaZoomable }}">
+              <span aria-hidden="true" style="position:absolute;right:12px;bottom:12px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.86);box-shadow:0 1px 6px rgba(28,26,25,0.15);pointer-events:none;z-index:2;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="10.5" cy="10.5" r="6.5" stroke="#1C1A19" stroke-width="1.6"></circle><path d="M15.5 15.5L21 21M10.5 7.5v6M7.5 10.5h6" stroke="#1C1A19" stroke-width="1.6" stroke-linecap="round"></path></svg></span>
+            </sc-if>
             <sc-if value="{{ hasManyMedia }}">
               <button type="button" data-arrow="prev" onClick="{{ prevMedia }}" aria-label="Foto anterior"><span data-arrow-inner="1"><svg data-arrow-shadow="1" viewBox="0 0 25 44" aria-hidden="true"><path d="M3.72 20.04 L3.45 20.49 L3.26 20.97 L3.14 21.48 L3.10 22.00 L3.14 22.52 L3.26 23.03 L3.45 23.51 L3.72 23.96 L15.72 40.96 L16.06 41.37 L16.46 41.72 L16.92 42.01 L17.41 42.22 L17.92 42.35 L18.45 42.40 L18.99 42.37 L19.51 42.25 L20.00 42.05 L20.46 41.78 L20.87 41.44 L21.22 41.04 L21.51 40.58 L21.72 40.09 L21.85 39.58 L21.90 39.05 L21.87 38.51 L21.75 37.99 L21.55 37.50 L21.28 37.04 L10.66 22.00 L21.28 6.96 L21.55 6.50 L21.75 6.01 L21.87 5.49 L21.90 4.95 L21.85 4.42 L21.72 3.91 L21.51 3.42 L21.22 2.96 L20.87 2.56 L20.46 2.22 L20.00 1.95 L19.51 1.75 L18.99 1.63 L18.45 1.60 L17.92 1.65 L17.41 1.78 L16.92 1.99 L16.46 2.28 L16.06 2.63 L15.72 3.04Z" fill="#1C1A19"></path></svg><span data-arrow-glass="1"></span><svg data-arrow-rim="1" viewBox="0 0 25 44" aria-hidden="true"><path d="M3.72 20.04 L3.45 20.49 L3.26 20.97 L3.14 21.48 L3.10 22.00 L3.14 22.52 L3.26 23.03 L3.45 23.51 L3.72 23.96 L15.72 40.96 L16.06 41.37 L16.46 41.72 L16.92 42.01 L17.41 42.22 L17.92 42.35 L18.45 42.40 L18.99 42.37 L19.51 42.25 L20.00 42.05 L20.46 41.78 L20.87 41.44 L21.22 41.04 L21.51 40.58 L21.72 40.09 L21.85 39.58 L21.90 39.05 L21.87 38.51 L21.75 37.99 L21.55 37.50 L21.28 37.04 L10.66 22.00 L21.28 6.96 L21.55 6.50 L21.75 6.01 L21.87 5.49 L21.90 4.95 L21.85 4.42 L21.72 3.91 L21.51 3.42 L21.22 2.96 L20.87 2.56 L20.46 2.22 L20.00 1.95 L19.51 1.75 L18.99 1.63 L18.45 1.60 L17.92 1.65 L17.41 1.78 L16.92 1.99 L16.46 2.28 L16.06 2.63 L15.72 3.04Z" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="0.8"></path></svg></span></button>
               <button type="button" data-arrow="next" onClick="{{ nextMedia }}" aria-label="Foto siguiente"><span data-arrow-inner="1"><svg data-arrow-shadow="1" viewBox="0 0 25 44" aria-hidden="true"><path d="M3.72 20.04 L3.45 20.49 L3.26 20.97 L3.14 21.48 L3.10 22.00 L3.14 22.52 L3.26 23.03 L3.45 23.51 L3.72 23.96 L15.72 40.96 L16.06 41.37 L16.46 41.72 L16.92 42.01 L17.41 42.22 L17.92 42.35 L18.45 42.40 L18.99 42.37 L19.51 42.25 L20.00 42.05 L20.46 41.78 L20.87 41.44 L21.22 41.04 L21.51 40.58 L21.72 40.09 L21.85 39.58 L21.90 39.05 L21.87 38.51 L21.75 37.99 L21.55 37.50 L21.28 37.04 L10.66 22.00 L21.28 6.96 L21.55 6.50 L21.75 6.01 L21.87 5.49 L21.90 4.95 L21.85 4.42 L21.72 3.91 L21.51 3.42 L21.22 2.96 L20.87 2.56 L20.46 2.22 L20.00 1.95 L19.51 1.75 L18.99 1.63 L18.45 1.60 L17.92 1.65 L17.41 1.78 L16.92 1.99 L16.46 2.28 L16.06 2.63 L15.72 3.04Z" fill="#1C1A19"></path></svg><span data-arrow-glass="1"></span><svg data-arrow-rim="1" viewBox="0 0 25 44" aria-hidden="true"><path d="M3.72 20.04 L3.45 20.49 L3.26 20.97 L3.14 21.48 L3.10 22.00 L3.14 22.52 L3.26 23.03 L3.45 23.51 L3.72 23.96 L15.72 40.96 L16.06 41.37 L16.46 41.72 L16.92 42.01 L17.41 42.22 L17.92 42.35 L18.45 42.40 L18.99 42.37 L19.51 42.25 L20.00 42.05 L20.46 41.78 L20.87 41.44 L21.22 41.04 L21.51 40.58 L21.72 40.09 L21.85 39.58 L21.90 39.05 L21.87 38.51 L21.75 37.99 L21.55 37.50 L21.28 37.04 L10.66 22.00 L21.28 6.96 L21.55 6.50 L21.75 6.01 L21.87 5.49 L21.90 4.95 L21.85 4.42 L21.72 3.91 L21.51 3.42 L21.22 2.96 L20.87 2.56 L20.46 2.22 L20.00 1.95 L19.51 1.75 L18.99 1.63 L18.45 1.60 L17.92 1.65 L17.41 1.78 L16.92 1.99 L16.46 2.28 L16.06 2.63 L15.72 3.04Z" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="0.8"></path></svg></span></button>
@@ -695,10 +712,10 @@
       <sc-if value="{{ hasRelated }}">
         <div style="margin-top:110px;">
           <h2 style="font-family:var(--bc-title);font-size-adjust:var(--bc-title-adjust);font-weight:300;font-size:34px;margin:0 0 34px;text-align:center;">También te puede gustar</h2>
-          <div data-pgrid="1" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,300px));justify-content:center;gap:22px;">
+          <div data-pgrid="1" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,245px));justify-content:center;gap:22px;">
             <sc-for list="{{ relatedProducts }}" as="p" hint-placeholder-count="4">
               <div onClick="{{ p.open }}" style="cursor:pointer;">
-                <div data-card-media="1" onMouseEnter="{{ p.hoverStart }}" onMouseLeave="{{ p.hoverEnd }}" style="position:relative;aspect-ratio:4/5;overflow:hidden;background:#F6F1EC;">
+                <div data-card-media="1" data-card-key="{{ p.cardKey }}" onMouseEnter="{{ p.hoverStart }}" onMouseLeave="{{ p.hoverEnd }}" style="position:relative;aspect-ratio:4/5;overflow:hidden;background:#F6F1EC;">
                   <img src="{{ p.image }}" alt="{{ p.name }}" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block;">
                   <sc-if value="{{ p.baseVideo }}"><video data-card-video="1" src="{{ p.baseVideo }}" poster="{{ p.image }}" muted="{{ p.on }}" loop="{{ p.on }}" playsInline="{{ p.on }}" preload="none" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none;"></video></sc-if>
                 <sc-for list="{{ p.slides }}" as="sl">
@@ -780,7 +797,7 @@
             </sc-if>
 
             <div style="display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;">
-              <p style="margin:0;font-size:13px;font-weight:300;color:#5B554F;line-height:1.7;max-width:600px;">Cada pedido que se envía por WhatsApp desde la web aparece acá con su código, el mismo que llega en el mensaje. Cuando se concreta, marcalo como vendido para que cuente en los números.</p>
+              <p style="margin:0;font-size:13px;font-weight:300;color:#5B554F;line-height:1.7;max-width:600px;">Cada pedido que se envía por WhatsApp desde la web aparece acá con su código, el mismo que llega en el mensaje. Apenas llega, su stock queda reservado. Confirmá o cancelá cada producto por separado (o todo junto): lo cancelado vuelve al stock y solo lo confirmado cuenta en los números.</p>
               <div role="group" aria-label="Período" style="display:flex;border:1px solid #D8D1CA;background:#fff;">
                 <sc-for list="{{ rangeChips }}" as="r" hint-placeholder-count="4">
                   <span onClick="{{ r.pick }}" style="cursor:pointer;padding:10px 15px;font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;white-space:nowrap;transition:background .2s ease,color .2s ease;background:{{ r.bg }};color:{{ r.ink }};">{{ r.label }}</span>
@@ -901,18 +918,69 @@
               </sc-if>
               <div style="display:flex;flex-direction:column;gap:8px;">
                 <sc-for list="{{ ordersList }}" as="o" hint-placeholder-count="3">
-                  <div style="border:1px solid #EFEAE4;padding:18px 20px;display:flex;flex-wrap:wrap;gap:16px 28px;align-items:flex-start;opacity:{{ o.faded }};transition:opacity .2s ease;">
+                  <div data-order="{{ o.code }}" style="border:1px solid #EFEAE4;padding:18px 20px;display:flex;flex-wrap:wrap;gap:16px 28px;align-items:flex-start;opacity:{{ o.faded }};transition:opacity .2s ease;">
                     <div style="width:170px;">
-                      <div style="font-size:14px;font-weight:500;letter-spacing:0.04em;">{{ o.code }}</div>
+                      <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#9A938D;margin-bottom:4px;">Pedido</div>
+                      <div style="font-size:15px;font-weight:500;letter-spacing:0.04em;">{{ o.code }}</div>
                       <div style="font-size:12px;color:#7A736E;margin-top:4px;">{{ o.date }}</div>
                       <div style="font-size:12px;color:#7A736E;margin-top:2px;">{{ o.who }}</div>
-                      <sc-if value="{{ o.hasStockNote }}"><div style="font-size:11.5px;color:#4E7B4F;margin-top:6px;">Descontado del stock</div></sc-if>
+                      <sc-if value="{{ o.hasStockNote }}"><div style="font-size:11.5px;color:#4E7B4F;margin-top:6px;line-height:1.5;">{{ o.stockNote }}</div></sc-if>
                       <sc-if value="{{ o.hasCheck }}"><div role="note" style="font-size:11.5px;line-height:1.5;color:#A6322A;margin-top:6px;max-width:240px;">Revisalo antes de confirmar: {{ o.checkText }}</div></sc-if>
                     </div>
-                    <div style="flex:1;min-width:220px;font-size:13px;line-height:1.75;">
+                    <div style="flex:1;min-width:260px;">
                       <sc-for list="{{ o.lines }}" as="ln" hint-placeholder-count="2">
-                        <div style="display:flex;justify-content:space-between;gap:14px;"><span>{{ ln.text }}</span><span style="color:#7A736E;white-space:nowrap;">{{ ln.price }}</span></div>
+                        <div data-line="1" style="display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px;padding:10px 0;border-bottom:1px solid #F3EFEA;">
+                          <img src="{{ ln.thumb }}" alt="" style="width:40px;height:50px;object-fit:cover;background:#F6F1EC;flex-shrink:0;">
+                          <div style="flex:1;min-width:120px;">
+                            <div style="font-size:13.5px;color:{{ ln.ink }};text-decoration:{{ ln.strike }};">{{ ln.name }}</div>
+                            <div style="font-size:11.5px;color:#7A736E;margin-top:2px;">{{ ln.meta }}</div>
+                          </div>
+                          <div style="font-size:13px;white-space:nowrap;color:{{ ln.ink }};text-decoration:{{ ln.strike }};">{{ ln.price }}</div>
+                          <div style="display:flex;align-items:center;gap:6px;margin-left:auto;">
+                            <sc-if value="{{ ln.isPending }}">
+                              <span role="button" tabIndex="0" onClick="{{ ln.confirm }}" style="cursor:pointer;background:#1C1A19;color:#fff;padding:8px 12px;font-size:9.5px;letter-spacing:0.14em;text-transform:uppercase;" style-hover="background:#4E7B4F;">Confirmar</span>
+                              <span role="button" tabIndex="0" onClick="{{ ln.cancel }}" style="cursor:pointer;border:1px solid #D8D1CA;color:#A6322A;padding:7px 11px;font-size:9.5px;letter-spacing:0.14em;text-transform:uppercase;" style-hover="border-color:#A6322A;">Cancelar</span>
+                            </sc-if>
+                            <sc-if value="{{ ln.isConfirmed }}">
+                              <span style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#4E7B4F;">✓ Confirmado</span>
+                              <span role="button" tabIndex="0" onClick="{{ ln.undo }}" style="cursor:pointer;font-size:10.5px;color:#7A736E;text-decoration:underline;text-underline-offset:3px;margin-left:4px;">Deshacer</span>
+                            </sc-if>
+                            <sc-if value="{{ ln.isCancelled }}">
+                              <span style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#A6322A;">Cancelado</span>
+                              <span role="button" tabIndex="0" onClick="{{ ln.undo }}" style="cursor:pointer;font-size:10.5px;color:#7A736E;text-decoration:underline;text-underline-offset:3px;margin-left:4px;">Deshacer</span>
+                            </sc-if>
+                          </div>
+                        </div>
                       </sc-for>
+                      <div style="display:flex;justify-content:space-between;align-items:baseline;padding-top:10px;">
+                        <span style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;">Total del pedido</span>
+                        <span style="font-size:14px;">{{ o.total }}</span>
+                      </div>
+                      <sc-if value="{{ o.hasDecided }}">
+                        <div style="display:flex;justify-content:space-between;align-items:baseline;padding-top:4px;">
+                          <span style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#4E7B4F;">Confirmado</span>
+                          <span style="font-size:14px;color:#4E7B4F;">{{ o.confirmedTotal }}</span>
+                        </div>
+                      </sc-if>
+                    </div>
+                    <div style="width:180px;display:flex;flex-direction:column;gap:10px;">
+                      <div style="display:flex;align-items:center;border:1px solid #D8D1CA;background:#fff;">
+                        <span style="width:8px;height:8px;flex-shrink:0;background:{{ o.dot }};margin-left:12px;"></span>
+                        <select value="{{ o.status }}" onChange="{{ o.onStatus }}" aria-label="Estado del pedido" style="flex:1;border:0;background:transparent;padding:10px;font-family:var(--bc-body);font-size:13px;cursor:pointer;">
+                          <option value="pendiente">Sin confirmar</option>
+                          <option value="vendido">Vendido</option>
+                          <option value="entregado">Entregado</option>
+                          <option value="cancelado">Cancelado</option>
+                        </select>
+                      </div>
+                      <sc-if value="{{ o.isPending }}">
+                        <span onClick="{{ o.markSold }}" style="cursor:pointer;text-align:center;background:#1C1A19;color:#fff;padding:11px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;transition:background .2s ease;" style-hover="background:var(--bc-accent);">Confirmar todo</span>
+                        <span onClick="{{ o.cancelAll }}" style="cursor:pointer;text-align:center;border:1px solid #D8D1CA;color:#A6322A;padding:10px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;">Cancelar todo</span>
+                      </sc-if>
+                      <span onClick="{{ o.remove }}" style="cursor:pointer;text-align:center;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#A6322A;padding:4px;">Eliminar</span>
+                    </div>
+                  </div>
+                </sc-for>
                       <div style="display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid #F1ECE6;margin-top:8px;padding-top:8px;">
                         <span style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;">Total</span>
                         <span style="font-size:14px;">{{ o.total }}</span>
@@ -1005,7 +1073,7 @@
               </div>
               <div style="display:flex;gap:28px;margin-bottom:22px;flex-wrap:wrap;">
                 <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;">
-                  <input type="checkbox" checked="{{ form.featured }}" onChange="{{ onFormFeaturedChange }}"> Mostrar en destacados
+                  <input type="checkbox" checked="{{ form.featured }}" onChange="{{ onFormFeaturedChange }}"> Mostrar en el inicio (Destacados)
                 </label>
                 <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;">
                   <input type="checkbox" checked="{{ form.outOfStock }}" onChange="{{ onFormOutOfStockChange }}"> {{ formStockLabel }}
@@ -1132,6 +1200,7 @@
               <label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Categoría</label>
               <select value="{{ adminCatFilter }}" onChange="{{ onAdminCatFilterChange }}" style="width:100%;padding:11px 13px;border:1px solid #D8D1CA;font-family:var(--bc-body);font-size:14px;background:#fff;">
                 <option value="">Todas las categorías</option>
+                <option value="__inicio">Los que se ven en el inicio</option>
                 <sc-for list="{{ categories }}" as="c" hint-placeholder-count="4">
                   <option value="{{ c.id }}">{{ c.name }}</option>
                 </sc-for>
@@ -1176,7 +1245,7 @@
                   <div style="font-size:14px;color:{{ p.priceColor }};">{{ p.priceFormatted }}</div>
                 </div>
                 <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;color:#5B554F;">
-                  <input type="checkbox" checked="{{ p.featured }}" onChange="{{ p.toggleFeatured }}"> Destacado
+                  <input type="checkbox" checked="{{ p.featured }}" onChange="{{ p.toggleFeatured }}"> En inicio
                 </label>
                 <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer;color:#5B554F;">
                   <input type="checkbox" checked="{{ p.outOfStock }}" onChange="{{ p.toggleOutOfStock }}"> Agotado
@@ -1517,7 +1586,8 @@ function cldImage(url, w) {
 // Videos: se convierten a MP4 (lo reproduce cualquier navegador, incluso si se grabó en .mov).
 function cldVideo(url, w) {
   if (!isCloudinary(url)) return url || '';
-  return url.replace('/upload/', `/upload/q_auto,vc_auto,c_limit,w_${w || 1080}/`).replace(/\.[a-z0-9]+$/i, '.mp4');
+  // ac_none: sin pista de audio (los videos de la tienda no tienen sonido).
+  return url.replace('/upload/', `/upload/q_auto,vc_auto,ac_none,c_limit,w_${w || 1080}/`).replace(/\.[a-z0-9]+$/i, '.mp4');
 }
 // Primer fotograma del video como imagen (para la miniatura y las tarjetas del catálogo).
 function cldPoster(url, w) {
@@ -1542,6 +1612,32 @@ function newOrderCode() {
   let c = '';
   for (let i = 0; i < 4; i++) c += abc[Math.floor(Math.random() * abc.length)];
   return 'BC-' + c;
+}
+// Cada producto de un pedido tiene su estado: 'pendiente', 'confirmado' o 'cancelado', y `held`
+// (si su stock está reservado o descontado). Los pedidos viejos no lo tienen: se deduce del pedido.
+const LINE_STATES = ['pendiente', 'confirmado', 'cancelado'];
+function orderLines(o) {
+  const fromOrder = (st) => (st === 'vendido' || st === 'entregado') ? 'confirmado' : st === 'cancelado' ? 'cancelado' : 'pendiente';
+  return (Array.isArray(o && o.items) ? o.items : []).map(it => {
+    const state = LINE_STATES.includes(it && it.state) ? it.state : fromOrder(o.status);
+    const held = typeof (it && it.held) === 'boolean' ? it.held : (!!o.stockApplied && state !== 'cancelado');
+    return { ...it, state, held };
+  });
+}
+// Estado del pedido según sus productos: si falta decidir alguno, sigue sin confirmar.
+function orderStatusFrom(lines, prefer) {
+  if (lines.some(l => l.state === 'pendiente')) return 'pendiente';
+  if (lines.some(l => l.state === 'confirmado')) return prefer === 'entregado' ? 'entregado' : 'vendido';
+  return 'cancelado';
+}
+function lineTotal(l) { return (+l.price || 0) * (+l.qty || 0); }
+function confirmedLines(o) { return orderLines(o).filter(l => l.state === 'confirmado'); }
+function confirmedTotal(o) { return confirmedLines(o).reduce((a, l) => a + lineTotal(l), 0); }
+// Lo que se guarda de cada producto del pedido (solo campos conocidos).
+function cleanLine(l) {
+  const out = {};
+  ['productId', 'name', 'color', 'colorId', 'qty', 'price', 'state', 'held'].forEach(k => { if (l[k] !== undefined) out[k] = l[k]; });
+  return out;
 }
 // Día en hora argentina, como texto AAAA-MM-DD (así se agrupan las estadísticas por día).
 function dayKey(d) {
@@ -1716,6 +1812,8 @@ const ACCENTS = [
   { hex: '#1C1A19', name: 'Negro' }
 ];
 const LOOK_KEY = 'blublub_look_v1';
+// Imagen transparente para cuando todavía no hay foto (evita el ícono de imagen rota).
+const BLANK = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
 // Preguntas frecuentes de fábrica (la dueña las cambia desde Estética).
 const MAX_FAQ = 12;
 const DEFAULT_FAQ = [
@@ -1749,7 +1847,8 @@ function normalizeLook(raw) {
   const d = defaultLook();
   const r = (raw && typeof raw === 'object') ? raw : {};
   const str = (v, fb) => (typeof v === 'string' ? v : fb);
-  const media = (m, fb) => ({ url: safeUrl(str(m && m.url, fb.url)) || fb.url, type: (m && m.type === 'video') ? 'video' : 'image' });
+  const stored = !!(raw && typeof raw === 'object');
+  const media = (m, fb) => ({ url: safeUrl(str(m && m.url, stored ? '' : fb.url)) || (stored ? '' : fb.url), type: (m && m.type === 'video') ? 'video' : 'image' });
   const hero = Array.isArray(r.hero) && r.hero.length
     ? r.hero.slice(0, 5).map((h, i) => ({ ...media(h, d.hero[i] || d.hero[0]), kicker: str(h && h.kicker, ''), headline: str(h && h.headline, ''), sub: str(h && h.sub, '') }))
     : d.hero;
@@ -1760,7 +1859,7 @@ function normalizeLook(raw) {
     header: r.header === 'transparente' ? 'transparente' : 'blanco',
     hero,
     editorial: { ...media(e, d.editorial), kicker: str(e.kicker, d.editorial.kicker), title: str(e.title, d.editorial.title), text: str(e.text, d.editorial.text) },
-    instagram: d.instagram.map((u, i) => safeUrl(str(Array.isArray(r.instagram) ? r.instagram[i] : '', '')) || u),
+    instagram: d.instagram.map((u, i) => safeUrl(str(Array.isArray(r.instagram) ? r.instagram[i] : '', '')) || (stored && Array.isArray(r.instagram) ? '' : u)),
     // Si nunca se guardaron preguntas, van las de fábrica; si se guardó una lista (aunque esté vacía), se respeta.
     faq: Array.isArray(r.faq)
       ? r.faq.slice(0, MAX_FAQ).map(f => ({ q: str(f && f.q, '').slice(0, 200), a: str(f && f.a, '').slice(0, 2000) })).filter(f => f.q.trim() || f.a.trim())
@@ -1831,8 +1930,9 @@ class Component extends DCLogic {
   }
   state = {
     view: 'home',
-    products: this.getDefaultProducts(),
-    categories: this.getDefaultCategories(),
+    // Arranca vacío: nunca se muestran los productos ni las fotos de ejemplo mientras carga.
+    products: [],
+    categories: [],
     materials: this.getDefaultMaterials(),
     cart: [],
     cartOpen: false,
@@ -1867,6 +1967,9 @@ class Component extends DCLogic {
     mediaIndex: 0,
     storeLoaded: false,
     look: this.readCachedLook(),
+    // Si ya se conoce la estética guardada (en este navegador o desde Firebase). Mientras no, la
+    // portada no muestra fotos de ejemplo.
+    lookKnown: (() => { try { return !!localStorage.getItem(LOOK_KEY); } catch (e) { return false; } })(),
     lookDraft: null,
     lookCatDraft: null,
     lookBase: null,
@@ -1890,6 +1993,9 @@ class Component extends DCLogic {
     chartHover: -1,
     orderFilter: 'todos',
     ordersShown: 25,
+    autoIdx: {},
+    zoomOpen: false,
+    zoomIdx: 0,
     adminChecking: true,
     costs: {},
     costsLoaded: false,
@@ -1922,9 +2028,88 @@ class Component extends DCLogic {
       this._vidObs.observe(v);
     });
   }
-  componentDidUpdate() { this.watchCardVideos(); }
+  componentDidUpdate() { this.watchCardVideos(); this.observeCards(); }
+
+  // ---- Celulares: las tarjetas que se ven en pantalla pasan sus fotos solas (2 s cada foto;
+  // los videos se ven enteros y al terminar sigue la próxima). En compu es al pasar el mouse. ----
+  // true en celulares y tablets (sin "mouse encima").
+  _touch = !!(window.matchMedia && !window.matchMedia('(hover: hover)').matches);
+  initCardAuto() {
+    const reduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    if (!this._touch || reduce || !('IntersectionObserver' in window)) return;
+    this._autoEls = new Map();   // elemento de la tarjeta -> ¿se ve?
+    this._autoSince = {};        // tarjeta -> cuándo empezó la foto actual
+    this._cardObs = new IntersectionObserver((entries) => {
+      entries.forEach(en => this._autoEls.set(en.target, en.isIntersecting && en.intersectionRatio >= 0.55));
+      this.syncAuto();
+    }, { threshold: [0, 0.55, 0.9] });
+    this._autoTimer = setInterval(() => this.tickAuto(), 400);
+    this.observeCards();
+  }
+  observeCards() {
+    if (!this._cardObs) return;
+    document.querySelectorAll('[data-card-key]').forEach(el => {
+      if (this._autoEls.has(el)) return;
+      this._autoEls.set(el, false);
+      this._cardObs.observe(el);
+    });
+  }
+  mediaForKey(key) {
+    const id = key.slice(key.indexOf(':') + 1);
+    const p = this.state.products.find(x => x.id === id);
+    return p ? cardMedia(p) : [];
+  }
+  syncAuto() {
+    const visible = {};
+    this._autoEls.forEach((on, el) => {
+      if (!el.isConnected) { this._cardObs.unobserve(el); this._autoEls.delete(el); return; }
+      const k = el.getAttribute('data-card-key');
+      if (on && k && this.mediaForKey(k).length > 1) visible[k] = true;
+    });
+    const cur = this.state.autoIdx || {};
+    const next = {};
+    let changed = false;
+    Object.keys(visible).forEach(k => {
+      if (cur[k] !== undefined) next[k] = cur[k];
+      else { next[k] = 0; this._autoSince[k] = Date.now() + Math.random() * 600; changed = true; }
+    });
+    Object.keys(cur).forEach(k => { if (!visible[k]) { changed = true; delete this._autoSince[k]; } });
+    if (changed) this.setState({ autoIdx: next });
+  }
+  tickAuto() {
+    const cur = this.state.autoIdx || {};
+    const keys = Object.keys(cur);
+    if (!keys.length) return;
+    const now = Date.now();
+    let next = null;
+    keys.forEach(k => {
+      const media = this.mediaForKey(k);
+      if (media.length < 2) return;
+      const i = cur[k] % media.length;
+      const since = this._autoSince[k] || now;
+      let go = false;
+      if (media[i].type !== 'video') go = now - since >= 2000;
+      else if (now - since > 6000) {
+        // Un video que no arrancó (sin conexión) no frena la tarjeta; uno muy largo, tampoco.
+        const v = document.querySelector('[data-card-key="' + k + '"] video[data-hover-video]');
+        go = !v || !!v.error || v.readyState < 2 || now - since > 90000;
+      }
+      if (go) { if (!next) next = { ...cur }; next[k] = (i + 1) % media.length; this._autoSince[k] = now; }
+    });
+    if (next) this.setState({ autoIdx: next });
+  }
+  advanceAuto(key) {
+    const cur = this.state.autoIdx || {};
+    if (cur[key] === undefined) return;
+    const media = this.mediaForKey(key);
+    if (media.length < 2) return;
+    this._autoSince[key] = Date.now();
+    this.setState({ autoIdx: { ...cur, [key]: (cur[key] + 1) % media.length } });
+  }
 
   componentDidMount() {
+    this.initCardAuto();
+    this._storeReady = new Promise(res => { this._storeReadyDone = res; });
     // Se cumple cuando ya se sabe si quien navega es la dueña o no.
     this._authKnown = new Promise(res => { this._authKnownDone = () => res(); });
     applyLook(this.state.look);
@@ -1939,8 +2124,9 @@ class Component extends DCLogic {
           const look = normalizeLook(data.settings);
           try { localStorage.setItem(LOOK_KEY, JSON.stringify(look)); } catch (e) {}
           const migrated = this.migrate(data);
+          if (this._storeReadyDone) setTimeout(this._storeReadyDone, 0);
           this.setState(st => ({
-            ...migrated, look, storeLoaded: true,
+            ...migrated, look, storeLoaded: true, lookKnown: true,
             ...((st.lookDraft && !st.lookDirty) ? this.freshLookDrafts(look, migrated.categories) : {})
           }), () => {
             // Si la dueña está editando la estética o mirando la vista previa, no se le pisa.
@@ -1957,7 +2143,7 @@ class Component extends DCLogic {
 
       // Escucha la sesión de Firebase Authentication (reemplaza el login casero).
       this._unsubAuth = auth.onAuthStateChanged(async (fbUser) => {
-        if (!fbUser) { this.stopAdminData(); this.stopCosts(); this.setState({ user: null, costs: {}, costsLoaded: false, adminChecking: false }, this._authKnownDone); return; }
+        if (!fbUser) { this.stopAdminData(); this.stopCosts(); this.stopHolds(); this.setState({ user: null, costs: {}, costsLoaded: false, adminChecking: false }, this._authKnownDone); return; }
         const base = { name: fbUser.displayName || (fbUser.email || '').split('@')[0], email: fbUser.email, admin: false };
         this.setState({ user: base, adminChecking: true });
         // ¿Es la dueña? Su correo no está escrito en el código público: lo decide Firebase,
@@ -1967,7 +2153,7 @@ class Component extends DCLogic {
         this.setState({ user: { ...base, admin }, adminChecking: false }, () => {
           this._authKnownDone();
           if (admin && this.state.view === 'admin') this.startAdminData();
-          if (admin) this.startCosts(); else this.stopCosts();
+          if (admin) { this.startCosts(); this.startHolds(); } else { this.stopCosts(); this.stopHolds(); }
         });
         if (admin) {
           // Primera vez que la dueña entra: si el catálogo compartido todavía no existe, lo crea.
@@ -2031,6 +2217,10 @@ class Component extends DCLogic {
 
   componentWillUnmount() {
     if (this._vidObs) { this._vidObs.disconnect(); this._vidObs = null; }
+    if (this._cardObs) { this._cardObs.disconnect(); this._cardObs = null; }
+    this.stopHolds();
+    if (this._zoomKeys) window.removeEventListener('keydown', this._zoomKeys);
+    clearInterval(this._autoTimer);
     if (this._heroTimer) clearInterval(this._heroTimer);
     if (this._onScroll) window.removeEventListener('scroll', this._onScroll);
     if (this._unsubStore) this._unsubStore();
@@ -2047,32 +2237,21 @@ class Component extends DCLogic {
 
   // Keeps the owner's saved edits while filling in anything a newer default set added.
   migrate(data) {
-    const defProducts = this.getDefaultProducts();
-    const defCats = this.getDefaultCategories();
     const defMats = this.getDefaultMaterials();
-    const byId = (list) => { const m = {}; list.forEach(x => { m[x.id] = x; }); return m; };
-    const defP = byId(defProducts);
 
-    // Sólo completa datos faltantes de los productos de ejemplo que siguen existiendo.
-    // Antes también volvía a agregar los que la dueña había borrado: por eso reaparecían.
-    const products = (data.products || []).map(p => {
-      const base = defP[p.id];
-      return base ? { ...base, ...p, image: p.image || base.image } : p;
-    });
-
-    const categories = (data.categories || []).map(c => {
-      const base = defCats.find(d => d.id === c.id);
-      return base ? { ...base, ...c, image: c.image || base.image } : c;
-    });
+    // Ya no se completa nada con los datos de ejemplo: así nunca aparecen sus fotos.
+    const products = (data.products || []).filter(p => p && p.id);
+    const categories = (data.categories || []).filter(c => c && c.id);
 
     const materials = (data.materials && data.materials.length) ? data.materials : defMats;
     return { products, categories, materials };
   }
 
   // Guarda el catálogo entero en Firestore. Las reglas de seguridad sólo dejan escribir a la dueña.
-  async persist() {
+  async persist(productsOverride) {
     await firebaseReady;
-    const { products, categories, materials } = this.state;
+    const { categories, materials } = this.state;
+    const products = productsOverride || this.state.products;
     STORE_DOC.set({ version: Component.STORE_VERSION, products, categories, materials }, { merge: true })
       .catch((e) => { console.error('No se pudo guardar en Firestore:', e); this.showToast('No se pudo guardar — revisá tu conexión'); });
   }
@@ -2147,6 +2326,7 @@ class Component extends DCLogic {
     if (next.view === 'product') this.trackStat('views', next.selectedProductId);
     if (next.view === 'admin') this.startAdminData(); else this.stopAdminData();
     this._editReturn = null;
+    if (this.state.zoomOpen) this.closeZoom();
     this.setState({ ...next, menuOpen: false, cartOpen: false, authOpen: false, hoverKey: '', hoverIdx: 0 }, () => {
       if (after) { after(); return; }
       // Al ir hacia atrás, vuelve a la misma altura donde estaba la clienta.
@@ -2187,7 +2367,7 @@ class Component extends DCLogic {
   setCatFilter = (id) => this.navigate(id && id !== 'all' ? '#/productos/' + encodeURIComponent(id) : '#/productos');
 
   // ---- Tarjetas: al pasar el mouse se van pasando las fotos y videos ----
-  // Fotos: 1,9 s cada una. Videos: se ven enteros y al terminar pasa al siguiente (tope 90 s por si falla).
+  // Fotos: 2 s cada una. Videos: se ven enteros y al terminar pasa al siguiente (tope 90 s por si falla).
   startCardHover(key, media) {
     if (!media || media.length < 2) return;
     if (window.matchMedia && !window.matchMedia('(hover: hover)').matches) return; // en celulares no
@@ -2215,7 +2395,7 @@ class Component extends DCLogic {
     if (this.state.hoverKey !== key || this.state.hoverLeaving || media.length < 2) return;
     const next = (this.state.hoverIdx + 1) % media.length;
     this.setState({ hoverIdx: next });
-    if (media[next].type === 'video') this.scheduleVideoHover(key); else this.scheduleHover(key, 1900);
+    if (media[next].type === 'video') this.scheduleVideoHover(key); else this.scheduleHover(key, 2000);
   }
   stopCardHover(key) {
     if (this.state.hoverKey !== key) return;
@@ -2247,6 +2427,148 @@ class Component extends DCLogic {
     const dx = t.clientX - this._tx, dy = t.clientY - this._ty;
     this._tx = null;
     if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.3) { if (dx < 0) this.nextMedia(); else this.prevMedia(); }
+  };
+
+  // ---- Zoom de las fotos del producto ----
+  // Compu: al pasar el mouse la foto se agranda siguiendo el puntero. Tocar o hacer clic abre la
+  // foto en pantalla completa, donde se puede pellizcar, tocar dos veces o hacer clic para acercar.
+  currentPhotos() {
+    const p = this.state.products.find(x => x.id === this.state.selectedProductId);
+    const c = pickColor(p, this.state.selectedColor);
+    return c ? c.media.filter(m => m.type !== 'video') : [];
+  }
+  onMediaHoverZoom = (e) => {
+    if (this._touch) return;
+    const box = e.currentTarget;
+    const img = box.querySelector('img[data-zoomable="1"]');
+    box.querySelectorAll('img[data-zoomable]').forEach(i => { if (i !== img) i.style.transform = ''; });
+    if (!img || (e.target.closest && e.target.closest('[data-arrow]'))) { if (img) img.style.transform = ''; return; }
+    const r = box.getBoundingClientRect();
+    img.style.transformOrigin = `${((e.clientX - r.left) / r.width) * 100}% ${((e.clientY - r.top) / r.height) * 100}%`;
+    img.style.transform = 'scale(2)';
+  };
+  onMediaHoverOut = (e) => { e.currentTarget.querySelectorAll('img[data-zoomable]').forEach(i => { i.style.transform = ''; }); };
+  onMediaClick = (e) => {
+    if (e.target.closest && e.target.closest('[data-arrow]')) return;
+    const p = this.state.products.find(x => x.id === this.state.selectedProductId);
+    const c = pickColor(p, this.state.selectedColor);
+    const cur = c && c.media[Math.min(this.state.mediaIndex || 0, c.media.length - 1)];
+    if (!cur || cur.type === 'video') return;
+    const photos = this.currentPhotos();
+    const idx = Math.max(0, photos.findIndex(m => m.url === cur.url));
+    this._zp = { ptrs: new Map(), s: 1, x: 0, y: 0, start: null, pinch: null, lastTap: 0, moved: false };
+    try { document.documentElement.style.overflow = 'hidden'; } catch (err) {}
+    this._zoomKeys = (ev) => {
+      if (ev.key === 'Escape') this.closeZoom();
+      else if (ev.key === 'ArrowRight') this.zoomNext();
+      else if (ev.key === 'ArrowLeft') this.zoomPrev();
+    };
+    window.addEventListener('keydown', this._zoomKeys);
+    this.setState({ zoomOpen: true, zoomIdx: idx });
+  };
+  closeZoom = () => {
+    try { document.documentElement.style.overflow = ''; } catch (err) {}
+    if (this._zoomKeys) { window.removeEventListener('keydown', this._zoomKeys); this._zoomKeys = null; }
+    if (this.state.zoomOpen) this.setState({ zoomOpen: false });
+  };
+  zoomGo(dir) {
+    const n = this.currentPhotos().length;
+    if (n < 2) return;
+    this._zp = { ...this._zp, s: 1, x: 0, y: 0, start: null, pinch: null };
+    this.setState(s => ({ zoomIdx: (s.zoomIdx + dir + n) % n }), () => this.applyZoom(false));
+  }
+  zoomNext = () => this.zoomGo(1);
+  zoomPrev = () => this.zoomGo(-1);
+  zoomEls() { return { stage: document.querySelector('[data-zoom-stage]'), img: document.querySelector('[data-zoom-img]') }; }
+  clampZoom() {
+    const { stage, img } = this.zoomEls();
+    const z = this._zp;
+    if (!stage || !img) return;
+    const W = img.offsetWidth * z.s, H = img.offsetHeight * z.s;
+    const sw = stage.clientWidth, sh = stage.clientHeight, ox = img.offsetLeft, oy = img.offsetTop;
+    z.x = W <= sw ? (sw - W) / 2 - ox : Math.min(-ox, Math.max(sw - W - ox, z.x));
+    z.y = H <= sh ? (sh - H) / 2 - oy : Math.min(-oy, Math.max(sh - H - oy, z.y));
+  }
+  applyZoom(animate) {
+    const { stage, img } = this.zoomEls();
+    if (!img || !this._zp) return;
+    const z = this._zp;
+    this.clampZoom();
+    img.style.transition = animate ? 'transform .25s ease' : 'none';
+    img.style.transform = `translate(${z.x}px, ${z.y}px) scale(${z.s})`;
+    if (stage) stage.style.cursor = z.s > 1.01 ? 'grab' : 'zoom-in';
+  }
+  zoomAt(cx, cy, ns, animate) {
+    const { stage, img } = this.zoomEls();
+    if (!stage || !img) return;
+    const z = this._zp, r = stage.getBoundingClientRect();
+    const px = cx - r.left, py = cy - r.top;
+    const lx = (px - img.offsetLeft - z.x) / z.s, ly = (py - img.offsetTop - z.y) / z.s;
+    z.s = ns;
+    z.x = px - img.offsetLeft - ns * lx;
+    z.y = py - img.offsetTop - ns * ly;
+    this.applyZoom(animate);
+  }
+  zoomDown = (e) => {
+    const z = this._zp;
+    if (!z) return;
+    z.ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    try { e.currentTarget.setPointerCapture(e.pointerId); } catch (err) {}
+    if (z.ptrs.size === 1) { z.start = { x: e.clientX, y: e.clientY, t: Date.now(), zx: z.x, zy: z.y }; z.moved = false; }
+    if (z.ptrs.size === 2) {
+      const [a, b] = [...z.ptrs.values()];
+      z.pinch = { d: Math.hypot(a.x - b.x, a.y - b.y) || 1, s: z.s, cx: (a.x + b.x) / 2, cy: (a.y + b.y) / 2, x: z.x, y: z.y };
+      z.moved = true;
+    }
+  };
+  zoomMove = (e) => {
+    const z = this._zp;
+    if (!z || !z.ptrs.has(e.pointerId)) return;
+    z.ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    const { stage, img } = this.zoomEls();
+    if (!stage || !img) return;
+    if (z.ptrs.size >= 2 && z.pinch) {
+      const [a, b] = [...z.ptrs.values()];
+      const r = stage.getBoundingClientRect();
+      const ns = Math.max(1, Math.min(5, z.pinch.s * Math.hypot(a.x - b.x, a.y - b.y) / z.pinch.d));
+      const lx = (z.pinch.cx - r.left - img.offsetLeft - z.pinch.x) / z.pinch.s;
+      const ly = (z.pinch.cy - r.top - img.offsetTop - z.pinch.y) / z.pinch.s;
+      z.s = ns;
+      z.x = (a.x + b.x) / 2 - r.left - img.offsetLeft - ns * lx;
+      z.y = (a.y + b.y) / 2 - r.top - img.offsetTop - ns * ly;
+      this.applyZoom(false);
+    } else if (z.ptrs.size === 1 && z.start) {
+      const dx = e.clientX - z.start.x, dy = e.clientY - z.start.y;
+      if (Math.abs(dx) + Math.abs(dy) > 6) z.moved = true;
+      if (z.s > 1.01) { z.x = z.start.zx + dx; z.y = z.start.zy + dy; this.applyZoom(false); }
+    }
+  };
+  zoomUp = (e) => {
+    const z = this._zp;
+    if (!z) return;
+    z.ptrs.delete(e.pointerId);
+    if (z.ptrs.size === 1) {
+      // De pellizcar a arrastrar con un dedo.
+      const [a] = [...z.ptrs.values()];
+      z.start = { x: a.x, y: a.y, t: Date.now(), zx: z.x, zy: z.y }; z.pinch = null;
+      return;
+    }
+    if (z.ptrs.size > 0 || !z.start) { z.pinch = null; return; }
+    z.pinch = null;
+    const dx = e.clientX - z.start.x, dy = e.clientY - z.start.y, dt = Date.now() - z.start.t;
+    z.start = null;
+    if (!z.moved && dt < 400) {
+      const now = Date.now();
+      // Clic con mouse, o dos toques seguidos con el dedo: acerca o vuelve.
+      if (e.pointerType === 'mouse' || now - z.lastTap < 320) { this.zoomAt(e.clientX, e.clientY, z.s > 1.05 ? 1 : 2.5, true); z.lastTap = 0; }
+      else z.lastTap = now;
+      return;
+    }
+    if (z.s <= 1.01) {
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.3) { if (dx < 0) this.zoomNext(); else this.zoomPrev(); return; }
+      if (e.pointerType !== 'mouse' && dy > 110 && dy > Math.abs(dx) * 1.3) { this.closeZoom(); return; }
+    }
+    if (z.s < 1.02) { z.s = 1; this.applyZoom(true); }
   };
 
   // ---- Animación: la foto vuela hasta el carrito ----
@@ -2402,7 +2724,7 @@ class Component extends DCLogic {
         const orders = snap.docs.map(d => {
           const o = d.data({ serverTimestamps: 'estimate' }) || {};
           const date = o.createdAt && o.createdAt.toDate ? o.createdAt.toDate() : new Date();
-          return { id: d.id, code: o.code || '', status: o.status || 'pendiente', total: +o.total || 0, items: Array.isArray(o.items) ? o.items : [], customer: o.customer || null, stockApplied: !!o.stockApplied, date };
+          return { id: d.id, code: o.code || '', status: o.status || 'pendiente', total: +o.total || 0, items: Array.isArray(o.items) ? o.items : [], customer: o.customer || null, stockApplied: !!o.stockApplied, date, lines: orderLines(o) };
         });
         this.setState({ orders, ordersLoaded: true, ordersError: '' });
       }, (err) => {
@@ -2474,34 +2796,110 @@ class Component extends DCLogic {
     return m && typeof m[colorKey] === 'number' ? m[colorKey] : null;
   }
   setSalesRange(r) { this.setState({ salesRange: r, chartHover: -1, ordersShown: 25 }, () => { if (this._unsubStats) this.loadStats(); }); }
-  // Al pasar un pedido a Vendido o Entregado se descuenta del stock; si vuelve a Sin confirmar o
-  // Cancelado, se devuelve. `stockApplied` en el pedido recuerda si ya se descontó.
+  // Stock y pedidos: un pedido nuevo deja su stock reservado (descontado) hasta que se decide.
+  // Lo que se cancela vuelve al stock; lo confirmado queda descontado. Cada producto del pedido
+  // se puede confirmar o cancelar por separado.
+  // Todo el pedido (lista de estados o botones "Confirmar todo" / "Cancelar todo").
   setOrderStatus(id, status) {
     const o = this.state.orders.find(x => x.id === id);
-    if (!o || o.status === status) return;
-    const isSale = (st) => st === 'vendido' || st === 'entregado';
-    const sign = isSale(status) && !o.stockApplied ? -1 : (!isSale(status) && o.stockApplied ? 1 : 0);
-    const touched = sign ? this.adjustStock(o.items, sign) : 0;
-    const upd = sign ? { status, stockApplied: sign < 0 } : { status };
-    firebaseReady.then(() => db.collection('orders').doc(id).update(upd))
+    if (!o) return;
+    const lines = orderLines(o);
+    let next;
+    if (status === 'cancelado') next = lines.map(l => ({ ...l, state: 'cancelado' }));
+    else if (status === 'pendiente') next = lines.map(l => ({ ...l, state: 'pendiente' }));
+    else {
+      next = lines.map(l => l.state === 'pendiente' ? { ...l, state: 'confirmado' } : l);
+      if (!next.some(l => l.state === 'confirmado')) next = next.map(l => ({ ...l, state: 'confirmado' }));
+    }
+    this.commitOrderLines(o, next, status);
+  }
+  // Un solo producto del pedido.
+  setLineState(id, idx, state) {
+    const o = this.state.orders.find(x => x.id === id);
+    if (!o) return;
+    const lines = orderLines(o);
+    if (!lines[idx] || lines[idx].state === state) return;
+    lines[idx] = { ...lines[idx], state };
+    this.commitOrderLines(o, lines, null, state === 'confirmado' ? 'Producto confirmado' : state === 'cancelado' ? 'Producto cancelado' : 'Producto sin confirmar');
+  }
+  // Guarda los estados nuevos y ajusta el stock: lo cancelado vuelve al stock; lo que deja de estar
+  // cancelado se vuelve a descontar.
+  commitOrderLines(o, newLines, prefer, label) {
+    const old = orderLines(o);
+    const deltas = [];
+    const lines = newLines.map((l, i) => {
+      const want = l.state !== 'cancelado';
+      const had = old[i] ? old[i].held : false;
+      if (want && !had) deltas.push({ it: l, sign: -1 });
+      if (!want && had) deltas.push({ it: l, sign: 1 });
+      return { ...l, held: want };
+    });
+    const status = orderStatusFrom(lines, prefer || o.status);
+    const touched = deltas.length ? this.applyStockDeltas(deltas) : 0;
+    const upd = { items: lines.map(cleanLine), status, stockApplied: lines.some(l => l.held) };
+    firebaseReady.then(() => db.collection('orders').doc(o.id).update(upd))
       .then(() => {
-        let msg = status === 'vendido' ? 'Marcado como vendido' : 'Estado actualizado';
-        if (touched) msg += sign < 0 ? '. Se descontó del stock.' : '. Se devolvió al stock.';
+        let msg = label || (status === 'vendido' ? 'Pedido confirmado' : status === 'entregado' ? 'Marcado como entregado' : status === 'cancelado' ? 'Pedido cancelado' : 'Pedido actualizado');
+        if (touched) {
+          const back = deltas.some(d => d.sign > 0), off = deltas.some(d => d.sign < 0);
+          msg += back && off ? '. Stock actualizado.' : back ? '. Volvió al stock.' : '. Se descontó del stock.';
+        }
         this.showToast(msg);
       })
       .catch(() => {
-        if (touched) this.adjustStock(o.items, -sign);
+        if (touched) this.applyStockDeltas(deltas.map(d => ({ it: d.it, sign: -d.sign })));
         this.showToast('No se pudo actualizar el pedido');
       });
   }
+  // Apenas llega un pedido nuevo, su stock queda reservado (aunque la dueña no lo haya abierto).
+  // Funciona mientras la dueña tenga la web abierta con su cuenta, en cualquier pantalla.
+  startHolds() {
+    if (this._unsubHolds || !this.isAdminUser()) return;
+    this._unsubHolds = () => {};
+    this._holding = this._holding || {};
+    firebaseReady.then(() => this._storeReady).then(() => {
+      if (!this.isAdminUser()) { this._unsubHolds = null; return; }
+      this._unsubHolds = db.collection('orders').where('status', '==', 'pendiente').limit(200).onSnapshot(
+        (snap) => snap.docs.forEach(d => this.holdOrder(d.id)),
+        (err) => console.warn('No se pudieron revisar los pedidos nuevos:', err)
+      );
+    });
+  }
+  stopHolds() { if (this._unsubHolds) { this._unsubHolds(); this._unsubHolds = null; } }
+  async holdOrder(id) {
+    if (this._holding[id]) return;
+    this._holding[id] = true;
+    try {
+      const ref = db.collection('orders').doc(id);
+      // Transacción: si la dueña tiene la web abierta en dos dispositivos, solo uno descuenta.
+      const taken = await db.runTransaction(async (t) => {
+        const snap = await t.get(ref);
+        if (!snap.exists) return null;
+        const o = snap.data() || {};
+        if (o.status !== 'pendiente') return null;
+        const lines = orderLines(o);
+        const idx = lines.map((l, i) => (l.state !== 'cancelado' && !l.held) ? i : -1).filter(i => i >= 0);
+        if (!idx.length) return null;
+        const next = lines.map((l, i) => idx.includes(i) ? { ...l, held: true } : l);
+        t.update(ref, { items: next.map(cleanLine), stockApplied: true });
+        return idx.map(i => lines[i]);
+      });
+      if (taken && taken.length) this.applyStockDeltas(taken.map(it => ({ it, sign: -1 })));
+    } catch (e) {
+      console.warn('No se pudo reservar el stock del pedido', id, e);
+    } finally {
+      setTimeout(() => { delete this._holding[id]; }, 4000);
+    }
+  }
   // Suma (sign = 1) o resta (sign = -1) las unidades de un pedido al stock de cada color.
-  // Solo toca los colores que tienen stock cargado. Devuelve cuántas líneas cambió.
-  adjustStock(items, sign) {
-    let touched = 0;
+  adjustStock(items, sign) { return this.applyStockDeltas((items || []).map(it => ({ it, sign }))); }
+  // deltas: [{ it: producto del pedido, sign: -1 descuenta / +1 devuelve }]. Solo toca colores con stock cargado.
+  applyStockDeltas(deltas) {
     const raw = (x) => (typeof x.stock === 'number' && isFinite(x.stock)) ? x.stock : null;
-    const products = this.state.products.map(p => {
+    let touched = 0;
+    const compute = (list, count) => list.map(p => {
       let np = p;
-      (items || []).filter(it => it.productId === p.id).forEach(it => {
+      (deltas || []).filter(d => d.it && d.it.productId === p.id).forEach(({ it, sign }) => {
         // Solo cantidades normales (1 a 99): un pedido alterado no puede vaciar ni inflar el stock.
         const n = +it.qty;
         if (!(Number.isInteger(n) && n >= 1 && n <= 99)) return;
@@ -2518,16 +2916,21 @@ class Component extends DCLogic {
           if (raw(np) === null) return;
           np = { ...np, stock: raw(np) + q };
         }
-        touched++;
+        if (count) touched++;
       });
       return np;
     });
-    if (touched) this.setState({ products }, () => this.persist());
+    compute(this.state.products, true);
+    if (touched) {
+      // Se guarda exactamente la lista calculada (por si mientras tanto llegan otros datos).
+      let result = null;
+      this.setState(st => { result = compute(st.products, false); return { products: result }; }, () => this.persist(result));
+    }
     return touched;
   }
   deleteOrder(id, code) {
     const o = this.state.orders.find(x => x.id === id);
-    const extra = o && o.stockApplied ? '\n\nEste pedido ya descontó stock y al eliminarlo no se devuelve. Si querés devolverlo, pasalo a Cancelado antes.' : '';
+    const extra = o && orderLines(o).some(l => l.held) ? '\n\nEste pedido tiene stock reservado o descontado y al eliminarlo no se devuelve. Si querés devolverlo, cancelalo antes.' : '';
     if (!confirm(`¿Eliminar el pedido ${code}? No se puede deshacer.${extra}`)) return;
     firebaseReady.then(() => db.collection('orders').doc(id).delete()).catch(() => this.showToast('No se pudo eliminar'));
   }
@@ -2630,8 +3033,8 @@ class Component extends DCLogic {
   setHeroText(i, field, value) { this.editLook(d => { if (d.hero[i]) d.hero[i][field] = value; }); }
   addHeroSlide = () => this.editLook(d => {
     if (d.hero.length >= 5) return;
-    const base = defaultLook().hero[d.hero.length % 3];
-    d.hero.push({ url: base.url, type: 'image', kicker: '', headline: '', sub: '' });
+    // Sin foto de ejemplo: queda vacía hasta que se suba una.
+    d.hero.push({ url: '', type: 'image', kicker: '', headline: '', sub: '' });
   });
   removeHeroSlide(i) {
     const n = (this.state.lookDraft || this.state.look).hero.length;
@@ -2968,7 +3371,7 @@ class Component extends DCLogic {
       const media = cardMedia(p);
       return {
         ...p,
-        image: media[0] ? mediaThumb(media[0], 900) : '',
+        image: (media[0] && mediaThumb(media[0], 900)) || BLANK,
         imageId: SLOT + p.imageId,
         priceFormatted: priceVaries ? 'Desde ' + this.fmt(minPrice) : this.fmt(this.effPrice(shown)),
         isOnSale: sale,
@@ -3019,13 +3422,18 @@ class Component extends DCLogic {
       const base = withDetails(p);
       const key = section + ':' + p.id;
       const media = cardMedia(p);
-      const hovered = s.hoverKey === key && media.length > 1;
-      const idx = hovered ? (s.hoverIdx || 0) % media.length : 0;
+      // Compu: pasan al pasar el mouse. Celular: pasan solas mientras la tarjeta se ve en pantalla.
+      const autoI = s.autoIdx ? s.autoIdx[key] : undefined;
+      const byHover = s.hoverKey === key && media.length > 1;
+      const byAuto = !byHover && autoI !== undefined && media.length > 1;
+      const hovered = byHover || byAuto;
+      const idx = byHover ? (s.hoverIdx || 0) % media.length : byAuto ? autoI % media.length : 0;
       const first = media[0];
       return {
         ...base,
         // Si lo principal es un video, se reproduce solo en la tarjeta (sin sonido) cuando se ve en pantalla.
-        baseVideo: first && first.type === 'video' && !reduceMotion ? cldVideo(first.url, 720) : '', on: true,
+        baseVideo: first && first.type === 'video' && !reduceMotion && (media.length < 2 || !this._touch) ? cldVideo(first.url, 720) : '', on: true,
+        cardKey: key,
         canQuickAdd: !base.outOfStock,
         quickLabel: base.hasColors ? 'Elegir color' : 'Agregar',
         slides: hovered ? media.map((m, i) => ({
@@ -3036,7 +3444,7 @@ class Component extends DCLogic {
           on: true,
           // Con varias fotos, el video se ve entero y recién al terminar pasa a la siguiente.
           loop: media.length < 2,
-          onEnded: () => { if (i === idx) this.advanceHover(key); },
+          onEnded: () => { if (i !== idx) return; if (byHover) this.advanceHover(key); else this.advanceAuto(key); },
           onReady: (e) => { try { e.target.muted = true; const pr = e.target.play(); if (pr && pr.catch) pr.catch(() => {}); } catch (err) {} }
         })) : [],
         showDots: hovered && !s.hoverLeaving,
@@ -3058,13 +3466,14 @@ class Component extends DCLogic {
       };
     };
 
+    const known = s.lookKnown || previewing;
     const heroIdx = s.heroSlide % Math.max(1, L.hero.length);
     const heroSlides = L.hero.map((h, i) => ({
       kicker: h.kicker, headline: h.headline, sub: h.sub,
-      hasKicker: !!h.kicker, hasHeadline: !!h.headline, hasSub: !!h.sub,
+      hasKicker: known && !!h.kicker, hasHeadline: known && !!h.headline, hasSub: known && !!h.sub,
       imageId: SLOT + 'hero-' + (i + 1),
-      image: h.type === 'video' ? cldPoster(h.url, 1800) : cldImage(h.url, 1800),
-      isVideo: h.type === 'video', video: h.type === 'video' ? cldVideo(h.url, 1600) : '', on: true,
+      image: (known && (h.type === 'video' ? cldPoster(h.url, 1800) : cldImage(h.url, 1800))) || BLANK,
+      isVideo: known && h.type === 'video' && !!h.url, video: h.type === 'video' ? cldVideo(h.url, 1600) : '', on: true,
       active: i === heroIdx,
       select: () => this.selectHero(i),
       onReady: (e) => { try { e.target.muted = true; const pr = e.target.play(); if (pr && pr.catch) pr.catch(() => {}); } catch (err) {} },
@@ -3073,16 +3482,18 @@ class Component extends DCLogic {
     }));
 
     const noop = () => {};
-    const categoryTiles = s.categories.slice(0, 4).map(c => ({
-      name: c.name, imageId: SLOT + 'cat-' + c.id, image: cldImage(safeUrl(catImage(c)), 900),
+    const categoryTiles = (loading ? [1, 2, 3, 4].map(n => ({ id: '_' + n, name: '', image: '' })) : s.categories.slice(0, 4)).map(c => ({
+      name: c.name, imageId: SLOT + 'cat-' + c.id, image: cldImage(safeUrl(catImage(c)), 900) || BLANK,
       soon: !!c.soon, ready: !c.soon, cursor: c.soon ? 'default' : 'pointer', filter: c.soon ? 'grayscale(1)' : 'none', fade: c.soon ? 0.55 : 1,
       select: c.soon ? noop : () => this.setCatFilter(c.id)
     }));
     const menuCategories = s.categories.map(c => ({ name: c.name, soon: !!c.soon, ready: !c.soon, select: c.soon ? noop : () => this.setCatFilter(c.id) }));
 
-    const featuredProducts = loading ? [] : shop.filter(p => p.featured).slice(0, 4).map(p => withCard(p, 'feat'));
+    const allOut = (p) => { const cs = productColors(p); return cs.length > 0 && cs.every(c => c.outOfStock); };
+    const stockFirst = (list) => [...list.filter(p => !allOut(p)), ...list.filter(allOut)];
+    const featuredProducts = loading ? [] : stockFirst(shop.filter(p => p.featured)).slice(0, 8).map(p => withCard(p, 'feat'));
 
-    const instagramTiles = L.instagram.map((u, i) => ({ imageId: SLOT + 'ig-' + i, image: cldImage(u, 600) }));
+    const instagramTiles = L.instagram.map((u, i) => ({ imageId: SLOT + 'ig-' + i, image: (known && cldImage(u, 600)) || BLANK }));
 
     const faqItems = (L.faq || []).filter(f => f.q && f.q.trim()).map((f, i) => ({
       ...f, open: s.faqOpen === i, sign: s.faqOpen === i ? '−' : '+', toggle: () => this.toggleFaq(i)
@@ -3110,6 +3521,9 @@ class Component extends DCLogic {
     if (s.sortBy === 'price_asc') catalog = [...catalog].sort((a, b) => minOf(a) - minOf(b));
     else if (s.sortBy === 'price_desc') catalog = [...catalog].sort((a, b) => minOf(b) - minOf(a));
     else catalog = [...catalog].sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+    // Los que no tienen stock van siempre al final (sin cambiar el orden del resto).
+    const soldOut = (p) => { const cs = productColors(p); return cs.length > 0 && cs.every(c => c.outOfStock); };
+    catalog = [...catalog.filter(p => !soldOut(p)), ...catalog.filter(soldOut)];
     const catalogProducts = loading ? [] : catalog.map(p => withCard(p, 'cat'));
     const catalogTitle = s.catFilter === 'all' ? 'Todos los productos'
       : s.catFilter === 'sale' ? 'Sale' : this.categoryName(s.catFilter);
@@ -3152,6 +3566,7 @@ class Component extends DCLogic {
       opacity: i === mediaIdx ? 1 : 0,
       pe: i === mediaIdx ? 'auto' : 'none',
       activeFlag: i === mediaIdx ? '1' : '0',
+      zoomable: m.type !== 'video' && i === mediaIdx ? '1' : '0',
       alt: selectedRaw.name || '',
       on: true
     }));
@@ -3182,8 +3597,8 @@ class Component extends DCLogic {
       isMain: i === 0, notMain: i !== 0,
       makeMain: () => this.makeFormMediaMain(i), remove: () => this.removeFormMedia(i)
     }));
-    const relatedProducts = shop
-      .filter(p => p.categoryId === selectedRaw.categoryId && p.id !== selectedRaw.id)
+    const relatedProducts = stockFirst(shop
+      .filter(p => p.categoryId === selectedRaw.categoryId && p.id !== selectedRaw.id))
       .slice(0, 4).map(p => withCard(p, 'rel'));
 
     const cartItems = s.cart.map(ci => {
@@ -3220,8 +3635,9 @@ class Component extends DCLogic {
       const fromKey = range ? dayKey(new Date(now.getTime() - (range - 1) * 86400000)) : '0000-00-00';
       const inRange = s.orders.filter(o => dayKey(o.date) >= fromKey);
       const live = inRange.filter(o => o.status !== 'cancelado');
-      const sold = inRange.filter(o => o.status === 'vendido' || o.status === 'entregado');
-      const revenue = sold.reduce((a, o) => a + o.total, 0);
+      // Ventas = pedidos con al menos un producto confirmado; los ingresos son solo lo confirmado.
+      const sold = inRange.filter(o => o.lines.some(l => l.state === 'confirmado'));
+      const revenue = sold.reduce((a, o) => a + confirmedTotal(o), 0);
       const pending = inRange.filter(o => o.status === 'pendiente').length;
       const views = {}, carts = {};
       s.stats.filter(d => (d.day || '') >= fromKey).forEach(d => {
@@ -3238,7 +3654,7 @@ class Component extends DCLogic {
           // Ganancia de las ventas confirmadas, con el costo que hoy tiene cargado cada producto.
           if (s.costsError === 'rules') return { label: 'Ganancia estimada', value: '—', sub: 'faltan las reglas nuevas de Firebase' };
           let units = 0, costed = 0, gain = 0;
-          sold.forEach(o => o.items.forEach(it => {
+          sold.forEach(o => confirmedLines(o).forEach(it => {
             const q = Math.max(0, +it.qty || 0);
             units += q;
             const p = s.products.find(x => x.id === it.productId);
@@ -3284,7 +3700,7 @@ class Component extends DCLogic {
       const pool = byRevenue ? sold : live;
       const points = buckets.map(b => {
         const os = pool.filter(o => { const k = dayKey(o.date); return k >= b.from && k <= b.to; });
-        return { b, v: byRevenue ? os.reduce((a, o) => a + o.total, 0) : os.length, n: os.length };
+        return { b, v: byRevenue ? os.reduce((a, o) => a + confirmedTotal(o), 0) : os.length, n: os.length };
       });
       const maxV = Math.max(0, ...points.map(x => x.v));
       const fmtV = (v) => byRevenue ? this.fmt(v) : (nf(v) + (v === 1 ? ' pedido' : ' pedidos'));
@@ -3315,9 +3731,9 @@ class Component extends DCLogic {
 
       // Rankings
       const nameById = {};
-      const qty = (orders) => {
+      const qty = (orders, onlyConfirmed) => {
         const m = {};
-        orders.forEach(o => o.items.forEach(it => {
+        orders.forEach(o => o.lines.filter(l => onlyConfirmed ? l.state === 'confirmado' : l.state !== 'cancelado').forEach(it => {
           const k = it.productId || it.name;
           if (!k) return;
           m[k] = (m[k] || 0) + (+it.qty || 0);
@@ -3338,13 +3754,13 @@ class Component extends DCLogic {
         });
       };
       salesVals.salesLists = [
-        { title: 'Más vendidos', hint: 'Unidades en ventas confirmadas', rows: rank(qty(sold), 'unidad', 'unidades') },
-        { title: 'Más pedidos', hint: 'Unidades en todos los pedidos, confirmados o no', rows: rank(qty(live), 'unidad', 'unidades') },
+        { title: 'Más vendidos', hint: 'Unidades confirmadas', rows: rank(qty(sold, true), 'unidad', 'unidades') },
+        { title: 'Más pedidos', hint: 'Unidades pedidas, confirmadas o no (sin las canceladas)', rows: rank(qty(live, false), 'unidad', 'unidades') },
         { title: 'Más vistos', hint: 'Veces que se abrió cada producto', rows: rank(views, 'vista', 'vistas') },
         { title: 'Más agregados al carrito', hint: 'Aunque después no se hayan pedido', rows: rank(carts, 'vez', 'veces') }
       ].map(l => ({ ...l, noRows: l.rows.length === 0 }));
       const colorMap = {};
-      live.forEach(o => o.items.forEach(it => { const c = it.color || 'Sin color'; colorMap[c] = (colorMap[c] || 0) + (+it.qty || 0); }));
+      live.forEach(o => o.lines.filter(l => l.state !== 'cancelado').forEach(it => { const c = it.color || 'Sin color'; colorMap[c] = (colorMap[c] || 0) + (+it.qty || 0); }));
       const colorArr = Object.entries(colorMap).filter(([, n]) => n > 0).sort((a, b) => b[1] - a[1]).slice(0, 6);
       const colorSum = colorArr.reduce((a, [, n]) => a + n, 0);
       salesVals.colorRows = colorArr.map(([name, n]) => ({
@@ -3377,12 +3793,27 @@ class Component extends DCLogic {
       salesVals.ordersList = filtered.slice(0, s.ordersShown).map(o => ({
         code: o.code || 'Sin código', date: when(o.date),
         who: o.customer && (o.customer.name || o.customer.email) ? (o.customer.name || o.customer.email) : 'Sin cuenta en la web',
-        lines: o.items.map(it => ({ text: `${it.qty} × ${it.name}${it.color ? ' · ' + it.color : ''}`, price: this.fmt((+it.price || 0) * (+it.qty || 0)) })),
+        lines: o.lines.map((l, i) => {
+          const p = s.products.find(x => x.id === l.productId);
+          const c = p ? (productColors(p).find(x => x.key === l.colorId) || productColors(p)[0]) : null;
+          const m = c && c.media[0];
+          return {
+            name: l.name || 'Producto', meta: `${l.color ? l.color + ' · ' : ''}${l.qty} × ${this.fmt(+l.price || 0)}`,
+            price: this.fmt(lineTotal(l)), thumb: m ? mediaThumb(m, 120) : BLANK,
+            isPending: l.state === 'pendiente', isConfirmed: l.state === 'confirmado', isCancelled: l.state === 'cancelado',
+            strike: l.state === 'cancelado' ? 'line-through' : 'none', ink: l.state === 'cancelado' ? '#B5ADA6' : '#1C1A19',
+            confirm: () => this.setLineState(o.id, i, 'confirmado'),
+            cancel: () => this.setLineState(o.id, i, 'cancelado'),
+            undo: () => this.setLineState(o.id, i, 'pendiente')
+          };
+        }),
         total: this.fmt(o.total), status: o.status, dot: (STATUS[o.status] || STATUS.pendiente).dot,
+        hasDecided: o.lines.some(l => l.state !== 'pendiente'), confirmedTotal: this.fmt(confirmedTotal(o)),
         onStatus: (e) => this.setOrderStatus(o.id, e.target.value),
-        isPending: o.status === 'pendiente', markSold: () => this.setOrderStatus(o.id, 'vendido'),
+        isPending: o.status === 'pendiente', markSold: () => this.setOrderStatus(o.id, 'vendido'), cancelAll: () => this.setOrderStatus(o.id, 'cancelado'),
         remove: () => this.deleteOrder(o.id, o.code || ''), faded: o.status === 'cancelado' ? 0.55 : 1,
-        hasStockNote: !!o.stockApplied,
+        hasStockNote: o.lines.some(l => l.held),
+        stockNote: o.status === 'pendiente' ? 'Stock reservado hasta que lo confirmes' : 'Descontado del stock',
         // Los pedidos los arma el navegador de la clienta: si alguien los modifica a mano,
         // acá se avisa (solo en los que todavía no confirmaste).
         ...(() => {
@@ -3419,7 +3850,7 @@ class Component extends DCLogic {
     // ---- Panel: Estética (se muestra el borrador) ----
     const D = s.lookDraft || L;
     const catDraft = s.lookCatDraft || {};
-    const thumbOf = (m, w) => m.type === 'video' ? cldPoster(m.url, w) : cldImage(m.url, w);
+    const thumbOf = (m, w) => ((m.type === 'video' ? cldPoster(m.url, w) : cldImage(m.url, w)) || BLANK);
     const lookBusy = !!s.lookUploading;
     const lookFonts = FONT_PAIRS.map(f => ({
       name: f.name, title: f.title, body: f.body, ta: f.ta, ba: f.ba, selected: D.font === f.id,
@@ -3439,7 +3870,7 @@ class Component extends DCLogic {
       ink: h.id === 'blanco' ? '#1C1A19' : '#fff', bg: thumbOf(D.hero[0], 600), pick: () => this.pickHeader(h.id)
     }));
     const lookHero = D.hero.map((h, i) => ({
-      thumb: thumbOf(h, 900), isVideo: h.type === 'video', kicker: h.kicker, headline: h.headline, sub: h.sub,
+      thumb: (h.url && thumbOf(h, 900)) || BLANK, isVideo: h.type === 'video', kicker: h.kicker, headline: h.headline, sub: h.sub,
       num: i + 1, busy: s.lookUploading === 'hero-' + i,
       onFile: (e) => this.onLookFile('hero-' + i, e),
       onKicker: (e) => this.setHeroText(i, 'kicker', e.target.value),
@@ -3498,10 +3929,10 @@ class Component extends DCLogic {
 
       heroSlides, categoryTiles, featuredProducts,
       saleProducts, hasSale: saleProducts.length > 0, goSale: this.goSale,
-      editorialImage: L.editorial.type === 'video' ? cldPoster(L.editorial.url, 1200) : cldImage(L.editorial.url, 1200),
-      editorialIsVideo: L.editorial.type === 'video', editorialVideo: L.editorial.type === 'video' ? cldVideo(L.editorial.url, 1080) : '',
+      editorialImage: (known && (L.editorial.type === 'video' ? cldPoster(L.editorial.url, 1200) : cldImage(L.editorial.url, 1200))) || BLANK,
+      editorialIsVideo: known && L.editorial.type === 'video' && !!L.editorial.url, editorialVideo: L.editorial.type === 'video' ? cldVideo(L.editorial.url, 1080) : '',
       onBgVideoReady: (e) => { try { e.target.muted = true; const pr = e.target.play(); if (pr && pr.catch) pr.catch(() => {}); } catch (err) {} },
-      editorialKicker: L.editorial.kicker, editorialTitle: L.editorial.title, editorialText: L.editorial.text,
+      editorialKicker: known ? L.editorial.kicker : '', editorialTitle: known ? L.editorial.title : '', editorialText: known ? L.editorial.text : '',
       showInstagram: this.props.showInstagramSection !== false, instagramTiles,
       instagramHandleDisplay: '@' + instagramHandle,
       instagramUrl: `https://instagram.com/${instagramHandle}`,
@@ -3584,13 +4015,28 @@ class Component extends DCLogic {
       formMedia, formHasMedia: formMedia.length > 0, formNoMedia: formMedia.length === 0,
       selectedMedia, hasManyMedia: selectedMedia.length > 1,
       galleryMain, prevMedia: this.prevMedia, nextMedia: this.nextMedia,
+      ...(() => {
+        const cur = selMedia[mediaIdx];
+        const zoomable = !!cur && cur.type !== 'video';
+        const photos = selMedia.filter(m => m.type !== 'video');
+        const zi = Math.min(s.zoomIdx || 0, Math.max(0, photos.length - 1));
+        return {
+          mediaZoomable: zoomable, mediaCursor: zoomable ? 'zoom-in' : 'default', mediaZoomHint: zoomable ? 'Tocá para ver la foto más grande' : '',
+          onMediaClick: this.onMediaClick, onMediaHoverZoom: this.onMediaHoverZoom, onMediaHoverOut: this.onMediaHoverOut,
+          zoomOpen: !!s.zoomOpen && photos.length > 0, zoomSrc: photos[zi] ? cldImage(photos[zi].url, 2400) : BLANK, zoomAlt: selectedRaw.name || '',
+          zoomMany: photos.length > 1, zoomCounter: photos.length > 1 ? `${zi + 1} / ${photos.length} · ` : '',
+          zoomHint: this._touch ? 'Pellizcá o tocá dos veces para acercar' : 'Hacé clic para acercar y arrastrá para mover',
+          closeZoom: this.closeZoom, zoomPrev: this.zoomPrev, zoomNext: this.zoomNext,
+          zoomDown: this.zoomDown, zoomMove: this.zoomMove, zoomUp: this.zoomUp
+        };
+      })(),
       onMediaTouchStart: this.onMediaTouchStart, onMediaTouchEnd: this.onMediaTouchEnd,
       productLoading: loading, productFound: !loading && !!foundProduct, productMissing: !loading && !foundProduct,
       skeletonCards: loading ? [{ k: 1 }, { k: 2 }, { k: 3 }, { k: 4 }] : [],
       cartBadgeAnim: s.cartBump ? ((s.cartBump % 2 ? 'bcBumpA' : 'bcBumpB') + ' .55s cubic-bezier(.3,1.5,.5,1)') : 'none',
       yes: true,
       adminProducts: s.products
-        .filter(p => !s.adminCatFilter || p.categoryId === s.adminCatFilter)
+        .filter(p => !s.adminCatFilter || (s.adminCatFilter === '__inicio' ? !!p.featured : p.categoryId === s.adminCatFilter))
         .filter(p => !s.adminMatFilter || productColors(p).some(c => c.materialId === s.adminMatFilter))
         .filter(p => {
           const f = s.adminStockFilter;
