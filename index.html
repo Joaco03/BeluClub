@@ -8,6 +8,11 @@
 <link rel="icon" type="image/svg+xml" href="assets/logo-bc-cuadrado.svg">
 <link rel="icon" type="image/png" href="assets/favicon-180.png">
 <link rel="apple-touch-icon" href="assets/favicon-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Blu Club">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#1C1A19">
 <meta property="og:type" content="website">
 <meta property="og:title" content="The Blu Club">
@@ -214,6 +219,38 @@
   </sc-if>
 
   <!-- TOAST -->
+  <!-- TIENDA EN PAUSA: cartel para las clientas -->
+  <sc-if value="{{ maintScreen }}">
+    <div data-maint="1" role="main" style="position:fixed;inset:0;z-index:62;overflow:auto;background:radial-gradient(120% 90% at 50% 0%, #FBF7F2 0%, #F4EEE6 55%, #EFE6DB 100%);animation:bcFade .5s ease;">
+      <div style="min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:64px 28px 48px;box-sizing:border-box;">
+        <img src="assets/logo-bc-bordo.svg" alt="The Blu Club" style="width:84px;height:auto;margin-bottom:34px;">
+        <div style="font-size:10px;letter-spacing:0.34em;text-transform:uppercase;color:#9A8576;margin-bottom:18px;">The Blu Club</div>
+        <h1 style="font-family:var(--bc-title);font-size-adjust:var(--bc-title-adjust);font-weight:300;font-size:clamp(34px,7vw,54px);line-height:1.08;color:#1C1A19;margin:0 0 20px;max-width:620px;text-wrap:balance;">{{ maintTitle }}</h1>
+        <div style="width:42px;height:1px;background:#C7A98C;margin:0 auto 22px;"></div>
+        <p style="font-size:14.5px;font-weight:300;line-height:1.85;color:#5B554F;margin:0 0 36px;max-width:440px;white-space:pre-line;">{{ maintText }}</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+          <a href="{{ whatsappGeneralLink }}" target="_blank" rel="noopener" style="background:#1C1A19;color:#fff;padding:15px 30px;font-size:10.5px;letter-spacing:0.2em;text-transform:uppercase;" style-hover="background:var(--bc-accent);color:#fff;">Escribinos por WhatsApp</a>
+          <a href="{{ instagramUrl }}" target="_blank" rel="noopener" style="border:1px solid #1C1A19;color:#1C1A19;padding:14px 30px;font-size:10.5px;letter-spacing:0.2em;text-transform:uppercase;" style-hover="background:#1C1A19;color:#fff;">{{ instagramHandleDisplay }}</a>
+        </div>
+        <sc-if value="{{ maintIsPreview }}">
+          <span role="button" tabIndex="0" onClick="{{ closeMaintPreview }}" style="cursor:pointer;margin-top:44px;background:#C9962E;color:#fff;padding:12px 24px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;">Vista previa · Cerrar</span>
+        </sc-if>
+        <span onClick="{{ maintLogin }}" style="cursor:pointer;margin-top:56px;font-size:11px;color:#B5ADA6;letter-spacing:0.06em;">Ingresar</span>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- Aviso para la dueña mientras la tienda está en pausa -->
+  <sc-if value="{{ maintBanner }}">
+    <div style="position:fixed;top:76px;left:0;right:0;z-index:39;background:#FBF4EC;border-bottom:1px solid #E8C9A8;color:#7A4A1A;font-size:12px;line-height:1.5;">
+      <div style="max-width:1400px;margin:0 auto;padding:9px 22px;display:flex;align-items:center;gap:8px 16px;flex-wrap:wrap;">
+        <span style="flex:1;min-width:200px;">Tienda en pausa: las clientas ven el cartel. Vos ves todo normal.</span>
+        <span onClick="{{ openMaintPreview }}" style="cursor:pointer;text-decoration:underline;text-underline-offset:3px;">Ver el cartel</span>
+        <span onClick="{{ toggleMaint }}" style="cursor:pointer;text-decoration:underline;text-underline-offset:3px;font-weight:500;">Abrir la tienda</span>
+      </div>
+    </div>
+  </sc-if>
+
   <sc-if value="{{ zoomOpen }}">
     <div data-zoom="1" role="dialog" aria-modal="true" aria-label="Foto ampliada" style="position:fixed;inset:0;z-index:95;background:#fff;animation:bcFade .2s ease;">
       <div data-zoom-stage="1" onPointerDown="{{ zoomDown }}" onPointerMove="{{ zoomMove }}" onPointerUp="{{ zoomUp }}" onPointerCancel="{{ zoomUp }}" style="position:absolute;inset:0;overflow:hidden;touch-action:none;display:flex;align-items:center;justify-content:center;cursor:zoom-in;user-select:none;">
@@ -779,7 +816,37 @@
           </div>
           <span onClick="{{ goHome }}" style="cursor:pointer;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;border-bottom:1px solid #1C1A19;padding-bottom:4px;">Volver al sitio</span>
         </div>
-        <p style="color:#7A736E;margin:0 0 36px;font-size:13.5px;font-weight:300;">Ventas, productos y la estética del sitio, todo desde acá y sin tocar código.</p>
+        <p style="color:#7A736E;margin:0 0 24px;font-size:13.5px;font-weight:300;">Ventas, productos y la estética del sitio, todo desde acá y sin tocar código.</p>
+
+        <div data-store-state="1" style="border:1px solid {{ maintBorder }};background:{{ maintBg }};padding:14px 18px;margin-bottom:14px;">
+          <div style="display:flex;align-items:center;gap:10px 20px;flex-wrap:wrap;">
+            <span style="display:flex;align-items:center;gap:9px;font-size:13.5px;"><span style="width:9px;height:9px;background:{{ maintDot }};"></span>{{ maintStateText }}</span>
+            <span style="flex:1;min-width:200px;font-size:12px;color:#7A736E;font-weight:300;line-height:1.5;">{{ maintHint }}</span>
+            <span role="button" tabIndex="0" onClick="{{ openMaintPreview }}" style="cursor:pointer;font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:#3A3532;text-decoration:underline;text-underline-offset:3px;">Ver el cartel</span>
+            <sc-if value="{{ maintNotEditing }}"><span role="button" tabIndex="0" onClick="{{ openMaintEdit }}" style="cursor:pointer;font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:#3A3532;text-decoration:underline;text-underline-offset:3px;">Editar el cartel</span></sc-if>
+            <span role="button" tabIndex="0" onClick="{{ toggleMaint }}" style="cursor:pointer;background:#1C1A19;color:#fff;padding:11px 20px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;" style-hover="background:var(--bc-accent);">{{ maintButton }}</span>
+          </div>
+          <sc-if value="{{ maintEditing }}">
+            <div style="display:grid;gap:10px;margin-top:14px;padding-top:14px;border-top:1px solid #EFE6DB;">
+              <div><label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Título del cartel</label><input value="{{ maintDraftTitle }}" onChange="{{ onMaintTitle }}" maxLength="120" style="width:100%;box-sizing:border-box;padding:11px 13px;border:1px solid #D8D1CA;font-family:var(--bc-body);font-size:14px;background:#fff;"></div>
+              <div><label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Texto</label><textarea value="{{ maintDraftText }}" onChange="{{ onMaintText }}" rows="3" maxLength="600" style="width:100%;box-sizing:border-box;padding:11px 13px;border:1px solid #D8D1CA;font-family:var(--bc-body);font-size:14px;background:#fff;resize:vertical;line-height:1.6;"></textarea></div>
+              <div style="display:flex;gap:10px;justify-content:flex-end;">
+                <span role="button" tabIndex="0" onClick="{{ cancelMaintEdit }}" style="cursor:pointer;border:1px solid #D8D1CA;padding:11px 20px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#3A3532;">Cancelar</span>
+                <span role="button" tabIndex="0" onClick="{{ saveMaintText }}" style="cursor:pointer;background:#1C1A19;color:#fff;padding:11px 20px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;">Guardar cartel</span>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+        <sc-if value="{{ canInstall }}">
+          <div style="display:flex;align-items:center;gap:10px 18px;flex-wrap:wrap;border:1px solid #E4DED8;padding:12px 18px;margin-bottom:14px;font-size:12.5px;color:#5B554F;">
+            <span style="flex:1;min-width:200px;">Instalá la tienda como una app en este dispositivo: se abre directo en el panel.</span>
+            <span role="button" tabIndex="0" onClick="{{ installApp }}" style="cursor:pointer;border:1px solid #1C1A19;padding:10px 18px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#1C1A19;">Instalar app</span>
+          </div>
+        </sc-if>
+        <sc-if value="{{ isIOS }}">
+          <div style="border:1px solid #E4DED8;padding:12px 18px;margin-bottom:14px;font-size:12.5px;color:#5B554F;line-height:1.6;">Para usarla como app en el iPhone: en Safari tocá <strong style="font-weight:500;">Compartir</strong> → <strong style="font-weight:500;">Agregar a inicio</strong>. Así la sesión no se cierra sola.</div>
+        </sc-if>
+        <div style="height:22px;"></div>
 
         <div style="display:flex;gap:0;margin-bottom:36px;border-bottom:1px solid #E4DED8;overflow-x:auto;scrollbar-width:none;">
           <sc-for list="{{ adminTabs }}" as="t" hint-placeholder-count="4">
@@ -976,28 +1043,6 @@
                       <sc-if value="{{ o.isPending }}">
                         <span onClick="{{ o.markSold }}" style="cursor:pointer;text-align:center;background:#1C1A19;color:#fff;padding:11px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;transition:background .2s ease;" style-hover="background:var(--bc-accent);">Confirmar todo</span>
                         <span onClick="{{ o.cancelAll }}" style="cursor:pointer;text-align:center;border:1px solid #D8D1CA;color:#A6322A;padding:10px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;">Cancelar todo</span>
-                      </sc-if>
-                      <span onClick="{{ o.remove }}" style="cursor:pointer;text-align:center;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#A6322A;padding:4px;">Eliminar</span>
-                    </div>
-                  </div>
-                </sc-for>
-                      <div style="display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid #F1ECE6;margin-top:8px;padding-top:8px;">
-                        <span style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;">Total</span>
-                        <span style="font-size:14px;">{{ o.total }}</span>
-                      </div>
-                    </div>
-                    <div style="width:180px;display:flex;flex-direction:column;gap:10px;">
-                      <div style="display:flex;align-items:center;border:1px solid #D8D1CA;background:#fff;">
-                        <span style="width:8px;height:8px;flex-shrink:0;background:{{ o.dot }};margin-left:12px;"></span>
-                        <select value="{{ o.status }}" onChange="{{ o.onStatus }}" aria-label="Estado del pedido" style="flex:1;border:0;background:transparent;padding:10px;font-family:var(--bc-body);font-size:13px;cursor:pointer;">
-                          <option value="pendiente">Sin confirmar</option>
-                          <option value="vendido">Vendido</option>
-                          <option value="entregado">Entregado</option>
-                          <option value="cancelado">Cancelado</option>
-                        </select>
-                      </div>
-                      <sc-if value="{{ o.isPending }}">
-                        <span onClick="{{ o.markSold }}" style="cursor:pointer;text-align:center;background:#1C1A19;color:#fff;padding:11px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;transition:background .2s ease;" style-hover="background:var(--bc-accent);">Marcar vendido</span>
                       </sc-if>
                       <span onClick="{{ o.remove }}" style="cursor:pointer;text-align:center;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#A6322A;padding:4px;">Eliminar</span>
                     </div>
@@ -1765,6 +1810,8 @@ const firebaseReady = (async () => {
   firebase.initializeApp(firebaseConfig);
   db = firebase.firestore();
   auth = firebase.auth();
+  // La sesión queda guardada en el dispositivo hasta que se toque "Cerrar sesión".
+  try { await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL); } catch (e) {}
   STORE_DOC = db.collection('store').doc('main');
   // Costos: documento aparte que solo puede leer la dueña (el catálogo lo descarga cualquiera).
   COSTS_DOC = db.collection('private').doc('costs');
@@ -1812,6 +1859,14 @@ const ACCENTS = [
   { hex: '#1C1A19', name: 'Negro' }
 ];
 const LOOK_KEY = 'blublub_look_v1';
+// Cartel de "tienda en pausa".
+const MAINT_KEY = 'blublub_maint_v1';
+const DEFAULT_MAINT = { on: false, title: 'Estamos trabajando en la página', text: 'Volvemos muy pronto con novedades. Mientras tanto, escribinos por WhatsApp o Instagram y te ayudamos con lo que necesites.' };
+function normalizeMaint(raw) {
+  const r = (raw && typeof raw === 'object') ? raw : {};
+  const str = (v, fb) => (typeof v === 'string' && v.trim() ? v.slice(0, 600) : fb);
+  return { on: r.on === true, title: str(r.title, DEFAULT_MAINT.title).slice(0, 120), text: str(r.text, DEFAULT_MAINT.text) };
+}
 // Imagen transparente para cuando todavía no hay foto (evita el ícono de imagen rota).
 const BLANK = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
 // Preguntas frecuentes de fábrica (la dueña las cambia desde Estética).
@@ -1994,6 +2049,11 @@ class Component extends DCLogic {
     orderFilter: 'todos',
     ordersShown: 25,
     autoIdx: {},
+    maint: (() => { try { return normalizeMaint(JSON.parse(localStorage.getItem(MAINT_KEY) || 'null')); } catch (e) { return normalizeMaint(null); } })(),
+    maintEdit: false,
+    maintDraft: null,
+    maintPreview: false,
+    canInstall: false,
     zoomOpen: false,
     zoomIdx: 0,
     adminChecking: true,
@@ -2109,6 +2169,11 @@ class Component extends DCLogic {
 
   componentDidMount() {
     this.initCardAuto();
+    // App instalada en el celular (o la compu): se registra el service worker (no guarda copias,
+    // así siempre se ve la última versión) y se ofrece "Instalar".
+    this._isApp = !!((window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone);
+    try { if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {}); } catch (e) {}
+    window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); this._installEvent = e; this.setState({ canInstall: true }); });
     this._storeReady = new Promise(res => { this._storeReadyDone = res; });
     // Se cumple cuando ya se sabe si quien navega es la dueña o no.
     this._authKnown = new Promise(res => { this._authKnownDone = () => res(); });
@@ -2124,9 +2189,11 @@ class Component extends DCLogic {
           const look = normalizeLook(data.settings);
           try { localStorage.setItem(LOOK_KEY, JSON.stringify(look)); } catch (e) {}
           const migrated = this.migrate(data);
+          const maint = normalizeMaint(data.settings && data.settings.maintenance);
+          try { localStorage.setItem(MAINT_KEY, JSON.stringify(maint)); } catch (e) {}
           if (this._storeReadyDone) setTimeout(this._storeReadyDone, 0);
           this.setState(st => ({
-            ...migrated, look, storeLoaded: true, lookKnown: true,
+            ...migrated, look, storeLoaded: true, lookKnown: true, maint,
             ...((st.lookDraft && !st.lookDirty) ? this.freshLookDrafts(look, migrated.categories) : {})
           }), () => {
             // Si la dueña está editando la estética o mirando la vista previa, no se le pisa.
@@ -2152,6 +2219,8 @@ class Component extends DCLogic {
         if (!auth.currentUser || auth.currentUser.uid !== fbUser.uid) return; // la sesión cambió mientras tanto
         this.setState({ user: { ...base, admin }, adminChecking: false }, () => {
           this._authKnownDone();
+          // Si la dueña abre la app instalada, entra directo al panel.
+          if (admin && this._isApp && !this._appOpened && (!location.hash || location.hash === '#/')) { this._appOpened = true; this.navigate('#/admin'); }
           if (admin && this.state.view === 'admin') this.startAdminData();
           if (admin) { this.startCosts(); this.startHolds(); } else { this.stopCosts(); this.stopHolds(); }
         });
@@ -2427,6 +2496,37 @@ class Component extends DCLogic {
     const dx = t.clientX - this._tx, dy = t.clientY - this._ty;
     this._tx = null;
     if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.3) { if (dx < 0) this.nextMedia(); else this.prevMedia(); }
+  };
+
+  // ---- Tienda en pausa ----
+  // Se guarda en store/main → settings.maintenance. Las clientas ven solo el cartel; la dueña ve todo.
+  writeMaint(m, toast) {
+    this.setState({ maint: m, maintDraft: null, maintEdit: false });
+    try { localStorage.setItem(MAINT_KEY, JSON.stringify(m)); } catch (e) {}
+    firebaseReady.then(() => STORE_DOC.set({ settings: { maintenance: m } }, { merge: true }))
+      .then(() => toast && this.showToast(toast))
+      .catch(() => this.showToast('No se pudo guardar — revisá tu conexión'));
+  }
+  toggleMaint = () => {
+    const m = this.state.maint;
+    if (!m.on && !confirm('¿Pausar la tienda?\n\nLas clientas van a ver solo el cartel "' + m.title + '" hasta que la vuelvas a abrir. Vos vas a seguir viendo todo.')) return;
+    this.writeMaint({ ...m, on: !m.on }, m.on ? 'La tienda está abierta otra vez' : 'Tienda en pausa: las clientas ven el cartel');
+  };
+  openMaintEdit = () => this.setState(s => ({ maintEdit: true, maintDraft: { title: s.maint.title, text: s.maint.text } }));
+  cancelMaintEdit = () => this.setState({ maintEdit: false, maintDraft: null });
+  onMaintTitle = (e) => { const v = e.target.value; this.setState(s => ({ maintDraft: { ...(s.maintDraft || s.maint), title: v } })); };
+  onMaintText = (e) => { const v = e.target.value; this.setState(s => ({ maintDraft: { ...(s.maintDraft || s.maint), text: v } })); };
+  saveMaintText = () => {
+    const d = this.state.maintDraft || this.state.maint;
+    this.writeMaint(normalizeMaint({ ...this.state.maint, title: d.title, text: d.text }), 'Cartel guardado');
+  };
+  // Instalar como app (Android y compu con Chrome). En iPhone se hace desde Compartir → Agregar a inicio.
+  installApp = async () => {
+    const ev = this._installEvent;
+    if (!ev) return;
+    this._installEvent = null;
+    this.setState({ canInstall: false });
+    try { ev.prompt(); await ev.userChoice; } catch (e) {}
   };
 
   // ---- Zoom de las fotos del producto ----
@@ -3988,6 +4088,26 @@ class Component extends DCLogic {
       onLookEdText: (e) => this.setEditorialText('text', e.target.value),
       lookShowBar: s.view === 'admin' && s.adminTab === 'estetica' && s.lookDirty,
       openLookPreview: this.openLookPreview, backToLook: this.backToLook, saveFromPreview: this.saveFromPreview,
+      // Tienda en pausa
+      ...(() => {
+        const m = s.maint || DEFAULT_MAINT;
+        const d = s.maintDraft || m;
+        const showScreen = (m.on && !admin) || (admin && s.maintPreview);
+        return {
+          maintScreen: showScreen, maintTitle: m.title, maintText: m.text, maintIsPreview: admin && s.maintPreview,
+          closeMaintPreview: () => this.setState({ maintPreview: false }), openMaintPreview: () => this.setState({ maintPreview: true, menuOpen: false }),
+          maintLogin: this.openAccount,
+          maintBanner: admin && m.on && s.view !== 'admin' && !s.maintPreview,
+          maintOn: m.on, maintOff: !m.on,
+          maintStateText: m.on ? 'Tienda en pausa' : 'Tienda abierta',
+          maintHint: m.on ? 'Las clientas ven solo el cartel "' + m.title + '". Vos seguís viendo todo.' : 'Todas pueden ver la tienda y hacer pedidos.',
+          maintDot: m.on ? '#C9962E' : '#4E7B4F', maintBg: m.on ? '#FBF4EC' : '#fff', maintBorder: m.on ? '#E8C9A8' : '#E4DED8',
+          maintButton: m.on ? 'Abrir la tienda' : 'Pausar la tienda', toggleMaint: this.toggleMaint,
+          maintEditing: !!s.maintEdit, maintNotEditing: !s.maintEdit, openMaintEdit: this.openMaintEdit, cancelMaintEdit: this.cancelMaintEdit,
+          maintDraftTitle: d.title, maintDraftText: d.text, onMaintTitle: this.onMaintTitle, onMaintText: this.onMaintText, saveMaintText: this.saveMaintText,
+          canInstall: !!s.canInstall, installApp: this.installApp, isIOS: /iPhone|iPad|iPod/.test(navigator.userAgent) && !this._isApp
+        };
+      })(),
       previewBar: previewing, previewDirty: previewing && !!s.lookDirty, previewPad: previewing ? '150px' : '0px',
       previewText: s.lookDirty ? 'Así va a quedar el sitio cuando guardes. Las clientas todavía ven la versión anterior.' : 'No hay cambios sin guardar: esto es lo mismo que ven las clientas.',
       previewSaveLabel: s.lookSaving ? 'Guardando…' : 'Guardar cambios',
