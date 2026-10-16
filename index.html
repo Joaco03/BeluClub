@@ -57,8 +57,12 @@
     [data-arrow-glass]{background:rgba(255,255,255,.34);-webkit-backdrop-filter:blur(7px) saturate(1.5) brightness(1.1);backdrop-filter:blur(7px) saturate(1.5) brightness(1.1);-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 25 44'%3E%3Cpath d='M3.72 20.04 L3.45 20.49 L3.26 20.97 L3.14 21.48 L3.10 22.00 L3.14 22.52 L3.26 23.03 L3.45 23.51 L3.72 23.96 L15.72 40.96 L16.06 41.37 L16.46 41.72 L16.92 42.01 L17.41 42.22 L17.92 42.35 L18.45 42.40 L18.99 42.37 L19.51 42.25 L20.00 42.05 L20.46 41.78 L20.87 41.44 L21.22 41.04 L21.51 40.58 L21.72 40.09 L21.85 39.58 L21.90 39.05 L21.87 38.51 L21.75 37.99 L21.55 37.50 L21.28 37.04 L10.66 22.00 L21.28 6.96 L21.55 6.50 L21.75 6.01 L21.87 5.49 L21.90 4.95 L21.85 4.42 L21.72 3.91 L21.51 3.42 L21.22 2.96 L20.87 2.56 L20.46 2.22 L20.00 1.95 L19.51 1.75 L18.99 1.63 L18.45 1.60 L17.92 1.65 L17.41 1.78 L16.92 1.99 L16.46 2.28 L16.06 2.63 L15.72 3.04Z' fill='black'/%3E%3C/svg%3E") center/100% 100% no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 25 44'%3E%3Cpath d='M3.72 20.04 L3.45 20.49 L3.26 20.97 L3.14 21.48 L3.10 22.00 L3.14 22.52 L3.26 23.03 L3.45 23.51 L3.72 23.96 L15.72 40.96 L16.06 41.37 L16.46 41.72 L16.92 42.01 L17.41 42.22 L17.92 42.35 L18.45 42.40 L18.99 42.37 L19.51 42.25 L20.00 42.05 L20.46 41.78 L20.87 41.44 L21.22 41.04 L21.51 40.58 L21.72 40.09 L21.85 39.58 L21.90 39.05 L21.87 38.51 L21.75 37.99 L21.55 37.50 L21.28 37.04 L10.66 22.00 L21.28 6.96 L21.55 6.50 L21.75 6.01 L21.87 5.49 L21.90 4.95 L21.85 4.42 L21.72 3.91 L21.51 3.42 L21.22 2.96 L20.87 2.56 L20.46 2.22 L20.00 1.95 L19.51 1.75 L18.99 1.63 L18.45 1.60 L17.92 1.65 L17.41 1.78 L16.92 1.99 L16.46 2.28 L16.06 2.63 L15.72 3.04Z' fill='black'/%3E%3C/svg%3E") center/100% 100% no-repeat;transition:background .3s ease;}
     [data-arrow]:hover [data-arrow-glass]{background:rgba(255,255,255,.52);}
     :focus-visible{outline:1px solid var(--bc-accent);outline-offset:3px;}
+    [data-search-input]::-webkit-search-cancel-button,[data-search-input]::-webkit-search-decoration{-webkit-appearance:none;appearance:none;display:none;}
+    [data-search-input]:focus{outline:none;border-color:#1C1A19!important;}
+    [data-crop-stage] [data-h]{position:absolute;width:38px;height:38px;z-index:2;}
     @media (max-width:640px){
       /* Celular: siempre 2 productos (y 2 categorías) por fila */
+      [data-search-input]{font-size:16px!important;}
       [data-pgrid]{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:30px 12px!important;}
       [data-tgrid]{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
       [data-pgrid] [data-badge]{font-size:8px!important;letter-spacing:.1em!important;padding:5px 7px!important;}
@@ -77,11 +81,14 @@
   <!-- HEADER -->
   <header style="position:fixed;top:0;left:0;right:0;z-index:40;background:{{ headerBg }};border-bottom:1px solid {{ headerBorder }};transition:background .3s ease, border-color .3s ease;">
     <div style="max-width:1400px;margin:0 auto;padding:0 22px;height:76px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;">
-      <div style="display:flex;align-items:center;">
+      <div style="display:flex;align-items:center;gap:2px;">
         <div onClick="{{ openMenu }}" title="Menú" style="cursor:pointer;display:flex;flex-direction:column;gap:5px;padding:8px 6px;">
           <span style="display:block;width:24px;height:1.5px;background:{{ headerInk }};transition:background .3s;"></span>
           <span style="display:block;width:24px;height:1.5px;background:{{ headerInk }};transition:background .3s;"></span>
           <span style="display:block;width:24px;height:1.5px;background:{{ headerInk }};transition:background .3s;"></span>
+        </div>
+        <div data-search-open="1" role="button" tabIndex="0" onClick="{{ openSearch }}" title="Buscar" aria-label="Buscar productos" style="cursor:pointer;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:{{ headerInk }};">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.3" stroke="currentColor" stroke-width="1.4"></circle><path d="M15.3 15.3l5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"></path></svg>
         </div>
       </div>
       <div onClick="{{ goHome }}" style="cursor:pointer;display:flex;align-items:center;justify-content:center;">
@@ -263,6 +270,43 @@
         <button type="button" data-arrow="next" onClick="{{ zoomNext }}" aria-label="Foto siguiente" style="z-index:2;"><span data-arrow-inner="1"><svg data-arrow-shadow="1" viewBox="0 0 25 44" aria-hidden="true"><path d="M21.28 6.96 L10.66 22.00 L21.28 37.04" fill="none" stroke="#1C1A19" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path></svg><svg viewBox="0 0 25 44" aria-hidden="true"><path d="M21.28 6.96 L10.66 22.00 L21.28 37.04" fill="none" stroke="#1C1A19" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button>
       </sc-if>
       <div style="position:absolute;left:0;right:0;bottom:16px;text-align:center;font-size:11px;letter-spacing:0.12em;color:#7A736E;pointer-events:none;z-index:2;">{{ zoomCounter }}{{ zoomHint }}</div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ cropOpen }}">
+    <div data-crop="1" role="dialog" aria-modal="true" aria-label="Recortar foto" style="position:fixed;inset:0;z-index:96;background:#171514;color:#fff;display:flex;flex-direction:column;animation:bcFade .2s ease;">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px 6px 22px;">
+        <div style="font-size:10.5px;letter-spacing:0.22em;text-transform:uppercase;">{{ cropTitle }}</div>
+        <span role="button" tabIndex="0" aria-label="{{ cropCloseLabel }}" title="{{ cropCloseLabel }}" onClick="{{ cropCancel }}" style="cursor:pointer;width:44px;height:44px;display:flex;align-items:center;justify-content:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" stroke="#fff" stroke-width="1.6" stroke-linecap="round"></path></svg></span>
+      </div>
+      <div style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:8px 16px;">
+        <div data-crop-stage="1" onPointerDown="{{ cropDown }}" onPointerMove="{{ cropMove }}" onPointerUp="{{ cropUp }}" onPointerCancel="{{ cropUp }}" style="position:relative;display:inline-block;line-height:0;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;cursor:crosshair;">
+          <img src="{{ cropSrc }}" alt="Foto a recortar" draggable="false" style="display:block;max-width:calc(100vw - 32px);max-height:calc(100vh - 250px);width:auto;height:auto;pointer-events:none;-webkit-user-drag:none;">
+          <div data-crop-box="1" style="position:absolute;left:{{ cropL }};top:{{ cropT }};width:{{ cropW }};height:{{ cropH }};box-shadow:0 0 0 9999px rgba(23,21,20,0.62);outline:1px solid rgba(255,255,255,0.95);cursor:move;">
+            <div style="position:absolute;left:33.333%;top:0;bottom:0;width:1px;background:rgba(255,255,255,0.32);pointer-events:none;"></div>
+            <div style="position:absolute;left:66.666%;top:0;bottom:0;width:1px;background:rgba(255,255,255,0.32);pointer-events:none;"></div>
+            <div style="position:absolute;top:33.333%;left:0;right:0;height:1px;background:rgba(255,255,255,0.32);pointer-events:none;"></div>
+            <div style="position:absolute;top:66.666%;left:0;right:0;height:1px;background:rgba(255,255,255,0.32);pointer-events:none;"></div>
+            <span data-h="nw" style="left:0;top:0;cursor:nwse-resize;"><span style="position:absolute;left:0;top:0;width:16px;height:16px;border-left:3px solid #fff;border-top:3px solid #fff;pointer-events:none;"></span></span>
+            <span data-h="ne" style="right:0;top:0;cursor:nesw-resize;"><span style="position:absolute;right:0;top:0;width:16px;height:16px;border-right:3px solid #fff;border-top:3px solid #fff;pointer-events:none;"></span></span>
+            <span data-h="sw" style="left:0;bottom:0;cursor:nesw-resize;"><span style="position:absolute;left:0;bottom:0;width:16px;height:16px;border-left:3px solid #fff;border-bottom:3px solid #fff;pointer-events:none;"></span></span>
+            <span data-h="se" style="right:0;bottom:0;cursor:nwse-resize;"><span style="position:absolute;right:0;bottom:0;width:16px;height:16px;border-right:3px solid #fff;border-bottom:3px solid #fff;pointer-events:none;"></span></span>
+          </div>
+        </div>
+      </div>
+      <div style="padding:10px 16px 20px;display:flex;flex-direction:column;align-items:center;gap:12px;">
+        <div style="font-size:11.5px;color:rgba(255,255,255,0.6);text-align:center;line-height:1.5;">Mové el recuadro y estirá sus esquinas. Lo que queda adentro es lo que se sube.</div>
+        <div role="group" aria-label="Forma del recorte" style="display:flex;flex-wrap:wrap;justify-content:center;gap:6px;">
+          <sc-for list="{{ cropAspects }}" as="a" hint-placeholder-count="4">
+            <span role="button" tabIndex="0" aria-pressed="{{ a.on }}" onClick="{{ a.pick }}" style="cursor:pointer;padding:9px 14px;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;border:1px solid {{ a.border }};background:{{ a.bg }};color:{{ a.ink }};">{{ a.label }}</span>
+          </sc-for>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px;">
+          <sc-if value="{{ cropCanRest }}"><span role="button" tabIndex="0" onClick="{{ cropRest }}" style="cursor:pointer;font-size:11.5px;color:rgba(255,255,255,0.75);text-decoration:underline;text-underline-offset:3px;padding:6px 4px;">Subir las que quedan sin recortar</span></sc-if>
+          <span role="button" tabIndex="0" onClick="{{ cropSkip }}" style="cursor:pointer;border:1px solid rgba(255,255,255,0.5);padding:13px 22px;font-size:10.5px;letter-spacing:0.16em;text-transform:uppercase;" style-hover="border-color:#fff;">{{ cropSkipLabel }}</span>
+          <span data-crop-apply="1" role="button" tabIndex="0" onClick="{{ cropApply }}" style="cursor:pointer;background:#fff;color:#1C1A19;padding:14px 26px;font-size:10.5px;letter-spacing:0.16em;text-transform:uppercase;" style-hover="background:#F0E6DC;">{{ cropApplyLabel }}</span>
+        </div>
+      </div>
     </div>
   </sc-if>
 
@@ -535,7 +579,15 @@
       <div style="font-size:10.5px;letter-spacing:0.16em;text-transform:uppercase;color:#9A938D;margin-bottom:20px;">
         <span onClick="{{ goHome }}" style="cursor:pointer;">Inicio</span> — Productos
       </div>
-      <h1 style="font-family:var(--bc-title);font-size-adjust:var(--bc-title-adjust);font-weight:300;font-size:48px;margin:0 0 40px;line-height:1.05;">{{ catalogTitle }}</h1>
+      <h1 style="font-family:var(--bc-title);font-size-adjust:var(--bc-title-adjust);font-weight:300;font-size:48px;margin:0 0 28px;line-height:1.05;">{{ catalogTitle }}</h1>
+
+      <div role="search" style="position:relative;max-width:480px;margin-bottom:24px;">
+        <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" style="position:absolute;left:15px;top:50%;transform:translateY(-50%);color:#9A938D;pointer-events:none;"><circle cx="10.5" cy="10.5" r="6.3" stroke="currentColor" stroke-width="1.5"></circle><path d="M15.3 15.3l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg>
+        <input data-search-input="1" type="search" value="{{ catSearch }}" onChange="{{ onCatSearch }}" onKeyDown="{{ onCatSearchKey }}" placeholder="Buscar: anillo, collar, plateado…" aria-label="Buscar productos" autoComplete="off" maxLength="60" style="width:100%;box-sizing:border-box;padding:14px 44px 14px 44px;border:1px solid #D8D1CA;border-radius:0;font-family:var(--bc-body);font-size:14px;background:#fff;color:#1C1A19;-webkit-appearance:none;appearance:none;transition:border-color .2s ease;">
+        <sc-if value="{{ catSearchOn }}">
+          <span role="button" tabIndex="0" aria-label="Borrar búsqueda" onClick="{{ clearCatSearch }}" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);cursor:pointer;width:34px;height:34px;display:flex;align-items:center;justify-content:center;color:#7A736E;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg></span>
+        </sc-if>
+      </div>
 
       <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
         <sc-for list="{{ categoryChips }}" as="chip" hint-placeholder-count="5">
@@ -556,8 +608,21 @@
         </select>
       </div>
 
+      <sc-if value="{{ catSearchHasInfo }}">
+        <div aria-live="polite" style="margin:-26px 0 26px;font-size:12.5px;color:#7A736E;">{{ catSearchInfo }}</div>
+      </sc-if>
       <sc-if value="{{ catalogEmpty }}">
         <p style="text-align:center;color:#7A736E;padding:80px 0;font-size:14px;">No hay productos en esta selección todavía.</p>
+      </sc-if>
+      <sc-if value="{{ catSearchEmpty }}">
+        <div style="text-align:center;padding:64px 0 80px;">
+          <p style="margin:0 0 6px;color:#3A3532;font-size:15px;">{{ catSearchEmptyText }}</p>
+          <p style="margin:0 0 22px;color:#9A938D;font-size:13px;font-weight:300;">Probá con otra palabra, por ejemplo el tipo de joya o el color.</p>
+          <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+            <sc-if value="{{ catSearchWiden }}"><span role="button" tabIndex="0" onClick="{{ widenCatSearch }}" style="cursor:pointer;background:#1C1A19;color:#fff;padding:13px 24px;font-size:10.5px;letter-spacing:0.16em;text-transform:uppercase;" style-hover="background:var(--bc-accent);">{{ catSearchWidenLabel }}</span></sc-if>
+            <span role="button" tabIndex="0" onClick="{{ clearCatSearch }}" style="cursor:pointer;border:1px solid #D8D1CA;padding:12px 24px;font-size:10.5px;letter-spacing:0.16em;text-transform:uppercase;color:#3A3532;" style-hover="border-color:#1C1A19;">Borrar búsqueda</span>
+          </div>
+        </div>
       </sc-if>
       <sc-if value="{{ catalogSoon }}">
         <div style="text-align:center;padding:80px 0;">
@@ -1127,13 +1192,14 @@
               </div>
               <div style="margin-bottom:26px;">
                 <label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Fotos y videos</label>
-                <p style="font-size:12.5px;font-weight:300;color:#7A736E;margin:0 0 14px;">Podés elegir varios archivos a la vez. La principal es la que se ve en el catálogo.</p>
+                <p style="font-size:12.5px;font-weight:300;color:#7A736E;margin:0 0 14px;line-height:1.7;">Podés elegir varios archivos a la vez. Antes de subir cada foto podés recortarla, y las que ya están se recortan con el botón de la esquina. La principal es la que se ve en el catálogo.</p>
                 <sc-if value="{{ formHasMedia }}">
                   <div style="display:flex;flex-wrap:wrap;gap:14px;margin-bottom:16px;">
                     <sc-for list="{{ formMedia }}" as="m" hint-placeholder-count="3">
                       <div style="width:132px;">
                         <div style="position:relative;aspect-ratio:4/5;background:#F6F1EC;overflow:hidden;">
                           <img src="{{ m.thumb }}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">
+                          <sc-if value="{{ m.isPhoto }}"><span role="button" tabIndex="0" aria-label="Recortar esta foto" title="Recortar" onClick="{{ m.crop }}" data-crop-btn="1" style="position:absolute;right:5px;top:5px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.94);color:#1C1A19;box-shadow:0 1px 4px rgba(28,26,25,0.22);cursor:pointer;" style-hover="background:#1C1A19;color:#fff;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 2v15h15" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path><path d="M2 7h15v15" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></sc-if>
                           <sc-if value="{{ m.isMain }}">
                             <span style="position:absolute;left:0;top:0;background:#1C1A19;color:#fff;font-size:9px;letter-spacing:0.14em;text-transform:uppercase;padding:5px 8px;">Principal</span>
                           </sc-if>
@@ -1205,6 +1271,7 @@
                           <div style="width:108px;">
                             <div style="position:relative;aspect-ratio:4/5;background:#F6F1EC;overflow:hidden;">
                               <img src="{{ m.thumb }}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">
+                              <sc-if value="{{ m.isPhoto }}"><span role="button" tabIndex="0" aria-label="Recortar esta foto" title="Recortar" onClick="{{ m.crop }}" data-crop-btn="1" style="position:absolute;right:5px;top:5px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.94);color:#1C1A19;box-shadow:0 1px 4px rgba(28,26,25,0.22);cursor:pointer;" style-hover="background:#1C1A19;color:#fff;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 2v15h15" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path><path d="M2 7h15v15" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></sc-if>
                               <sc-if value="{{ m.isMain }}"><span style="position:absolute;left:0;top:0;background:#1C1A19;color:#fff;font-size:9px;letter-spacing:0.14em;text-transform:uppercase;padding:5px 8px;">Principal</span></sc-if>
                               <sc-if value="{{ m.isVideo }}"><span style="position:absolute;right:0;bottom:0;background:rgba(28,26,25,0.75);color:#fff;font-size:9px;letter-spacing:0.14em;text-transform:uppercase;padding:5px 8px;">Video</span></sc-if>
                             </div>
@@ -1235,6 +1302,70 @@
           </sc-if>
           <sc-if value="{{ formClosed }}">
             <span onClick="{{ openNewProductForm }}" style="cursor:pointer;display:inline-block;background:#1C1A19;color:#fff;padding:14px 32px;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:30px;" style-hover="background:var(--bc-accent);">Agregar producto</span>
+          </sc-if>
+
+          <sc-if value="{{ dupShow }}">
+            <section data-dups="1" aria-label="Unir colores" style="border:1px solid {{ dupBorder }};background:{{ dupBg }};padding:20px 22px;margin-bottom:30px;">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px 24px;flex-wrap:wrap;">
+                <div style="flex:1;min-width:240px;max-width:660px;">
+                  <div style="font-size:10.5px;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:8px;">{{ dupTitle }}</div>
+                  <p style="margin:0;font-size:13px;font-weight:300;color:#5B554F;line-height:1.7;">{{ dupIntro }}</p>
+                </div>
+                <sc-if value="{{ dupCanAll }}"><span role="button" tabIndex="0" onClick="{{ mergeAllDups }}" style="cursor:pointer;background:#1C1A19;color:#fff;padding:12px 22px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;white-space:nowrap;" style-hover="background:var(--bc-accent);">{{ dupAllLabel }}</span></sc-if>
+              </div>
+              <sc-if value="{{ dupHasGroups }}">
+                <div style="display:flex;flex-direction:column;gap:8px;margin-top:16px;">
+                  <sc-for list="{{ dupGroups }}" as="g" hint-placeholder-count="2">
+                    <div data-dup="1" style="display:flex;align-items:center;gap:12px 16px;flex-wrap:wrap;background:#fff;border:1px solid #EFEAE4;padding:12px 14px;">
+                      <div style="display:flex;gap:6px;flex-shrink:0;">
+                        <sc-for list="{{ g.thumbs }}" as="t" hint-placeholder-count="2"><div style="width:42px;height:52px;background:#F6F1EC;overflow:hidden;"><img src="{{ t.src }}" alt="" style="width:100%;height:100%;object-fit:cover;display:block;"></div></sc-for>
+                      </div>
+                      <div style="flex:1;min-width:180px;">
+                        <div style="font-size:14px;">{{ g.name }}</div>
+                        <div style="font-size:12px;color:#7A736E;margin-top:3px;line-height:1.5;">{{ g.detail }}</div>
+                        <sc-if value="{{ g.loose }}"><div style="font-size:11.5px;color:#9A5B1E;margin-top:4px;line-height:1.5;">{{ g.looseText }}</div></sc-if>
+                      </div>
+                      <span role="button" tabIndex="0" onClick="{{ g.skip }}" style="cursor:pointer;font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:#7A736E;text-decoration:underline;text-underline-offset:3px;">No unir</span>
+                      <span role="button" tabIndex="0" onClick="{{ g.merge }}" style="cursor:pointer;border:1px solid #1C1A19;padding:10px 20px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#1C1A19;" style-hover="background:#1C1A19;color:#fff;">Unir</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <div style="margin-top:14px;">
+                <span role="button" tabIndex="0" onClick="{{ toggleMergeManual }}" style="cursor:pointer;font-size:12px;color:#3A3532;text-decoration:underline;text-underline-offset:3px;">{{ mergeManualLabel }}</span>
+                <sc-if value="{{ mergeManualOpen }}">
+                  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;align-items:end;margin-top:14px;">
+                    <div>
+                      <label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Producto que queda</label>
+                      <select data-merge-a="1" value="{{ mergeA }}" onChange="{{ onMergeA }}" style="width:100%;padding:11px 13px;border:1px solid #D8D1CA;font-family:var(--bc-body);font-size:14px;background:#fff;">
+                        <option value="">Elegí uno</option>
+                        <sc-for list="{{ mergeOptions }}" as="o" hint-placeholder-count="3"><option value="{{ o.id }}">{{ o.label }}</option></sc-for>
+                      </select>
+                    </div>
+                    <div>
+                      <label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Sumarle como color</label>
+                      <select data-merge-b="1" value="{{ mergeB }}" onChange="{{ onMergeB }}" style="width:100%;padding:11px 13px;border:1px solid #D8D1CA;font-family:var(--bc-body);font-size:14px;background:#fff;">
+                        <option value="">Elegí uno</option>
+                        <sc-for list="{{ mergeOptions }}" as="o" hint-placeholder-count="3"><option value="{{ o.id }}">{{ o.label }}</option></sc-for>
+                      </select>
+                    </div>
+                    <span role="button" tabIndex="0" onClick="{{ mergeManual }}" style="cursor:pointer;text-align:center;background:#1C1A19;color:#fff;padding:13px 22px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;" style-hover="background:var(--bc-accent);">Unir</span>
+                  </div>
+                  <p style="font-size:12px;font-weight:300;color:#7A736E;margin:10px 0 0;line-height:1.6;">El segundo pasa a ser un color del primero, con su precio, sus fotos y su stock. Tienen que ser de colores distintos.</p>
+                </sc-if>
+              </div>
+              <sc-if value="{{ dupHasUndo }}">
+                <div style="margin-top:16px;padding-top:14px;border-top:1px solid #EFEAE4;">
+                  <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:6px;">Unidos hace poco</div>
+                  <sc-for list="{{ dupUndo }}" as="u" hint-placeholder-count="1">
+                    <div data-undo="1" style="display:flex;align-items:center;gap:6px 16px;flex-wrap:wrap;font-size:13px;padding:6px 0;">
+                      <span style="flex:1;min-width:200px;color:#3A3532;">{{ u.text }}</span>
+                      <span role="button" tabIndex="0" onClick="{{ u.split }}" style="cursor:pointer;font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:#A6322A;text-decoration:underline;text-underline-offset:3px;">Separar</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </section>
           </sc-if>
 
           <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;margin-bottom:22px;">
@@ -1664,7 +1795,8 @@ function newOrderCode() {
 const LINE_STATES = ['pendiente', 'confirmado', 'cancelado'];
 function orderLines(o) {
   const fromOrder = (st) => (st === 'vendido' || st === 'entregado') ? 'confirmado' : st === 'cancelado' ? 'cancelado' : 'pendiente';
-  return (Array.isArray(o && o.items) ? o.items : []).map(it => {
+  return (Array.isArray(o && o.items) ? o.items : []).map(raw => {
+    const it = aliasLine(raw);
     const state = LINE_STATES.includes(it && it.state) ? it.state : fromOrder(o.status);
     const held = typeof (it && it.held) === 'boolean' ? it.held : (!!o.stockApplied && state !== 'cancelado');
     return { ...it, state, held };
@@ -1710,6 +1842,94 @@ function productColors(p) {
     return true;
   }).map(v => { const own = productMedia(v); const st = stockOf(v); return { key: v.materialId, materialId: v.materialId, price: +v.price || 0, salePrice: +v.salePrice || 0, stock: st, outOfStock: !!v.outOfStock || st === 0, media: own.length ? own : base.media, ownMedia: own.length > 0 }; });
   return [base, ...extra];
+}
+// ---------- Buscador ----------
+// Sin mayúsculas ni tildes, para que "corazon" encuentre "Corazón".
+function normText(s) { return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, ' ').trim(); }
+function searchTokens(q) { return normText(q).split(' ').filter(Boolean).slice(0, 8); }
+const SEARCH_SYN = { oro: 'dorad', gold: 'dorad', plata: 'platead', silver: 'platead', dorado: 'gold', plateado: 'silver' };
+function tokenVariants(t) {
+  const v = [t];
+  if (SEARCH_SYN[t]) v.push(SEARCH_SYN[t]);
+  if (t.length > 4 && /es$/.test(t)) v.push(t.slice(0, -2));
+  if (t.length > 3 && /s$/.test(t)) v.push(t.slice(0, -1));
+  if (t.length > 4 && /[aeo]s?$/.test(t)) v.push(t.replace(/[aeo]s?$/, ''));
+  return v;
+}
+// Cada palabra buscada tiene que aparecer al principio de alguna palabra del producto
+// (nombre, descripción, categoría o color). Así "aro" encuentra "Aros" pero no "claro".
+function productMatches(p, tokens, extra) {
+  if (!tokens.length) return true;
+  const text = ' ' + normText((p.name || '') + ' ' + (p.description || '') + ' ' + (extra || ''));
+  return tokens.every(t => tokenVariants(t).some(v => v && text.indexOf(' ' + v) >= 0));
+}
+
+// ---------- Productos unidos ----------
+// Cuando dos productos (por ejemplo, uno dorado y otro plateado) se unen en uno con dos colores,
+// el que desaparece queda anotado en `aliases`: { idViejo: { id: idNuevo, color, at, was } }.
+// Así los links viejos, los carritos guardados y los pedidos anteriores siguen funcionando.
+let ALIASES = {};
+function rawAliases(raw) {
+  const out = {};
+  if (raw && typeof raw === 'object') Object.keys(raw).forEach(k => { const a = raw[k]; if (a && typeof a.id === 'string' && a.id && a.id !== k) out[k] = a; });
+  return out;
+}
+function cleanAliases(raw) {
+  const out = {};
+  const r = rawAliases(raw);
+  Object.keys(r).forEach(k => { out[k] = { id: r[k].id, color: typeof r[k].color === 'string' ? r[k].color : '' }; });
+  // Si el producto nuevo después también se unió a otro, se sigue la cadena.
+  Object.keys(out).forEach(k => { let n = 0; while (out[out[k].id] && n++ < 6) out[k] = { id: out[out[k].id].id, color: out[k].color }; });
+  return out;
+}
+function aliasId(id) { const a = ALIASES[id]; return a ? a.id : id; }
+function aliasLine(it) {
+  const a = it && ALIASES[it.productId];
+  if (!a) return it;
+  return { ...it, productId: a.id, colorId: (it.colorId && it.colorId !== 'base') ? it.colorId : a.color };
+}
+// Nombre sin las palabras de color, para encontrar el mismo modelo cargado dos veces.
+const COLOR_WORDS = ['dorado', 'dorada', 'dorados', 'doradas', 'plateado', 'plateada', 'plateados', 'plateadas', 'plata', 'oro', 'gold', 'silver', 'acero', 'inoxidable', 'color', 'en', 'de'];
+function dupBaseName(name, loose) {
+  return normText(name).split(' ').filter(w => w && !COLOR_WORDS.includes(w) && !(loose && /^(regulable|ajustable)$/.test(w))).join(' ');
+}
+function mainImageOf(list) { const ph = (list || []).find(m => m && m.type === 'image'); return ph ? ph.url : ((list && list[0]) ? cldPoster(list[0].url) : ''); }
+function isVideoFile(f) { return !!f && ((f.type || '').indexOf('video/') === 0 || /\.(mov|mp4|m4v|webm|avi)$/i.test(f.name || '')); }
+
+// ---------- Recorte de fotos ----------
+// Formas posibles: [id, ancho/alto, nombre]. 0 = libre.
+const CROP_ASPECTS = [['4:5', 4 / 5, '4:5'], ['3:4', 3 / 4, '3:4'], ['1:1', 1, 'Cuadrada'], ['libre', 0, 'Libre']];
+const CROP_REC = { '4:5': '4:5 · como en la tienda', '3:4': '3:4 · como en el inicio', '1:1': 'Cuadrada · como en el inicio' };
+// El recuadro más grande posible con esa forma (en fracciones de la foto), centrado donde estaba.
+function cropRectFor(aspect, W, H, around) {
+  const a = (CROP_ASPECTS.find(x => x[0] === aspect) || [])[1];
+  if (!a) return { x: 0, y: 0, cw: 1, ch: 1 };
+  let cw, ch;
+  if (W / H > a) { ch = 1; cw = (a * H) / W; } else { cw = 1; ch = (W / a) / H; }
+  const cx = around ? around.x + around.cw / 2 : 0.5, cy = around ? around.y + around.ch / 2 : 0.5;
+  const cl = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+  return { cw, ch, x: cl(cx - cw / 2, 0, 1 - cw), y: cl(cy - ch / 2, 0, 1 - ch) };
+}
+// Recuadro que va desde una esquina fija (ax, ay) hasta el dedo (px, py), en píxeles de pantalla.
+function cropFromAnchor(ax, ay, px, py, W, H, a) {
+  const min = Math.min(36, W, H);
+  const dx = px - ax, dy = py - ay;
+  const sx = dx >= 0 ? 1 : -1, sy = dy >= 0 ? 1 : -1;
+  const maxW = sx > 0 ? W - ax : ax, maxH = sy > 0 ? H - ay : ay;
+  let w = Math.abs(dx), h = Math.abs(dy);
+  if (a) {
+    if (w / a > h) h = w / a; else w = h * a;
+    if (w > maxW) { w = maxW; h = w / a; }
+    if (h > maxH) { h = maxH; w = h * a; }
+    if (w < min || h < min) { if (a >= 1) { h = min; w = h * a; } else { w = min; h = w / a; } }
+  } else {
+    w = Math.min(Math.max(w, min), Math.max(maxW, min));
+    h = Math.min(Math.max(h, min), Math.max(maxH, min));
+  }
+  w = Math.min(w, W); h = Math.min(h, H);
+  let x = sx > 0 ? ax : ax - w, y = sy > 0 ? ay : ay - h;
+  x = Math.max(0, Math.min(W - w, x)); y = Math.max(0, Math.min(H - h, y));
+  return { x, y, w, h };
 }
 // Costos internos: { idProducto: { color: número } }. Descarta cualquier cosa rara.
 function cleanCosts(raw) {
@@ -2007,6 +2227,13 @@ class Component extends DCLogic {
     catFilter: 'all',
     matFilter: 'all',
     sortBy: 'destacados',
+    catSearch: '',
+    crop: null,
+    aliases: {},
+    mergeSkip: [],
+    mergeManualOpen: false,
+    mergeA: '',
+    mergeB: '',
     heroSlide: 0,
     faqOpen: 0,
     adminTab: 'ventas',
@@ -2201,6 +2428,7 @@ class Component extends DCLogic {
             const st = this.state;
             if (this.isPreviewing() || (st.view === 'admin' && st.adminTab === 'estetica')) applyLook(st.lookDraft || look);
             else applyLook(look);
+            this.afterAliases();
           });
         } else {
           // Si todavía no existe el documento, se muestran los productos de ejemplo
@@ -2314,7 +2542,10 @@ class Component extends DCLogic {
     const categories = (data.categories || []).filter(c => c && c.id);
 
     const materials = (data.materials && data.materials.length) ? data.materials : defMats;
-    return { products, categories, materials };
+    ALIASES = cleanAliases(data.aliases);
+    const aliases = rawAliases(data.aliases);
+    const mergeSkip = Array.isArray(data.mergeSkip) ? data.mergeSkip.filter(k => typeof k === 'string').slice(-300) : [];
+    return { products, categories, materials, aliases, mergeSkip };
   }
 
   // Guarda el catálogo entero en Firestore. Las reglas de seguridad sólo dejan escribir a la dueña.
@@ -2388,6 +2619,15 @@ class Component extends DCLogic {
     else if (a === 'productos') next = { view: 'catalog', catFilter: b || 'all', matFilter: 'all' };
     else if (a === 'admin') next = { view: 'admin', form: null, adminTab: 'ventas', lookPreview: false };
     else next = { view: 'home' };
+    if (next.view === 'product' && ALIASES[next.selectedProductId]) {
+      // Link viejo de un producto que se unió a otro: abre el producto nuevo en ese color.
+      const al = ALIASES[next.selectedProductId];
+      next.selectedProductId = al.id;
+      if (!next.selectedColor || next.selectedColor === 'base') next.selectedColor = al.color;
+      this.replaceHash('#/producto/' + encodeURIComponent(al.id) + (next.selectedColor ? '/' + encodeURIComponent(next.selectedColor) : ''));
+    }
+    // El buscador se vacía al entrar a Productos desde otra pantalla (al volver de un producto se mantiene).
+    if (next.view === 'catalog' && fromClick && this.state.view !== 'product') next.catSearch = '';
     applyLook(this.isPreviewing({ ...this.state, ...next }) ? this.state.lookDraft : this.state.look);
     clearTimeout(this._hoverTimer);
     const after = this._navAfter;
@@ -2825,7 +3065,7 @@ class Component extends DCLogic {
         const orders = snap.docs.map(d => {
           const o = d.data({ serverTimestamps: 'estimate' }) || {};
           const date = o.createdAt && o.createdAt.toDate ? o.createdAt.toDate() : new Date();
-          return { id: d.id, code: o.code || '', status: o.status || 'pendiente', total: +o.total || 0, items: Array.isArray(o.items) ? o.items : [], customer: o.customer || null, stockApplied: !!o.stockApplied, date, lines: orderLines(o) };
+          return { id: d.id, code: o.code || '', status: o.status || 'pendiente', total: +o.total || 0, items: (Array.isArray(o.items) ? o.items : []).map(aliasLine), customer: o.customer || null, stockApplied: !!o.stockApplied, date, lines: orderLines(o) };
         });
         this.setState({ orders, ordersLoaded: true, ordersError: '' });
       }, (err) => {
@@ -3008,6 +3248,8 @@ class Component extends DCLogic {
         const key = it.colorId || '';
         const vs = Array.isArray(np.variants) ? np.variants : [];
         const vi = key ? vs.findIndex(v => v.materialId === key) : -1;
+        // Un color que este producto ya no tiene (por ejemplo, porque se separó) no toca el stock de otro.
+        if (vi < 0 && key && key !== 'base' && key !== (np.materialId || 'base')) return;
         if (vi >= 0) {
           if (raw(vs[vi]) === null) return;
           const nv = vs.slice();
@@ -3072,6 +3314,426 @@ class Component extends DCLogic {
   selectHero = (i) => this.setState({ heroSlide: i });
   toggleFaq(i) { this.setState(s => ({ faqOpen: s.faqOpen === i ? -1 : i })); }
   onSortChange = (e) => this.setState({ sortBy: e.target.value });
+
+  // ---- Buscador de la tienda ----
+  onCatSearch = (e) => this.setState({ catSearch: String(e.target.value || '').slice(0, 60) });
+  focusSearch(delay) {
+    setTimeout(() => {
+      const el = document.querySelector('[data-search-input]');
+      if (el) { try { el.focus({ preventScroll: true }); } catch (err) { try { el.focus(); } catch (e2) {} } }
+    }, delay || 0);
+  }
+  clearCatSearch = () => { this.setState({ catSearch: '' }); this.focusSearch(0); };
+  onCatSearchKey = (e) => {
+    if (e.key === 'Escape') { e.preventDefault(); this.setState({ catSearch: '' }); }
+    else if (e.key === 'Enter') { e.preventDefault(); try { e.target.blur(); } catch (err) {} }
+  };
+  widenCatSearch = () => { this.setState({ catFilter: 'all', matFilter: 'all' }); this.replaceHash('#/productos'); };
+  // La lupa de arriba: lleva a Productos con el cursor en el buscador.
+  openSearch = () => {
+    if (this.state.view === 'catalog') {
+      try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (err) {}
+      this.focusSearch(80);
+      return;
+    }
+    this.navigate('#/productos', () => { try { window.scrollTo(0, 0); } catch (err) {} this.focusSearch(80); });
+  };
+
+  // ---- Recortar fotos antes de subirlas ----
+  // Abre la ventana de recorte y espera la decisión. Devuelve un archivo (el recorte, o el original
+  // si eligió "Subir sin recortar"), 'skip' (no subir / cancelar), 'rest' (esta y las que siguen
+  // sin recortar) o 'error' (no se pudo abrir la foto).
+  askCrop(source, opts = {}) {
+    const isUrl = typeof source === 'string';
+    if (this._crop) return Promise.resolve(isUrl ? 'skip' : source);
+    return new Promise((resolve) => {
+      let src = '';
+      try { src = isUrl ? source : URL.createObjectURL(source); } catch (e) { resolve(isUrl ? 'error' : source); return; }
+      const img = new Image();
+      if (isUrl) img.crossOrigin = 'anonymous';
+      const fail = () => {
+        if (!isUrl) { try { URL.revokeObjectURL(src); } catch (e) {} }
+        // Si el navegador no puede mostrar la foto (por ejemplo, HEIC en la compu), se sube tal cual.
+        resolve(isUrl ? 'error' : source);
+      };
+      img.onerror = fail;
+      img.onload = () => {
+        const w = img.naturalWidth, h = img.naturalHeight;
+        if (!w || !h) { fail(); return; }
+        this._crop = { img, file: isUrl ? null : source, isUrl, resolve, revoke: isUrl ? '' : src };
+        this._cropKeys = (ev) => {
+          if (ev.key === 'Escape') { ev.preventDefault(); this.cropCancel(); }
+          else if (ev.key === 'Enter') { ev.preventDefault(); this.cropApply(); }
+        };
+        window.addEventListener('keydown', this._cropKeys);
+        try { document.documentElement.style.overflow = 'hidden'; } catch (e) {}
+        const aspect = opts.aspect || '4:5';
+        this.setState({ crop: { src, w, h, aspect, rec: aspect, idx: opts.idx || 0, total: opts.total || 1, isUrl, ...cropRectFor(aspect, w, h) } });
+      };
+      img.src = src;
+    });
+  }
+  finishCrop(result) {
+    const k = this._crop;
+    this._crop = null; this._cd = null;
+    if (this._cropKeys) { window.removeEventListener('keydown', this._cropKeys); this._cropKeys = null; }
+    try { document.documentElement.style.overflow = ''; } catch (e) {}
+    this.setState({ crop: null }, () => {
+      if (k && k.revoke) setTimeout(() => { try { URL.revokeObjectURL(k.revoke); } catch (e) {} }, 2000);
+      if (k) k.resolve(result);
+    });
+  }
+  cropCancel = () => { if (this._crop && !this._cropBusy) this.finishCrop('skip'); };
+  cropSkip = () => { const k = this._crop; if (k && !this._cropBusy) this.finishCrop(k.isUrl ? 'skip' : k.file); };
+  cropRest = () => { if (this._crop && !this._cropBusy) this.finishCrop('rest'); };
+  setCropAspect(key) {
+    this.setState(s => {
+      const c = s.crop;
+      if (!c || c.aspect === key) return null;
+      // "Libre" deja el recuadro donde está; las otras formas lo ajustan a su proporción.
+      return { crop: { ...c, aspect: key, ...(key === 'libre' ? {} : cropRectFor(key, c.w, c.h, c)) } };
+    });
+  }
+  cropDown = (e) => {
+    const c = this.state.crop;
+    if (!c || this._cd || (e.button != null && e.button > 0)) return;
+    const stage = e.currentTarget;
+    const r = stage.getBoundingClientRect();
+    const t = e.target;
+    const h = t && t.closest ? t.closest('[data-h]') : null;
+    const inBox = t && t.closest ? t.closest('[data-crop-box]') : null;
+    const mode = h ? h.getAttribute('data-h') : inBox ? 'move' : 'new';
+    const px = e.clientX - r.left, py = e.clientY - r.top;
+    this._cd = { id: e.pointerId, mode, r, sx: px, sy: py, rect: { x: c.x * r.width, y: c.y * r.height, w: c.cw * r.width, h: c.ch * r.height }, started: mode !== 'new', cur: null };
+    try { stage.setPointerCapture(e.pointerId); } catch (err) {}
+    if (e.preventDefault) e.preventDefault();
+  };
+  cropMove = (e) => {
+    const d = this._cd, c = this.state.crop;
+    if (!d || !c || d.id !== e.pointerId) return;
+    const W = d.r.width, H = d.r.height;
+    const px = Math.max(0, Math.min(W, e.clientX - d.r.left)), py = Math.max(0, Math.min(H, e.clientY - d.r.top));
+    const a = (CROP_ASPECTS.find(x => x[0] === c.aspect) || [])[1] || 0;
+    let R;
+    if (d.mode === 'move') {
+      R = { w: d.rect.w, h: d.rect.h, x: Math.max(0, Math.min(W - d.rect.w, d.rect.x + px - d.sx)), y: Math.max(0, Math.min(H - d.rect.h, d.rect.y + py - d.sy)) };
+    } else {
+      let ax, ay;
+      if (d.mode === 'new') {
+        if (!d.started) { if (Math.hypot(px - d.sx, py - d.sy) < 8) return; d.started = true; }
+        ax = d.sx; ay = d.sy;
+      } else {
+        ax = d.mode.indexOf('w') >= 0 ? d.rect.x + d.rect.w : d.rect.x;
+        ay = d.mode.indexOf('n') >= 0 ? d.rect.y + d.rect.h : d.rect.y;
+      }
+      R = cropFromAnchor(ax, ay, px, py, W, H, a);
+    }
+    d.cur = R;
+    // Mientras se arrastra se mueve el recuadro directo (más fluido); al soltar se guarda.
+    const box = document.querySelector('[data-crop-box]');
+    if (box) {
+      box.style.left = (R.x / W * 100) + '%'; box.style.top = (R.y / H * 100) + '%';
+      box.style.width = (R.w / W * 100) + '%'; box.style.height = (R.h / H * 100) + '%';
+    }
+  };
+  cropUp = (e) => {
+    const d = this._cd;
+    if (!d || d.id !== e.pointerId) return;
+    this._cd = null;
+    if (!d.cur) return;
+    const R = d.cur, W = d.r.width, H = d.r.height;
+    this.setState(s => (s.crop ? { crop: { ...s.crop, x: R.x / W, y: R.y / H, cw: R.w / W, ch: R.h / H } } : null));
+  };
+  cropApply = async () => {
+    const c = this.state.crop, k = this._crop;
+    if (!c || !k || this._cropBusy || this._cd) return;
+    const full = c.x < 0.002 && c.y < 0.002 && c.cw > 0.998 && c.ch > 0.998;
+    if (full) { this.finishCrop(k.isUrl ? 'skip' : k.file); return; }
+    this._cropBusy = true;
+    try {
+      const W = k.img.naturalWidth, H = k.img.naturalHeight;
+      const sx = Math.round(c.x * W), sy = Math.round(c.y * H);
+      const sw = Math.max(1, Math.min(W - sx, Math.round(c.cw * W))), sh = Math.max(1, Math.min(H - sy, Math.round(c.ch * H)));
+      // Se guarda en buena calidad, con un máximo de 2400 px de lado (igual que al subir sin recortar).
+      const scale = Math.min(1, 2400 / Math.max(sw, sh));
+      const cv = document.createElement('canvas');
+      cv.width = Math.max(1, Math.round(sw * scale)); cv.height = Math.max(1, Math.round(sh * scale));
+      const ctx = cv.getContext('2d');
+      ctx.imageSmoothingQuality = 'high';
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(0, 0, cv.width, cv.height);
+      ctx.drawImage(k.img, sx, sy, sw, sh, 0, 0, cv.width, cv.height);
+      const blob = await new Promise((res, rej) => { try { cv.toBlob(res, 'image/jpeg', 0.92); } catch (err) { rej(err); } });
+      if (!blob) throw new Error('no se pudo crear la imagen');
+      const name = ((k.file && k.file.name) ? k.file.name.replace(/\.[^.]+$/, '') : 'foto') + '-recorte.jpg';
+      this._cropBusy = false;
+      this.finishCrop(new File([blob], name, { type: 'image/jpeg' }));
+    } catch (err) {
+      console.error('No se pudo recortar', err);
+      this._cropBusy = false;
+      if (k.isUrl) this.finishCrop('error');
+      else { this.finishCrop(k.file); this.showToast('No se pudo recortar: se sube la foto entera'); }
+    }
+  };
+  cropVals() {
+    const c = this.state.crop;
+    const pct = (v) => (Math.max(0, Math.min(1, v)) * 100).toFixed(3) + '%';
+    const handlers = { cropDown: this.cropDown, cropMove: this.cropMove, cropUp: this.cropUp, cropCancel: this.cropCancel, cropSkip: this.cropSkip, cropApply: this.cropApply, cropRest: this.cropRest };
+    if (!c) return { cropOpen: false, cropTitle: '', cropSrc: BLANK, cropL: '0%', cropT: '0%', cropW: '100%', cropH: '100%', cropAspects: [], cropCanRest: false, cropSkipLabel: '', cropApplyLabel: '', cropCloseLabel: '', ...handlers };
+    return {
+      cropOpen: true,
+      cropTitle: 'Recortar foto' + (c.total > 1 ? ` · ${c.idx + 1} de ${c.total}` : ''),
+      cropSrc: c.src, cropL: pct(c.x), cropT: pct(c.y), cropW: pct(c.cw), cropH: pct(c.ch),
+      cropAspects: CROP_ASPECTS.map(([k, , label]) => {
+        const on = c.aspect === k;
+        return { label: (k === c.rec && CROP_REC[k]) ? CROP_REC[k] : label, on: on ? 'true' : 'false', bg: on ? '#fff' : 'transparent', ink: on ? '#1C1A19' : '#fff', border: on ? '#fff' : 'rgba(255,255,255,0.4)', pick: () => this.setCropAspect(k) };
+      }),
+      cropCanRest: !c.isUrl && c.total > 1 && c.idx < c.total - 1,
+      cropSkipLabel: c.isUrl ? 'Cancelar' : 'Subir sin recortar',
+      cropApplyLabel: c.isUrl ? 'Guardar recorte' : 'Recortar y subir',
+      cropCloseLabel: c.isUrl ? 'Cancelar' : 'No subir esta foto',
+      ...handlers
+    };
+  }
+
+  // ---- Unir colores: el mismo modelo cargado dos veces (dorado y plateado) ----
+  // Después de cada cambio del catálogo: pasa los carritos y links viejos al producto que quedó.
+  afterAliases() {
+    const s = this.state;
+    if (s.cart.some(ci => ci && ALIASES[ci.productId])) {
+      const merged = [];
+      s.cart.forEach(ci => {
+        const a = ALIASES[ci.productId];
+        const n = a ? { ...ci, productId: a.id, color: (ci.color && ci.color !== 'base') ? ci.color : a.color } : ci;
+        const same = merged.find(x => x.productId === n.productId && (x.color || '') === (n.color || ''));
+        if (same) same.qty += n.qty; else merged.push({ ...n });
+      });
+      this.setState({ cart: merged });
+      try { localStorage.setItem(Component.CART_KEY, JSON.stringify(merged)); } catch (e) {}
+    }
+    const a = s.view === 'product' && ALIASES[s.selectedProductId];
+    if (a) {
+      const color = (s.selectedColor && s.selectedColor !== 'base') ? s.selectedColor : a.color;
+      this.replaceHash('#/producto/' + encodeURIComponent(a.id) + (color ? '/' + encodeURIComponent(color) : ''));
+      this.setState({ selectedProductId: a.id, selectedColor: color });
+    }
+    if ((s.orders || []).some(o => (o.items || []).some(it => it && ALIASES[it.productId]))) {
+      this.setState(st => ({ orders: st.orders.map(o => ({ ...o, items: (o.items || []).map(aliasLine), lines: orderLines(o) })) }));
+    }
+  }
+  findDuplicates() {
+    const s = this.state;
+    const skip = s.mergeSkip || [];
+    const groups = [], used = new Set();
+    const consider = (list, loose, key) => {
+      list = list.filter(p => !used.has(p.id));
+      if (list.length < 2 || list.length > 4 || skip.includes(key)) return;
+      // Solo si cada uno es de un color distinto (dos dorados iguales no se pueden unir como colores).
+      const keys = [];
+      for (const p of list) for (const c of productColors(p)) { if (!c.materialId || keys.includes(c.materialId)) return; keys.push(c.materialId); }
+      list.forEach(p => used.add(p.id));
+      groups.push({ key, loose, list });
+    };
+    const byName = (loose) => {
+      const m = {};
+      s.products.forEach(p => {
+        if (used.has(p.id)) return;
+        const b = dupBaseName(p.name, loose);
+        if (!b) return;
+        const k = (p.categoryId || '') + '|' + b;
+        (m[k] = m[k] || []).push(p);
+      });
+      return m;
+    };
+    const exact = byName(false);
+    Object.keys(exact).forEach(k => consider(exact[k], false, k));
+    const loose = byName(true);
+    Object.keys(loose).forEach(k => consider(loose[k], true, 'parecido:' + k));
+    return groups;
+  }
+  // El que queda: el destacado, o si no el del primer material de la lista (normalmente dorado).
+  dupKeeper(list) {
+    const mi = (id) => { const i = this.state.materials.findIndex(m => m.id === id); return i < 0 ? 99 : i; };
+    return list.slice().sort((a, b) => ((b.featured ? 1 : 0) - (a.featured ? 1 : 0)) || (mi(a.materialId) - mi(b.materialId)))[0];
+  }
+  colorNames(p) { return productColors(p).map(c => this.materialName(c.materialId) || 'sin color'); }
+  // Guarda el catálogo con otros campos (por ejemplo los productos unidos) en una sola escritura.
+  writeStore(products, extra) {
+    const { categories, materials } = this.state;
+    return firebaseReady
+      .then(() => STORE_DOC.update({ version: Component.STORE_VERSION, products, categories, materials, ...(extra || {}) }))
+      .catch((e) => { console.error('No se pudo guardar en Firestore:', e); this.showToast('No se pudo guardar — revisá tu conexión'); });
+  }
+  // groups: [{ keepId, otherIds }]. Cada producto de otherIds pasa a ser un color del que queda.
+  mergeGroups(groups) {
+    const s = this.state;
+    let products = s.products.slice();
+    const aliases = { ...(s.aliases || {}) };
+    const costs = { ...(s.costs || {}) };
+    let costsChanged = false, n = 0;
+    groups.forEach(({ keepId, otherIds }) => {
+      const ki = products.findIndex(p => p.id === keepId);
+      const others = (otherIds || []).map(id => products.find(p => p.id === id)).filter(p => p && p.id !== keepId);
+      if (ki < 0 || !others.length) return;
+      const keep = products[ki];
+      const merged = { ...keep, variants: Array.isArray(keep.variants) ? keep.variants.slice() : [] };
+      const used = new Set(productColors(keep).map(c => c.key));
+      const kc = { ...(costs[keep.id] || {}) };
+      let kcChanged = false;
+      others.forEach(o => {
+        const oc = costs[o.id] || {};
+        const ocs = productColors(o);
+        ocs.forEach((c, i) => {
+          if (!c.materialId || used.has(c.key)) return;
+          used.add(c.key);
+          const src = i === 0 ? o : ((o.variants || []).find(v => v && v.materialId === c.key) || {});
+          const media = (c.media || []).filter(m => m && m.url);
+          merged.variants.push({ materialId: c.key, price: +c.price || 0, salePrice: +c.salePrice || 0, outOfStock: !!src.outOfStock, stock: stockOf(src), media, image: mainImageOf(media) });
+          if (typeof oc[c.key] === 'number' && typeof kc[c.key] !== 'number') { kc[c.key] = oc[c.key]; kcChanged = true; }
+        });
+        aliases[o.id] = { id: keep.id, color: ocs[0] ? ocs[0].key : '', at: Date.now(), was: JSON.parse(JSON.stringify(o)) };
+        if (costs[o.id]) { delete costs[o.id]; costsChanged = true; }
+        if (o.featured) merged.featured = true;
+        if (!String(merged.description || '').trim() && String(o.description || '').trim()) merged.description = o.description;
+        n++;
+      });
+      if (kcChanged) { costs[keep.id] = kc; costsChanged = true; }
+      // Si algún producto viejo apuntaba a uno de estos, ahora apunta al que queda.
+      Object.keys(aliases).forEach(k => { const a = aliases[k]; if (a && others.some(o => o.id === a.id)) aliases[k] = { ...a, id: keep.id }; });
+      products[ki] = merged;
+      products = products.filter(p => !others.some(o => o.id === p.id));
+    });
+    if (!n) return 0;
+    ALIASES = cleanAliases(aliases);
+    this.setState({ products, aliases, ...(costsChanged ? { costs } : {}) }, () => {
+      this.writeStore(products, { aliases });
+      if (costsChanged && this.state.costsLoaded) firebaseReady.then(() => COSTS_DOC.set({ costs })).catch(() => this.showToast('No se pudieron mover los costos'));
+      this.afterAliases();
+    });
+    return n;
+  }
+  mergeDupGroup(g) {
+    const keep = this.dupKeeper(g.list);
+    const colors = [].concat(...g.list.map(p => this.colorNames(p)));
+    const others = g.list.filter(p => p.id !== keep.id).map(p => p.id);
+    if (!confirm(`¿Unir "${keep.name}" en un solo producto con ${colors.join(' y ')}?\n\nCada color mantiene su precio, sus fotos y su stock. Los links viejos y los pedidos siguen funcionando. Si te arrepentís, lo podés separar.`)) return;
+    if (this.mergeGroups([{ keepId: keep.id, otherIds: others }])) this.showToast(`Listo: ${keep.name} ahora tiene ${colors.length} colores`);
+  }
+  mergeAllDups = () => {
+    const groups = this.findDuplicates().filter(g => !g.loose);
+    if (!groups.length) return;
+    if (!confirm(`¿Unir los ${groups.length} productos repetidos?\n\nCada uno queda como un solo producto con sus colores, y cada color mantiene su precio, sus fotos y su stock. Los que tienen nombres parecidos pero no iguales no se tocan: esos revisalos uno por uno.`)) return;
+    const n = this.mergeGroups(groups.map(g => { const keep = this.dupKeeper(g.list); return { keepId: keep.id, otherIds: g.list.filter(p => p.id !== keep.id).map(p => p.id) }; }));
+    if (n) this.showToast(`Listo: se unieron ${groups.length} productos`);
+  };
+  skipDup(key) {
+    const mergeSkip = [...(this.state.mergeSkip || []).filter(k => k !== key), key].slice(-300);
+    this.setState({ mergeSkip });
+    firebaseReady.then(() => STORE_DOC.update({ mergeSkip })).catch(() => this.showToast('No se pudo guardar'));
+  }
+  // Deshace una unión: el producto vuelve a estar aparte, con el stock, precio y fotos que tenía su color.
+  splitProduct(oldId) {
+    const s = this.state;
+    const a = (s.aliases || {})[oldId];
+    if (!a || !a.was || s.products.some(p => p.id === oldId)) return;
+    const restored = JSON.parse(JSON.stringify(a.was));
+    if (!confirm(`¿Separar "${restored.name}" (${this.materialName(a.color) || 'su color'}) y que vuelva a ser un producto aparte?`)) return;
+    const keep = s.products.find(p => p.id === a.id);
+    const wasKeys = productColors(restored).map(c => c.key);
+    let products = s.products.slice();
+    const costs = { ...(s.costs || {}) };
+    let costsChanged = false;
+    if (keep) {
+      const vs = Array.isArray(keep.variants) ? keep.variants : [];
+      wasKeys.forEach((k, i) => {
+        const v = vs.find(x => x && x.materialId === k);
+        if (!v) return;
+        const upd = { price: +v.price || 0, salePrice: +v.salePrice || 0, stock: stockOf(v), outOfStock: !!v.outOfStock };
+        if (Array.isArray(v.media) && v.media.length) { upd.media = v.media; upd.image = v.image || mainImageOf(v.media); }
+        if (i === 0) Object.assign(restored, upd);
+        else restored.variants = (restored.variants || []).map(x => (x && x.materialId === k) ? { ...x, ...upd } : x);
+      });
+      const ki = products.findIndex(p => p.id === keep.id);
+      products[ki] = { ...keep, variants: vs.filter(x => !(x && wasKeys.includes(x.materialId))) };
+      products.splice(ki + 1, 0, restored);
+      const kc = costs[keep.id];
+      if (kc) {
+        const back = {}, rest = { ...kc };
+        wasKeys.forEach(k => { if (typeof rest[k] === 'number') { back[k] = rest[k]; delete rest[k]; } });
+        if (Object.keys(back).length) { costs[restored.id] = back; if (Object.keys(rest).length) costs[keep.id] = rest; else delete costs[keep.id]; costsChanged = true; }
+      }
+    } else products.push(restored);
+    const aliases = { ...s.aliases };
+    delete aliases[oldId];
+    ALIASES = cleanAliases(aliases);
+    this.setState({ products, aliases, ...(costsChanged ? { costs } : {}) }, () => {
+      this.writeStore(products, { aliases });
+      if (costsChanged && this.state.costsLoaded) firebaseReady.then(() => COSTS_DOC.set({ costs })).catch(() => {});
+      this.showToast(`Listo: ${restored.name} volvió a ser un producto aparte`);
+    });
+  }
+  toggleMergeManual = () => this.setState(s => ({ mergeManualOpen: !s.mergeManualOpen }));
+  onMergeA = (e) => this.setState({ mergeA: e.target.value });
+  onMergeB = (e) => this.setState({ mergeB: e.target.value });
+  mergeManual = () => {
+    const s = this.state;
+    const a = s.products.find(p => p.id === s.mergeA), b = s.products.find(p => p.id === s.mergeB);
+    if (!a || !b) { alert('Elegí los dos productos.'); return; }
+    if (a.id === b.id) { alert('Elegiste el mismo producto dos veces.'); return; }
+    const ka = productColors(a).map(c => c.materialId), kb = productColors(b).map(c => c.materialId);
+    const clash = kb.find(k => !k || ka.includes(k));
+    if (clash !== undefined) { alert(`Los dos tienen el color ${this.materialName(clash) || '(sin material)'}. Para unirlos, cada uno tiene que ser de un color distinto.`); return; }
+    if (!confirm(`¿Sumar "${b.name}" (${this.colorNames(b).join(' / ')}) como color de "${a.name}"?\n\n"${b.name}" deja de aparecer como producto aparte. Su precio, sus fotos y su stock pasan al color nuevo. Si te arrepentís, lo podés separar.`)) return;
+    if (this.mergeGroups([{ keepId: a.id, otherIds: [b.id] }])) {
+      this.setState({ mergeA: '', mergeB: '' });
+      this.showToast(`Listo: ${a.name} ahora tiene ${ka.length + kb.length} colores`);
+    }
+  };
+  dupVals() {
+    const s = this.state;
+    const base = {
+      mergeAllDups: this.mergeAllDups, toggleMergeManual: this.toggleMergeManual, onMergeA: this.onMergeA, onMergeB: this.onMergeB, mergeManual: this.mergeManual,
+      mergeA: s.mergeA, mergeB: s.mergeB, mergeManualOpen: !!s.mergeManualOpen, mergeManualLabel: s.mergeManualOpen ? 'Cerrar' : 'Unir dos productos a mano'
+    };
+    const on = s.view === 'admin' && s.adminTab === 'productos' && !s.form && this.isAdminUser();
+    if (!on) return { ...base, dupShow: false, dupTitle: '', dupIntro: '', dupBorder: '#E4DED8', dupBg: '#fff', dupCanAll: false, dupAllLabel: '', dupHasGroups: false, dupGroups: [], mergeOptions: [], dupHasUndo: false, dupUndo: [] };
+    const groups = this.findDuplicates();
+    const exact = groups.filter(g => !g.loose).length;
+    const thumbOf = (p) => { const m = cardMedia(p)[0]; return m ? mediaThumb(m, 120) : BLANK; };
+    const priceOf = (c) => this.fmt(c.salePrice && c.salePrice < c.price ? c.salePrice : c.price);
+    const dupGroups = groups.map(g => {
+      const keep = this.dupKeeper(g.list);
+      const ordered = [keep, ...g.list.filter(p => p !== keep)];
+      return {
+        name: keep.name, loose: g.loose,
+        looseText: 'Los nombres no son iguales (' + ordered.map(p => '“' + p.name + '”').join(' y ') + '): fijate que sea el mismo modelo.',
+        thumbs: ordered.map(p => ({ src: thumbOf(p) })),
+        detail: [].concat(...ordered.map(p => productColors(p).map(c => (this.materialName(c.materialId) || 'Sin color') + ' ' + priceOf(c)))).join(' · '),
+        merge: () => this.mergeDupGroup(g), skip: () => this.skipDup(g.key)
+      };
+    });
+    const now = Date.now();
+    const dupUndo = Object.keys(s.aliases || {}).map(id => ({ id, a: s.aliases[id] }))
+      .filter(x => x.a && x.a.was && (now - (+x.a.at || 0)) < 45 * 86400000 && s.products.some(p => p.id === x.a.id) && !s.products.some(p => p.id === x.id))
+      .sort((x, y) => (+y.a.at || 0) - (+x.a.at || 0)).slice(0, 12)
+      .map(x => {
+        const keep = s.products.find(p => p.id === x.a.id);
+        return { text: `${keep.name}: se le sumó el color ${this.materialName(x.a.color) || 'nuevo'}`, split: () => this.splitProduct(x.id) };
+      });
+    const n = groups.length;
+    return {
+      ...base, dupShow: true,
+      dupTitle: n ? `Productos repetidos por color (${n})` : 'Unir colores',
+      dupIntro: n
+        ? `Encontramos ${n === 1 ? 'un modelo cargado' : n + ' modelos cargados'} dos veces, una por color. Al unirlos queda un solo producto y la clienta elige el color en su página. Cada color mantiene su precio, sus fotos y su stock.`
+        : 'Si cargaste el mismo modelo dos veces, uno por color, unilos para que quede un solo producto donde la clienta elige el color.',
+      dupBorder: n ? '#E8C9A8' : '#E4DED8', dupBg: n ? '#FBF6EF' : '#FDFBF9',
+      dupCanAll: exact >= 2, dupAllLabel: `Unir los ${exact}`,
+      dupHasGroups: n > 0, dupGroups,
+      mergeOptions: s.products.slice().sort((a, b) => a.name.localeCompare(b.name, 'es')).map(p => ({ id: p.id, label: `${p.name} — ${this.colorNames(p).join(' / ')}` })),
+      dupHasUndo: dupUndo.length > 0, dupUndo
+    };
+  }
 
   // ---- Pestañas del panel ----
   setAdminTab(id) {
@@ -3176,9 +3838,17 @@ class Component extends DCLogic {
     if (!file || this.state.lookUploading) return;
     const isVideo = (file.type || '').indexOf('video/') === 0 || /\.(mov|mp4|m4v|webm)$/i.test(file.name);
     if (isVideo && !(key.indexOf('hero-') === 0 || key === 'editorial')) { alert('En este lugar van solo fotos.'); return; }
+    let up = file;
+    if (!isVideo && !/gif/i.test(file.type || '')) {
+      const aspect = key.indexOf('cat-') === 0 ? '3:4' : key.indexOf('ig-') === 0 ? '1:1' : 'libre';
+      const r = await this.askCrop(file, { aspect });
+      if (r === 'skip') return;
+      if (r && typeof r !== 'string') up = r;
+    }
+    if (this.state.lookUploading) return;
     this.setState({ lookUploading: key });
     try {
-      const item = await uploadToCloudinary(file);
+      const item = await uploadToCloudinary(up);
       if (key.indexOf('cat-') === 0) {
         const id = key.slice(4);
         this.setState(s => ({ lookCatDraft: { ...(s.lookCatDraft || {}), [id]: item.url }, lookDirty: true }));
@@ -3267,19 +3937,52 @@ class Component extends DCLogic {
     const files = Array.from((e && e.target && e.target.files) || []);
     if (e && e.target) e.target.value = '';
     if (!files.length || !this.state.form || this.state.uploadStatus) return;
-    const failed = [];
+    // Primero se recorta cada foto (o se deja entera). Los videos pasan directo.
+    this.setState({ uploadTarget: String(target), uploadStatus: 'Recortando…' });
+    const ready = [];
+    let noCrop = false;
     for (let i = 0; i < files.length; i++) {
-      this.setState({ uploadTarget: String(target), uploadStatus: files.length > 1 ? `Subiendo ${i + 1} de ${files.length}…` : 'Subiendo…' });
+      const f = files[i];
+      if (noCrop || isVideoFile(f) || /gif/i.test(f.type || '')) { ready.push(f); continue; }
+      const r = await this.askCrop(f, { aspect: '4:5', idx: i, total: files.length });
+      if (r === 'rest') { ready.push(f); noCrop = true; }
+      else if (r && r !== 'skip' && r !== 'error') ready.push(r);
+      if (!this.state.form) break;
+    }
+    if (!this.state.form || !ready.length) { this.setState({ uploadStatus: '', uploadTarget: '' }); return; }
+    const failed = [];
+    for (let i = 0; i < ready.length; i++) {
+      this.setState({ uploadTarget: String(target), uploadStatus: ready.length > 1 ? `Subiendo ${i + 1} de ${ready.length}…` : 'Subiendo…' });
       try {
-        const item = await uploadToCloudinary(files[i]);
+        const item = await uploadToCloudinary(ready[i]);
         this.setState(s => (s.form ? { form: this.formWithMedia(s.form, target, list => [...list, item]) } : null));
       } catch (err) {
-        console.error('Error subiendo', files[i].name, err);
-        failed.push(`${files[i].name}: ${err.message}`);
+        console.error('Error subiendo', ready[i].name, err);
+        failed.push(`${ready[i].name}: ${err.message}`);
       }
     }
     this.setState({ uploadStatus: '', uploadTarget: '' });
     if (failed.length) alert('Estos archivos no se pudieron subir:\n\n' + failed.join('\n'));
+  }
+  // Recorta una foto que ya estaba subida: se sube el recorte y reemplaza a la original en el mismo lugar.
+  async cropFormMedia(i, target = 'base') {
+    const f = this.state.form;
+    if (!f || this.state.uploadStatus) return;
+    const list = target === 'base' ? f.media : ((f.variants || [])[target] || {}).media;
+    const item = (list || [])[i];
+    if (!item || item.type === 'video') return;
+    const r = await this.askCrop(item.url, { aspect: '4:5' });
+    if (r === 'error') { alert('No se pudo abrir esta foto para recortarla. Probá quitarla y volver a subirla: antes de subir te deja recortarla.'); return; }
+    if (!r || typeof r === 'string') return;
+    this.setState({ uploadTarget: String(target), uploadStatus: 'Subiendo el recorte…' });
+    try {
+      const up = await uploadToCloudinary(r);
+      this.setState(s => (s.form ? { form: this.formWithMedia(s.form, target, l => l.map(x => (x && x.url === item.url) ? up : x)) } : null));
+      this.showToast('Foto recortada. Tocá Guardar para que quede así.');
+    } catch (err) {
+      alert('No se pudo subir el recorte: ' + err.message);
+    }
+    this.setState({ uploadStatus: '', uploadTarget: '' });
   }
   onProductMediaFilesChange = (e) => this.uploadFormMedia('base', e);
   removeFormMedia(i, target = 'base') {
@@ -3614,9 +4317,12 @@ class Component extends DCLogic {
     }));
 
     const catalogSoon = !!soonIds[s.catFilter];
+    const qTokens = searchTokens(s.catSearch);
+    const qMatch = (p) => productMatches(p, qTokens, this.categoryName(p.categoryId) + ' ' + productColors(p).map(c => this.materialName(c.materialId)).join(' '));
     let catalog = shop.filter(p =>
       (s.catFilter === 'all' || (s.catFilter === 'sale' ? this.anyOnSale(p) : p.categoryId === s.catFilter)) &&
-      (s.matFilter === 'all' || productColors(p).some(c => c.materialId === s.matFilter))
+      (s.matFilter === 'all' || productColors(p).some(c => c.materialId === s.matFilter)) &&
+      qMatch(p)
     );
     const minOf = (p) => Math.min(...productColors(p).map(c => this.effPrice(c)));
     if (s.sortBy === 'price_asc') catalog = [...catalog].sort((a, b) => minOf(a) - minOf(b));
@@ -3628,6 +4334,10 @@ class Component extends DCLogic {
     const catalogProducts = loading ? [] : catalog.map(p => withCard(p, 'cat'));
     const catalogTitle = s.catFilter === 'all' ? 'Todos los productos'
       : s.catFilter === 'sale' ? 'Sale' : this.categoryName(s.catFilter);
+    const searching = qTokens.length > 0;
+    const qShown = String(s.catSearch || '').trim();
+    const qScope = s.catFilter !== 'all' ? ' en ' + catalogTitle : '';
+    const qWiden = searching && !loading && catalog.length === 0 && (s.catFilter !== 'all' || s.matFilter !== 'all') ? shop.filter(qMatch).length : 0;
     const saleProducts = loading ? [] : shop.filter(p => productColors(p).some(c => this.onSale(c) && !c.outOfStock)).slice(0, 4).map(p => withCard(p, 'sale'));
 
     // Un producto de una categoría "próximamente" solo lo puede abrir la dueña.
@@ -3674,6 +4384,7 @@ class Component extends DCLogic {
     const formVariants = ((s.form && s.form.variants) || []).map((v, i) => {
       const vm = (v.media || []).map((m, j) => ({
         thumb: mediaThumb(m, 300), isVideo: m.type === 'video', isMain: j === 0, notMain: j !== 0,
+        isPhoto: m.type !== 'video', crop: () => this.cropFormMedia(j, i),
         makeMain: () => this.makeFormMediaMain(j, i), remove: () => this.removeFormMedia(j, i)
       }));
       return {
@@ -3695,7 +4406,7 @@ class Component extends DCLogic {
     });
     const formMedia = ((s.form && s.form.media) || []).map((m, i) => ({
       thumb: mediaThumb(m, 300), isVideo: m.type === 'video',
-      isMain: i === 0, notMain: i !== 0,
+      isMain: i === 0, notMain: i !== 0, isPhoto: m.type !== 'video', crop: () => this.cropFormMedia(i),
       makeMain: () => this.makeFormMediaMain(i), remove: () => this.removeFormMedia(i)
     }));
     const relatedProducts = stockFirst(shop
@@ -3742,8 +4453,8 @@ class Component extends DCLogic {
       const pending = inRange.filter(o => o.status === 'pendiente').length;
       const views = {}, carts = {};
       s.stats.filter(d => (d.day || '') >= fromKey).forEach(d => {
-        Object.keys(d.views || {}).forEach(k => { views[k] = (views[k] || 0) + (+d.views[k] || 0); });
-        Object.keys(d.carts || {}).forEach(k => { carts[k] = (carts[k] || 0) + (+d.carts[k] || 0); });
+        Object.keys(d.views || {}).forEach(k => { const id = aliasId(k); views[id] = (views[id] || 0) + (+d.views[k] || 0); });
+        Object.keys(d.carts || {}).forEach(k => { const id = aliasId(k); carts[id] = (carts[id] || 0) + (+d.carts[k] || 0); });
       });
       const total = (o) => Object.values(o).reduce((a, b) => a + b, 0);
       salesVals.salesKpis = [
@@ -4040,7 +4751,15 @@ class Component extends DCLogic {
       faqItems, hasFaq: faqItems.length > 0,
 
       categoryChips, materialChips, sortBy: s.sortBy, onSortChange: this.onSortChange,
-      catalogProducts, catalogEmpty: !loading && catalogProducts.length === 0 && !catalogSoon, catalogSoon, catalogTitle,
+      catalogProducts, catalogEmpty: !loading && catalogProducts.length === 0 && !catalogSoon && !searching, catalogSoon, catalogTitle,
+      catSearch: s.catSearch, onCatSearch: this.onCatSearch, onCatSearchKey: this.onCatSearchKey, clearCatSearch: this.clearCatSearch,
+      catSearchOn: searching, catSearchHasInfo: searching && catalog.length > 0, openSearch: this.openSearch, widenCatSearch: this.widenCatSearch,
+      catSearchInfo: (catalog.length === 1 ? '1 producto' : catalog.length + ' productos') + ' para “' + qShown + '”' + qScope,
+      catSearchEmpty: searching && !loading && catalog.length === 0 && !catalogSoon,
+      catSearchEmptyText: 'No encontramos productos para “' + qShown + '”' + qScope + '.',
+      catSearchWiden: qWiden > 0, catSearchWidenLabel: qWiden === 1 ? 'Ver 1 resultado en todos los productos' : `Ver ${qWiden} resultados en todos los productos`,
+      ...this.cropVals(),
+      ...this.dupVals(),
 
       selectedProduct, selectedProductInStock: !selColor.outOfStock,
       // Datos internos del color elegido, solo para la dueña.
@@ -4168,7 +4887,7 @@ class Component extends DCLogic {
           if (f === 'sincontar') return cs.some(c => c.stock === null);
           return true;
         })
-        .filter(p => !s.adminSearch.trim() || p.name.toLowerCase().includes(s.adminSearch.trim().toLowerCase()))
+        .filter(p => productMatches({ name: p.name }, searchTokens(s.adminSearch), ''))
         .slice()
         .sort((a, b) => {
           const ca = this.categoryName(a.categoryId), cb = this.categoryName(b.categoryId);
