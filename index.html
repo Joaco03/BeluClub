@@ -59,10 +59,12 @@
     :focus-visible{outline:1px solid var(--bc-accent);outline-offset:3px;}
     [data-search-input]::-webkit-search-cancel-button,[data-search-input]::-webkit-search-decoration{-webkit-appearance:none;appearance:none;display:none;}
     [data-search-input]:focus{outline:none;border-color:#1C1A19!important;}
+    [data-pay-input]:focus{outline:none;border-color:#1C1A19!important;}
     [data-crop-stage] [data-h]{position:absolute;width:38px;height:38px;z-index:2;}
     @media (max-width:640px){
       /* Celular: siempre 2 productos (y 2 categorías) por fila */
       [data-search-input]{font-size:16px!important;}
+      [data-pay-input]{font-size:16px!important;}
       [data-pgrid]{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:30px 12px!important;}
       [data-tgrid]{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
       [data-pgrid] [data-badge]{font-size:8px!important;letter-spacing:.1em!important;padding:5px 7px!important;}
@@ -188,10 +190,33 @@
     <div onClick="{{ toggleCart }}" style="position:fixed;inset:0;background:rgba(28,26,25,0.45);z-index:55;animation:bcFade .2s ease;"></div>
     <div style="position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);background:#fff;z-index:56;display:flex;flex-direction:column;">
       <div style="height:76px;padding:0 26px;border-bottom:1px solid #E4DED8;display:flex;align-items:center;justify-content:space-between;">
-        <span style="font-size:10.5px;letter-spacing:0.22em;text-transform:uppercase;color:#7A736E;">Tu carrito</span>
+        <span style="font-size:10.5px;letter-spacing:0.22em;text-transform:uppercase;color:#7A736E;">{{ cartTitle }}</span>
         <span onClick="{{ toggleCart }}" style="cursor:pointer;font-size:24px;line-height:1;font-weight:300;">×</span>
       </div>
       <div style="flex:1;overflow-y:auto;padding:14px 26px;">
+        <sc-if value="{{ payFormView }}">
+          <div data-pay-form="1" style="padding:6px 0 10px;">
+            <p style="margin:0 0 20px;font-size:13px;font-weight:300;color:#5B554F;line-height:1.7;">Completá tus datos y te llevamos a Mercado Pago para pagar de forma segura. Con esto coordinamos la entrega.</p>
+            <div style="margin-bottom:14px;">
+              <label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Nombre y apellido</label>
+              <input data-pay-input="1" name="name" value="{{ payForm.name }}" onChange="{{ onPayName }}" autoComplete="name" maxLength="80" style="width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid #D8D1CA;border-radius:0;font-family:var(--bc-body);font-size:14px;background:#fff;color:#1C1A19;">
+            </div>
+            <div style="margin-bottom:14px;">
+              <label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Teléfono / WhatsApp</label>
+              <input data-pay-input="1" name="tel" type="tel" inputMode="tel" value="{{ payForm.phone }}" onChange="{{ onPayPhone }}" autoComplete="tel" maxLength="30" placeholder="343 611-4805" style="width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid #D8D1CA;border-radius:0;font-family:var(--bc-body);font-size:14px;background:#fff;color:#1C1A19;">
+            </div>
+            <div style="margin-bottom:18px;">
+              <label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Email <span style="text-transform:none;letter-spacing:0.02em;">(para el comprobante, opcional)</span></label>
+              <input data-pay-input="1" name="email" type="email" value="{{ payForm.email }}" onChange="{{ onPayEmail }}" autoComplete="email" maxLength="120" style="width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid #D8D1CA;border-radius:0;font-family:var(--bc-body);font-size:14px;background:#fff;color:#1C1A19;">
+            </div>
+            <div style="background:#F6F1EC;padding:12px 14px;margin-bottom:16px;font-size:12.5px;color:#5B554F;line-height:1.6;">Después del pago coordinamos por WhatsApp el envío o el retiro.</div>
+            <div>
+              <label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Algo más que quieras decirnos <span style="text-transform:none;letter-spacing:0.02em;">(opcional)</span></label>
+              <textarea data-pay-input="1" name="notes" value="{{ payForm.notes }}" onChange="{{ onPayNotes }}" rows="2" maxLength="300" placeholder="Ej: soy de Rosario, es para regalo" style="width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid #D8D1CA;border-radius:0;font-family:var(--bc-body);font-size:14px;background:#fff;color:#1C1A19;resize:vertical;line-height:1.55;"></textarea>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ cartListView }}">
         <sc-if value="{{ cartEmpty }}" hint-placeholder-val="{{ false }}">
           <p style="color:#7A736E;text-align:center;margin-top:48px;font-size:14px;">Todavía no agregaste nada.</p>
         </sc-if>
@@ -213,15 +238,29 @@
             <div style="font-size:14px;white-space:nowrap;">{{ item.lineTotalFormatted }}</div>
           </div>
         </sc-for>
+        </sc-if>
       </div>
       <div style="padding:22px 26px;border-top:1px solid #E4DED8;">
         <div style="display:flex;justify-content:space-between;font-size:15px;margin-bottom:16px;">
-          <span style="letter-spacing:0.04em;">Subtotal</span><span>{{ cartSubtotalFormatted }}</span>
+          <span style="letter-spacing:0.04em;">{{ cartTotalLabel }}</span><span>{{ cartSubtotalFormatted }}</span>
         </div>
-        <a href="{{ whatsappCartLink }}" onClick="{{ onCheckout }}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:10px;background:#1C1A19;color:#fff;padding:15px;font-size:11.5px;letter-spacing:0.18em;text-transform:uppercase;" style-hover="background:var(--bc-accent);color:#fff;">
-          Finalizar por WhatsApp
-        </a>
-        <p style="margin:12px 0 0;font-size:11px;color:#9A938D;text-align:center;line-height:1.5;">Coordinamos pago y envío por mensaje.</p>
+        <sc-if value="{{ cartListView }}">
+          <sc-if value="{{ payMpOn }}">
+            <span data-pay-open="1" role="button" tabIndex="0" onClick="{{ openPayForm }}" style="cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;background:#1C1A19;color:#fff;padding:15px;font-size:11.5px;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:10px;" style-hover="background:var(--bc-accent);">Pagar con Mercado Pago</span>
+          </sc-if>
+          <a href="{{ whatsappCartLink }}" onClick="{{ onCheckout }}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:10px;background:{{ waBtnBg }};color:{{ waBtnInk }};border:1px solid #1C1A19;padding:14px;font-size:11.5px;letter-spacing:0.18em;text-transform:uppercase;" style-hover="background:var(--bc-accent);border-color:var(--bc-accent);color:#fff;">
+            {{ waBtnLabel }}
+          </a>
+          <p style="margin:12px 0 0;font-size:11px;color:#9A938D;text-align:center;line-height:1.5;">{{ cartNote }}</p>
+        </sc-if>
+        <sc-if value="{{ payFormView }}">
+          <sc-if value="{{ payHasError }}">
+            <p role="alert" style="margin:0 0 12px;font-size:12.5px;color:#A6322A;line-height:1.55;">{{ payError }}</p>
+          </sc-if>
+          <span data-pay-go="1" role="button" tabIndex="0" aria-disabled="{{ payBusyAttr }}" onClick="{{ startPayment }}" style="cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;background:#1C1A19;color:#fff;padding:15px;font-size:11.5px;letter-spacing:0.18em;text-transform:uppercase;opacity:{{ payGoOpacity }};" style-hover="background:var(--bc-accent);">{{ payGoLabel }}</span>
+          <span role="button" tabIndex="0" onClick="{{ closePayForm }}" style="cursor:pointer;display:block;text-align:center;margin-top:12px;font-size:12px;color:#7A736E;text-decoration:underline;text-underline-offset:3px;">Volver al carrito</span>
+          <p style="margin:12px 0 0;font-size:11px;color:#9A938D;text-align:center;line-height:1.5;">Tus productos quedan reservados 30 minutos mientras pagás.</p>
+        </sc-if>
       </div>
     </div>
   </sc-if>
@@ -573,6 +612,29 @@
     </div>
   </sc-if>
 
+  <!-- ============ PAGO (regreso de Mercado Pago) ============ -->
+  <sc-if value="{{ isPayment }}">
+    <div data-screen-label="Pago" data-pay-result="{{ payState }}" style="max-width:640px;margin:0 auto;padding:150px 24px 120px;text-align:center;min-height:62vh;box-sizing:border-box;">
+      <div style="font-size:10.5px;letter-spacing:0.26em;text-transform:uppercase;color:{{ payKickerInk }};margin-bottom:16px;">{{ payKicker }}</div>
+      <h1 style="font-family:var(--bc-title);font-size-adjust:var(--bc-title-adjust);font-weight:300;font-size:clamp(32px,6vw,46px);line-height:1.1;margin:0 0 18px;text-wrap:balance;">{{ payTitle }}</h1>
+      <p aria-live="polite" style="font-size:14.5px;font-weight:300;color:#5B554F;line-height:1.8;margin:0 auto 30px;max-width:480px;">{{ payText }}</p>
+      <sc-if value="{{ payHasCode }}">
+        <div style="display:inline-block;border:1px solid #E4DED8;padding:14px 26px;margin-bottom:32px;">
+          <div style="font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:#9A938D;margin-bottom:6px;">Tu pedido</div>
+          <div data-pay-code="1" style="font-size:22px;letter-spacing:0.08em;">{{ payCodeText }}</div>
+          <sc-if value="{{ payHasTotal }}"><div style="font-size:13px;color:#7A736E;margin-top:4px;">{{ payTotalText }}</div></sc-if>
+        </div>
+      </sc-if>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+        <sc-if value="{{ payShowRetry }}"><a href="{{ payRetryUrl }}" style="background:#1C1A19;color:#fff;padding:15px 28px;font-size:10.5px;letter-spacing:0.18em;text-transform:uppercase;" style-hover="background:var(--bc-accent);color:#fff;">Intentar de nuevo</a></sc-if>
+        <sc-if value="{{ payShowReload }}"><span role="button" tabIndex="0" onClick="{{ payReload }}" style="cursor:pointer;background:#1C1A19;color:#fff;padding:15px 28px;font-size:10.5px;letter-spacing:0.18em;text-transform:uppercase;" style-hover="background:var(--bc-accent);">Probar de nuevo</span></sc-if>
+        <sc-if value="{{ payShowWa }}"><a href="{{ payWaLink }}" target="_blank" rel="noopener" style="background:{{ payWaBg }};color:{{ payWaInk }};border:1px solid #1C1A19;padding:14px 28px;font-size:10.5px;letter-spacing:0.18em;text-transform:uppercase;" style-hover="background:var(--bc-accent);border-color:var(--bc-accent);color:#fff;">{{ payWaLabel }}</a></sc-if>
+        <sc-if value="{{ payShowCart }}"><span role="button" tabIndex="0" onClick="{{ payBackToCart }}" style="cursor:pointer;border:1px solid #D8D1CA;padding:14px 28px;font-size:10.5px;letter-spacing:0.18em;text-transform:uppercase;color:#3A3532;" style-hover="border-color:#1C1A19;">Volver al carrito</span></sc-if>
+      </div>
+      <div style="margin-top:28px;"><span role="button" tabIndex="0" onClick="{{ goCatalogAll }}" style="cursor:pointer;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;border-bottom:1px solid #1C1A19;padding-bottom:4px;">Seguir mirando</span></div>
+    </div>
+  </sc-if>
+
   <!-- ============ CATALOG ============ -->
   <sc-if value="{{ isCatalog }}">
     <div data-screen-label="Productos" style="max-width:1400px;margin:0 auto;padding:120px 24px 110px;">
@@ -806,7 +868,7 @@
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:18px;padding-top:28px;border-top:1px solid #E4DED8;">
             <div><div style="font-size:9.5px;letter-spacing:0.2em;text-transform:uppercase;color:#9A938D;margin-bottom:5px;">Waterproof</div><div style="font-size:12.5px;font-weight:300;color:#5B554F;">Resiste agua y transpiración</div></div>
             <div><div style="font-size:9.5px;letter-spacing:0.2em;text-transform:uppercase;color:#9A938D;margin-bottom:5px;">Hipoalergénico</div><div style="font-size:12.5px;font-weight:300;color:#5B554F;">Acero inoxidable quirúrgico</div></div>
-            <div><div style="font-size:9.5px;letter-spacing:0.2em;text-transform:uppercase;color:#9A938D;margin-bottom:5px;">Envío</div><div style="font-size:12.5px;font-weight:300;color:#5B554F;">1 a 3 días en Paraná</div></div>
+            <div><div style="font-size:9.5px;letter-spacing:0.2em;text-transform:uppercase;color:#9A938D;margin-bottom:5px;">Envío o retiro</div><div style="font-size:12.5px;font-weight:300;color:#5B554F;">Lo coordinamos por WhatsApp</div></div>
             <div><div style="font-size:9.5px;letter-spacing:0.2em;text-transform:uppercase;color:#9A938D;margin-bottom:5px;">Cambios</div><div style="font-size:12.5px;font-weight:300;color:#5B554F;">30 días para cambiarlo</div></div>
           </div>
         </div>
@@ -903,6 +965,29 @@
             </div>
           </sc-if>
         </div>
+        <div data-pay-card="1" style="border:1px solid {{ payCardBorder }};background:{{ payCardBg }};padding:14px 18px;margin-bottom:14px;">
+          <div style="display:flex;align-items:center;gap:10px 20px;flex-wrap:wrap;">
+            <span style="display:flex;align-items:center;gap:9px;font-size:13.5px;"><span style="width:9px;height:9px;background:{{ payDot }};"></span>{{ payStateText }}</span>
+            <span style="flex:1;min-width:200px;font-size:12px;color:#7A736E;font-weight:300;line-height:1.5;">{{ payHint }}</span>
+            <sc-if value="{{ payNotEditing }}"><span role="button" tabIndex="0" onClick="{{ openPayEdit }}" style="cursor:pointer;font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:#3A3532;text-decoration:underline;text-underline-offset:3px;">{{ payEditLabel }}</span></sc-if>
+            <sc-if value="{{ payCanToggle }}"><span data-pay-toggle="1" role="button" tabIndex="0" onClick="{{ togglePay }}" style="cursor:pointer;background:#1C1A19;color:#fff;padding:11px 20px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;" style-hover="background:var(--bc-accent);">{{ payToggleLabel }}</span></sc-if>
+          </div>
+          <sc-if value="{{ payEditing }}">
+            <div style="display:grid;gap:10px;margin-top:14px;padding-top:14px;border-top:1px solid #EFE6DB;">
+              <div>
+                <label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Dirección del servidor de pagos</label>
+                <input data-pay-api="1" value="{{ payApiDraft }}" onChange="{{ onPayApi }}" placeholder="https://blublub-pagos.tu-usuario.workers.dev" autoComplete="off" spellCheck="false" style="width:100%;box-sizing:border-box;padding:11px 13px;border:1px solid #D8D1CA;font-family:var(--bc-body);font-size:14px;background:#fff;">
+                <div style="font-size:11.5px;color:#9A938D;margin-top:6px;line-height:1.5;">Es la dirección que te da Cloudflare cuando publicás el servidor. Las claves de Mercado Pago y Firebase no van acá: quedan guardadas en Cloudflare.</div>
+              </div>
+              <sc-if value="{{ payHasTest }}"><div role="status" style="font-size:12.5px;line-height:1.5;color:{{ payTestInk }};">{{ payTestText }}</div></sc-if>
+              <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;">
+                <span role="button" tabIndex="0" onClick="{{ cancelPayEdit }}" style="cursor:pointer;border:1px solid #D8D1CA;padding:11px 20px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#3A3532;">Cancelar</span>
+                <span role="button" tabIndex="0" onClick="{{ testPay }}" style="cursor:pointer;border:1px solid #1C1A19;padding:11px 20px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#1C1A19;">Probar conexión</span>
+                <span role="button" tabIndex="0" onClick="{{ savePayApi }}" style="cursor:pointer;background:#1C1A19;color:#fff;padding:11px 20px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;">Guardar</span>
+              </div>
+            </div>
+          </sc-if>
+        </div>
         <sc-if value="{{ canInstall }}">
           <div style="display:flex;align-items:center;gap:10px 18px;flex-wrap:wrap;border:1px solid #E4DED8;padding:12px 18px;margin-bottom:14px;font-size:12.5px;color:#5B554F;">
             <span style="flex:1;min-width:200px;">Instalá la tienda como una app en este dispositivo: se abre directo en el panel.</span>
@@ -930,12 +1015,62 @@
             </sc-if>
 
             <div style="display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;">
-              <p style="margin:0;font-size:13px;font-weight:300;color:#5B554F;line-height:1.7;max-width:600px;">Cada pedido que se envía por WhatsApp desde la web aparece acá con su código, el mismo que llega en el mensaje. Apenas llega, su stock queda reservado. Confirmá o cancelá cada producto por separado (o todo junto): lo cancelado vuelve al stock y solo lo confirmado cuenta en los números.</p>
+              <p style="margin:0;font-size:13px;font-weight:300;color:#5B554F;line-height:1.7;max-width:600px;">Cada pedido que se envía por WhatsApp desde la web aparece acá con su código, el mismo que llega en el mensaje. Apenas llega, su stock queda reservado. Confirmá o cancelá cada producto por separado (o todo junto): lo cancelado vuelve al stock y solo lo confirmado cuenta en los números. Las ventas que cerrás por WhatsApp o en persona, sin pasar por la web, cargalas con <strong style="font-weight:500;">Cargar una venta</strong>.</p>
               <div role="group" aria-label="Período" style="display:flex;border:1px solid #D8D1CA;background:#fff;">
                 <sc-for list="{{ rangeChips }}" as="r" hint-placeholder-count="4">
                   <span onClick="{{ r.pick }}" style="cursor:pointer;padding:10px 15px;font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;white-space:nowrap;transition:background .2s ease,color .2s ease;background:{{ r.bg }};color:{{ r.ink }};">{{ r.label }}</span>
                 </sc-for>
               </div>
+            </div>
+
+            <div data-sale-area="1">
+              <sc-if value="{{ saleClosed }}">
+                <div style="display:flex;align-items:center;gap:10px 16px;flex-wrap:wrap;">
+                  <span data-sale-open="1" role="button" tabIndex="0" onClick="{{ openSaleForm }}" style="cursor:pointer;display:inline-block;background:#1C1A19;color:#fff;padding:13px 24px;font-size:10.5px;letter-spacing:0.18em;text-transform:uppercase;" style-hover="background:var(--bc-accent);">+ Cargar una venta</span>
+                  <span style="font-size:12.5px;color:#7A736E;font-weight:300;">Para las que cerraste por WhatsApp o en persona.</span>
+                </div>
+              </sc-if>
+              <sc-if value="{{ saleOpen }}">
+                <div data-sale-form="1" style="border:1px solid #E4DED8;background:#FDFBF9;padding:24px 24px 22px;">
+                  <h3 style="font-family:var(--bc-title);font-size-adjust:var(--bc-title-adjust);font-weight:400;font-size:26px;line-height:1.15;margin:0 0 6px;">Cargar una venta</h3>
+                  <p style="margin:0 0 20px;font-size:12.5px;font-weight:300;color:#7A736E;line-height:1.7;max-width:660px;">Queda en Pedidos como vendida, cuenta en los números y, si querés, se descuenta del stock. Si le hiciste otro precio, cambialo.</p>
+                  <sc-for list="{{ saleLines }}" as="l" hint-placeholder-count="1">
+                    <div data-sale-line="1" style="display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;padding-bottom:12px;margin-bottom:12px;border-bottom:1px solid #EFEAE4;">
+                      <div style="flex:1 1 240px;min-width:0;">
+                        <label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Producto</label>
+                        <select data-sale-product="1" value="{{ l.key }}" onChange="{{ l.onKey }}" style="width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid #D8D1CA;border-radius:0;font-family:var(--bc-body);font-size:14px;background:#fff;color:#1C1A19;">
+                          <option value="">Elegí un producto</option>
+                          <sc-for list="{{ saleOptions }}" as="o" hint-placeholder-count="3"><option value="{{ o.value }}">{{ o.label }}</option></sc-for>
+                          <option value="__otro">Otro (no está cargado en la tienda)</option>
+                        </select>
+                        <sc-if value="{{ l.isOther }}"><input data-sale-name="1" value="{{ l.name }}" onChange="{{ l.onName }}" placeholder="¿Qué vendiste?" maxLength="80" style="width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid #D8D1CA;border-radius:0;font-family:var(--bc-body);font-size:14px;background:#fff;color:#1C1A19;margin-top:8px;"></sc-if>
+                        <sc-if value="{{ l.hasInfo }}"><div style="font-size:11.5px;color:{{ l.infoInk }};margin-top:5px;">{{ l.info }}</div></sc-if>
+                      </div>
+                      <div style="width:84px;"><label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Cantidad</label><input data-sale-qty="1" value="{{ l.qty }}" onChange="{{ l.onQty }}" inputMode="numeric" maxLength="2" style="width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid #D8D1CA;border-radius:0;font-family:var(--bc-body);font-size:14px;background:#fff;color:#1C1A19;"></div>
+                      <div style="width:130px;"><label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Precio c/u</label><input data-sale-price="1" value="{{ l.price }}" onChange="{{ l.onPrice }}" inputMode="numeric" maxLength="10" placeholder="$" style="width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid #D8D1CA;border-radius:0;font-family:var(--bc-body);font-size:14px;background:#fff;color:#1C1A19;"></div>
+                      <sc-if value="{{ l.canRemove }}"><span role="button" tabIndex="0" onClick="{{ l.remove }}" style="cursor:pointer;padding:12px 4px;font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:#A6322A;">Quitar</span></sc-if>
+                    </div>
+                  </sc-for>
+                  <span role="button" tabIndex="0" onClick="{{ addSaleLine }}" style="cursor:pointer;display:inline-block;border:1px solid #D8D1CA;padding:10px 18px;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#3A3532;margin-bottom:22px;background:#fff;" style-hover="border-color:#1C1A19;">+ Otro producto</span>
+                  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:14px;">
+                    <div><label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Fecha</label><input data-sale-date="1" type="date" value="{{ saleDate }}" max="{{ saleToday }}" onChange="{{ onSaleDate }}" style="width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid #D8D1CA;border-radius:0;font-family:var(--bc-body);font-size:14px;background:#fff;color:#1C1A19;"></div>
+                    <div><label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Cómo pagó</label><select data-sale-method="1" value="{{ saleMethod }}" onChange="{{ onSaleMethod }}" style="width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid #D8D1CA;border-radius:0;font-family:var(--bc-body);font-size:14px;background:#fff;color:#1C1A19;"><option value="efectivo">Efectivo</option><option value="transferencia">Transferencia</option><option value="mercadopago">Mercado Pago</option><option value="otro">Otro</option></select></div>
+                    <div><label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Estado</label><select data-sale-status="1" value="{{ saleStatus }}" onChange="{{ onSaleStatus }}" style="width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid #D8D1CA;border-radius:0;font-family:var(--bc-body);font-size:14px;background:#fff;color:#1C1A19;"><option value="vendido">Vendido (falta entregar)</option><option value="entregado">Ya entregado</option></select></div>
+                    <div><label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Clienta (opcional)</label><input data-sale-client="1" value="{{ saleName }}" onChange="{{ onSaleName }}" maxLength="80" style="width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid #D8D1CA;border-radius:0;font-family:var(--bc-body);font-size:14px;background:#fff;color:#1C1A19;"></div>
+                    <div><label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Teléfono (opcional)</label><input data-sale-phone="1" value="{{ salePhone }}" onChange="{{ onSalePhone }}" inputMode="tel" maxLength="30" style="width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid #D8D1CA;border-radius:0;font-family:var(--bc-body);font-size:14px;background:#fff;color:#1C1A19;"></div>
+                  </div>
+                  <div style="margin-bottom:14px;"><label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Nota (opcional)</label><input data-sale-note="1" value="{{ saleNote }}" onChange="{{ onSaleNote }}" maxLength="200" placeholder="Ej: lo retiró en casa, le hice precio" style="width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid #D8D1CA;border-radius:0;font-family:var(--bc-body);font-size:14px;background:#fff;color:#1C1A19;"></div>
+                  <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;margin-bottom:18px;"><input data-sale-stock="1" type="checkbox" checked="{{ saleStock }}" onChange="{{ onSaleStock }}"> Descontar del stock</label>
+                  <sc-if value="{{ saleHasError }}"><p role="alert" style="margin:0 0 12px;font-size:12.5px;color:#A6322A;line-height:1.55;">{{ saleError }}</p></sc-if>
+                  <div style="display:flex;align-items:center;gap:12px 16px;flex-wrap:wrap;justify-content:space-between;border-top:1px solid #EFEAE4;padding-top:16px;">
+                    <div style="font-size:15px;">Total <span data-sale-total="1" style="margin-left:8px;">{{ saleTotal }}</span></div>
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                      <span role="button" tabIndex="0" onClick="{{ cancelSaleForm }}" style="cursor:pointer;border:1px solid #D8D1CA;padding:13px 24px;font-size:10.5px;letter-spacing:0.16em;text-transform:uppercase;color:#3A3532;background:#fff;">Cancelar</span>
+                      <span data-sale-save="1" role="button" tabIndex="0" onClick="{{ saveManualSale }}" style="cursor:pointer;background:#1C1A19;color:#fff;padding:13px 26px;font-size:10.5px;letter-spacing:0.16em;text-transform:uppercase;opacity:{{ saleSaveOpacity }};" style-hover="background:var(--bc-accent);">{{ saleSaveLabel }}</span>
+                    </div>
+                  </div>
+                </div>
+              </sc-if>
             </div>
 
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:#E4DED8;border:1px solid #E4DED8;">
@@ -1057,6 +1192,15 @@
                       <div style="font-size:15px;font-weight:500;letter-spacing:0.04em;">{{ o.code }}</div>
                       <div style="font-size:12px;color:#7A736E;margin-top:4px;">{{ o.date }}</div>
                       <div style="font-size:12px;color:#7A736E;margin-top:2px;">{{ o.who }}</div>
+                      <sc-if value="{{ o.hasPay }}"><div data-pay-badge="1" style="display:inline-block;margin-top:8px;font-size:9.5px;letter-spacing:0.12em;text-transform:uppercase;padding:5px 8px;line-height:1.4;background:{{ o.payBg }};color:{{ o.payInk }};">{{ o.payBadge }}</div></sc-if>
+                      <sc-if value="{{ o.hasPayWarn }}"><div role="note" style="font-size:11.5px;line-height:1.5;color:#A6322A;margin-top:6px;">{{ o.payWarn }}</div></sc-if>
+                      <sc-if value="{{ o.hasContact }}">
+                        <div data-contact="1" style="font-size:12px;color:#5B554F;margin-top:8px;line-height:1.55;">
+                          <sc-if value="{{ o.hasPhone }}"><a href="{{ o.waLink }}" target="_blank" rel="noopener" style="color:#3A3532;text-decoration:underline;text-underline-offset:3px;">{{ o.phone }}</a></sc-if>
+                          <div>{{ o.deliveryText }}</div>
+                          <sc-if value="{{ o.hasNotes }}"><div style="color:#7A736E;">“{{ o.notes }}”</div></sc-if>
+                        </div>
+                      </sc-if>
                       <sc-if value="{{ o.hasStockNote }}"><div style="font-size:11.5px;color:#4E7B4F;margin-top:6px;line-height:1.5;">{{ o.stockNote }}</div></sc-if>
                       <sc-if value="{{ o.hasCheck }}"><div role="note" style="font-size:11.5px;line-height:1.5;color:#A6322A;margin-top:6px;max-width:240px;">Revisalo antes de confirmar: {{ o.checkText }}</div></sc-if>
                     </div>
@@ -1843,6 +1987,26 @@ function productColors(p) {
   }).map(v => { const own = productMedia(v); const st = stockOf(v); return { key: v.materialId, materialId: v.materialId, price: +v.price || 0, salePrice: +v.salePrice || 0, stock: st, outOfStock: !!v.outOfStock || st === 0, media: own.length ? own : base.media, ownMedia: own.length > 0 }; });
   return [base, ...extra];
 }
+// ---------- Mercado Pago ----------
+// El cobro lo arma el servidor de pagos (Cloudflare): ver servidor/pagos-worker.js.
+// En la web solo se guarda la dirección de ese servidor y si está activo: settings.payments = { mp, api }.
+const PAY_KEY = 'blublub_pay_v1';         // último pago iniciado en este navegador
+const PAYFORM_KEY = 'blublub_payform_v1'; // datos de entrega, para no escribirlos otra vez
+function normalizePayments(raw) {
+  const r = raw && typeof raw === 'object' ? raw : {};
+  const t = typeof r.api === 'string' ? r.api.trim().replace(/\/+$/, '') : '';
+  const api = /^https:\/\/[a-z0-9-]+(\.[a-z0-9-]+)+(\/[\w\-./]*)?$/i.test(t) ? t : '';
+  return { on: !!r.mp, api };
+}
+// Link de WhatsApp para el teléfono que dejó la clienta (números argentinos).
+function phoneWaLink(phone) {
+  let d = String(phone || '').replace(/\D/g, '');
+  if (d.length < 8) return '';
+  if (d.indexOf('54') !== 0) { d = d.replace(/^0/, ''); if (d.length === 10) d = '549' + d; }
+  return 'https://wa.me/' + d;
+}
+const PAY_PHONE_OK = (p) => { const n = String(p || '').replace(/\D/g, '').length; return n >= 8 && n <= 15; };
+
 // ---------- Buscador ----------
 // Sin mayúsculas ni tildes, para que "corazon" encuentre "Corazón".
 function normText(s) { return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, ' ').trim(); }
@@ -2228,6 +2392,21 @@ class Component extends DCLogic {
     matFilter: 'all',
     sortBy: 'destacados',
     catSearch: '',
+    payments: { on: false, api: '' },
+    payStep: '',
+    payForm: null,
+    payBusy: false,
+    payError: '',
+    payRef: '',
+    payResult: null,
+    payPolling: false,
+    payEdit: false,
+    payApiDraft: '',
+    payTest: null,
+    payTesting: false,
+    saleForm: null,
+    saleSaving: false,
+    saleError: '',
     crop: null,
     aliases: {},
     mergeSkip: [],
@@ -2418,10 +2597,11 @@ class Component extends DCLogic {
           try { localStorage.setItem(LOOK_KEY, JSON.stringify(look)); } catch (e) {}
           const migrated = this.migrate(data);
           const maint = normalizeMaint(data.settings && data.settings.maintenance);
+          const payments = normalizePayments(data.settings && data.settings.payments);
           try { localStorage.setItem(MAINT_KEY, JSON.stringify(maint)); } catch (e) {}
           if (this._storeReadyDone) setTimeout(this._storeReadyDone, 0);
           this.setState(st => ({
-            ...migrated, look, storeLoaded: true, lookKnown: true, maint,
+            ...migrated, look, storeLoaded: true, lookKnown: true, maint, payments,
             ...((st.lookDraft && !st.lookDirty) ? this.freshLookDrafts(look, migrated.categories) : {})
           }), () => {
             // Si la dueña está editando la estética o mirando la vista previa, no se le pisa.
@@ -2482,6 +2662,15 @@ class Component extends DCLogic {
       if (Array.isArray(saved) && saved.length) this.setState({ cart: saved.filter(c => c && c.productId && c.qty > 0) });
     } catch (e) {}
 
+    // Regreso de Mercado Pago: llega como /?mp=ok&ref=… y se pasa a #/pago/<ref>.
+    try {
+      const q = new URLSearchParams(location.search);
+      if (q.get('mp')) {
+        this._payBack = q.get('mp');
+        const ref = q.get('ref') || q.get('external_reference') || '';
+        history.replaceState(null, '', location.pathname + '#/pago/' + encodeURIComponent(ref));
+      }
+    } catch (e) {}
     // Navegación con la dirección del navegador: el botón "Atrás" funciona
     // y cada producto tiene su propio link para compartir.
     this._scrolls = {};
@@ -2618,7 +2807,10 @@ class Component extends DCLogic {
     if (a === 'producto' && b) next = { view: 'product', selectedProductId: b, selectedColor: parts[2] ? decodeURIComponent(parts[2]) : '', selectedQty: 1, mediaIndex: 0 };
     else if (a === 'productos') next = { view: 'catalog', catFilter: b || 'all', matFilter: 'all' };
     else if (a === 'admin') next = { view: 'admin', form: null, adminTab: 'ventas', lookPreview: false };
+    else if (a === 'pago') next = { view: 'payment', payRef: b, payResult: null, payPolling: false };
     else next = { view: 'home' };
+    clearTimeout(this._payTimer);
+    if (next.view === 'payment') setTimeout(() => this.checkPayment(next.payRef, 0), 0);
     if (next.view === 'product' && ALIASES[next.selectedProductId]) {
       // Link viejo de un producto que se unió a otro: abre el producto nuevo en ese color.
       const al = ALIASES[next.selectedProductId];
@@ -2943,7 +3135,7 @@ class Component extends DCLogic {
     setTimeout(finish, 1400);
   }
 
-  toggleCart = () => this.setState(s => ({ cartOpen: !s.cartOpen }));
+  toggleCart = () => this.setState(s => ({ cartOpen: !s.cartOpen, payStep: s.payBusy ? s.payStep : '', payError: '' }));
 
   openAccount = () => this.setState({ authOpen: true, menuOpen: false, authError: '', authPassword: '' });
   closeAuth = () => this.setState({ authOpen: false, authError: '' });
@@ -3042,6 +3234,329 @@ class Component extends DCLogic {
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     })).catch((e) => console.warn('No se pudo registrar el pedido (¿faltan las reglas nuevas en Firebase?)', e));
   };
+  // ---- Cargar una venta a mano (ventas cerradas por WhatsApp o en persona) ----
+  newSaleLine() { return { key: '', name: '', qty: '1', price: '', auto: true }; }
+  openSaleForm = () => this.setState({ saleForm: { lines: [this.newSaleLine()], date: dayKey(new Date()), method: 'efectivo', status: 'vendido', name: '', phone: '', note: '', stock: true }, saleError: '' });
+  cancelSaleForm = () => { if (!this.state.saleSaving) this.setState({ saleForm: null, saleError: '' }); };
+  setSale(fn) { this.setState(s => (s.saleForm ? { saleForm: fn(s.saleForm), saleError: '' } : null)); }
+  saleInput(k) {
+    this._saleInputs = this._saleInputs || {};
+    if (!this._saleInputs[k]) this._saleInputs[k] = (e) => { const t = e && e.target; const v = k === 'stock' ? !!(t && t.checked) : String((t && t.value) || ''); this.setSale(f => ({ ...f, [k]: v })); };
+    return this._saleInputs[k];
+  }
+  setSaleLine(i, patch) { this.setSale(f => ({ ...f, lines: f.lines.map((l, j) => (j === i ? { ...l, ...patch } : l)) })); }
+  // Al elegir un producto se completa su precio de hoy (si no lo cambiaste a mano).
+  pickSaleProduct(i, key) {
+    const f = this.state.saleForm;
+    if (!f || !f.lines[i]) return;
+    const cur = f.lines[i];
+    if (!key || key === '__otro') { this.setSaleLine(i, { key, ...(cur.auto ? { price: '' } : {}) }); return; }
+    const [pid, ck] = key.split('|');
+    const p = this.state.products.find(x => x.id === pid);
+    const c = p ? (productColors(p).find(x => x.key === ck) || productColors(p)[0]) : null;
+    this.setSaleLine(i, { key, ...((cur.auto || !cur.price) && c ? { price: String(Math.round(this.effPrice(c))), auto: true } : {}) });
+  }
+  addSaleLine = () => this.setSale(f => ({ ...f, lines: f.lines.length >= 20 ? f.lines : [...f.lines, this.newSaleLine()] }));
+  removeSaleLine(i) { this.setSale(f => ({ ...f, lines: f.lines.length > 1 ? f.lines.filter((_, j) => j !== i) : f.lines })); }
+  parseSaleLines(f) {
+    const out = [];
+    for (const l of f.lines) {
+      if (!l.key) continue;
+      const qty = parseInt(String(l.qty || '').replace(/\D/g, ''), 10);
+      const price = toCost(l.price);
+      if (!(qty >= 1 && qty <= 99)) return { error: 'Revisá las cantidades (de 1 a 99).' };
+      if (price === null || price <= 0) return { error: 'Poné el precio de cada producto.' };
+      if (l.key === '__otro') {
+        const name = String(l.name || '').trim();
+        if (!name) return { error: 'Escribí qué vendiste en "Otro".' };
+        out.push({ productId: '', name: name.slice(0, 80), color: '', colorId: '', qty, price, c: null });
+        continue;
+      }
+      const [pid, ck] = l.key.split('|');
+      const p = this.state.products.find(x => x.id === pid);
+      if (!p) return { error: 'Uno de los productos ya no está en la tienda: elegilo de nuevo.' };
+      const c = productColors(p).find(x => x.key === ck) || productColors(p)[0];
+      out.push({ productId: p.id, name: p.name, color: this.materialName(c.materialId), colorId: c.key, qty, price, c });
+    }
+    if (!out.length) return { error: 'Elegí al menos un producto.' };
+    return { lines: out };
+  }
+  saveManualSale = async () => {
+    const s = this.state, f = s.saleForm;
+    if (!f || s.saleSaving) return;
+    const parsed = this.parseSaleLines(f);
+    if (parsed.error) { this.setState({ saleError: parsed.error }); return; }
+    const today = dayKey(new Date());
+    if (!/^\d{4}-\d\d-\d\d$/.test(f.date || '') || f.date > today) { this.setState({ saleError: 'Revisá la fecha: no puede ser una fecha que todavía no llegó.' }); return; }
+    const deduct = !!f.stock;
+    if (deduct) {
+      const need = {};
+      parsed.lines.forEach(l => { if (l.c && l.c.stock !== null) { const k = l.productId + '|' + l.colorId; need[k] = (need[k] || 0) + l.qty; } });
+      const short = parsed.lines.find(l => l.c && l.c.stock !== null && need[l.productId + '|' + l.colorId] > l.c.stock);
+      if (short && !confirm(`De ${short.name}${short.color ? ' (' + short.color + ')' : ''} hay ${short.c.stock} en stock y estás cargando ${need[short.productId + '|' + short.colorId]}. ¿Guardar igual? El stock va a quedar en 0 o menos.`)) return;
+    }
+    const lines = parsed.lines.map(l => ({ productId: l.productId, name: l.name, color: l.color, colorId: l.colorId, qty: l.qty, price: l.price, state: 'confirmado', held: deduct && !!l.c && l.c.stock !== null }));
+    const total = lines.reduce((a, l) => a + l.qty * l.price, 0);
+    const code = newOrderCode();
+    const name = String(f.name || '').trim().slice(0, 80), phone = String(f.phone || '').trim().slice(0, 30);
+    this.setState({ saleSaving: true, saleError: '' });
+    let ref = null;
+    try {
+      await firebaseReady;
+      ref = db.collection('orders').doc();
+      // Las reglas de Firebase solo dejan crear pedidos con el formato de la web: se crea así y enseguida
+      // se completa (la dueña sí puede modificarlos). Van todos "reservados" para que ningún dispositivo
+      // abierto intente descontarlos en ese instante.
+      await ref.set({ code, items: lines.map(l => cleanLine({ ...l, held: true })), total, status: 'pendiente', source: 'web', customer: name ? { name, email: '' } : null, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+      const upd = { items: lines.map(cleanLine), status: f.status === 'entregado' ? 'entregado' : 'vendido', source: 'manual', paidWith: f.method || 'otro', stockApplied: lines.some(l => l.held), note: String(f.note || '').trim().slice(0, 200), customer: (name || phone) ? { name, email: '', phone } : null };
+      if (f.date !== today) upd.createdAt = firebase.firestore.Timestamp.fromDate(new Date(f.date + 'T12:00:00-03:00'));
+      await ref.update(upd);
+    } catch (e) {
+      console.error('No se pudo cargar la venta:', e);
+      if (ref) { try { await ref.delete(); } catch (e2) {} }
+      this.setState({ saleSaving: false, saleError: e && e.code === 'permission-denied' ? 'Firebase no dejó guardarla: revisá que estés con la cuenta de Belu.' : 'No se pudo guardar. Revisá tu conexión y probá de nuevo.' });
+      return;
+    }
+    const held = lines.filter(l => l.held);
+    if (held.length) this.applyStockDeltas(held.map(it => ({ it, sign: -1 })));
+    this.setState({ saleSaving: false, saleForm: null, orderFilter: 'todos' });
+    this.showToast(held.length ? `Venta ${code} cargada. Se descontó del stock.` : `Venta ${code} cargada.`);
+  };
+  saleVals() {
+    const s = this.state, f = s.saleForm;
+    const base = {
+      saleOpen: !!f, saleClosed: !f, openSaleForm: this.openSaleForm, cancelSaleForm: this.cancelSaleForm, addSaleLine: this.addSaleLine, saveManualSale: this.saveManualSale,
+      onSaleDate: this.saleInput('date'), onSaleMethod: this.saleInput('method'), onSaleStatus: this.saleInput('status'), onSaleName: this.saleInput('name'),
+      onSalePhone: this.saleInput('phone'), onSaleNote: this.saleInput('note'), onSaleStock: this.saleInput('stock'), saleToday: dayKey(new Date())
+    };
+    if (!f) return { ...base, saleLines: [], saleOptions: [], saleDate: '', saleMethod: 'efectivo', saleStatus: 'vendido', saleName: '', salePhone: '', saleNote: '', saleStock: true, saleTotal: this.fmt(0), saleHasError: false, saleError: '', saleSaveLabel: 'Guardar venta', saleSaveOpacity: 1 };
+    const options = [];
+    s.products.slice().sort((a, b) => a.name.localeCompare(b.name, 'es')).forEach(p => {
+      const cs = productColors(p);
+      cs.forEach(c => options.push({ value: p.id + '|' + c.key, label: `${p.name}${cs.length > 1 || c.materialId ? ' — ' + (this.materialName(c.materialId) || 'sin color') : ''} · ${this.fmt(this.effPrice(c))}${c.stock === 0 || c.outOfStock ? ' (sin stock)' : ''}` }));
+    });
+    let total = 0;
+    const lines = f.lines.map((l, i) => {
+      const qty = parseInt(String(l.qty || '').replace(/\D/g, ''), 10) || 0, price = toCost(l.price) || 0;
+      if (l.key) total += qty * price;
+      let info = '', ink = '#7A736E';
+      if (l.key && l.key !== '__otro') {
+        const [pid, ck] = l.key.split('|');
+        const p = s.products.find(x => x.id === pid);
+        const c = p ? (productColors(p).find(x => x.key === ck) || productColors(p)[0]) : null;
+        if (c) {
+          info = c.stock === null ? 'Este color no lleva la cuenta de stock.' : c.stock === 0 ? 'Sin stock cargado.' : `Quedan ${c.stock} en stock.`;
+          if (c.stock !== null && qty > c.stock) ink = '#A6322A';
+        }
+      } else if (l.key === '__otro') info = 'No descuenta stock.';
+      return {
+        key: l.key, name: l.name, qty: l.qty, price: l.price, isOther: l.key === '__otro', hasInfo: !!info, info, infoInk: ink,
+        canRemove: f.lines.length > 1,
+        onKey: (e) => this.pickSaleProduct(i, String((e && e.target && e.target.value) || '')),
+        onName: (e) => this.setSaleLine(i, { name: String((e && e.target && e.target.value) || '') }),
+        onQty: (e) => this.setSaleLine(i, { qty: String((e && e.target && e.target.value) || '').replace(/\D/g, '').slice(0, 2) }),
+        onPrice: (e) => this.setSaleLine(i, { price: String((e && e.target && e.target.value) || '').replace(/[^\d]/g, '').slice(0, 9), auto: false }),
+        remove: () => this.removeSaleLine(i)
+      };
+    });
+    return {
+      ...base, saleLines: lines, saleOptions: options, saleDate: f.date, saleMethod: f.method, saleStatus: f.status, saleName: f.name, salePhone: f.phone, saleNote: f.note,
+      saleStock: !!f.stock, saleTotal: this.fmt(total), saleHasError: !!s.saleError, saleError: s.saleError || '',
+      saleSaveLabel: s.saleSaving ? 'Guardando…' : 'Guardar venta', saleSaveOpacity: s.saleSaving ? 0.6 : 1
+    };
+  }
+  // ---- Pagar con Mercado Pago (clienta) ----
+  openPayForm = () => {
+    const s = this.state;
+    if (!s.cart.length) return;
+    let saved = {};
+    try { saved = JSON.parse(localStorage.getItem(PAYFORM_KEY) || '{}') || {}; } catch (e) {}
+    const u = s.user || {};
+    const f = { name: '', phone: '', email: '', notes: '', ...saved, ...(s.payForm || {}) };
+    if (!f.name && u.name) f.name = u.name;
+    if (!f.email && u.email) f.email = u.email;
+    this.setState({ payStep: 'form', payForm: f, payError: '' });
+  };
+  closePayForm = () => { if (!this.state.payBusy) this.setState({ payStep: '', payError: '' }); };
+  setPayField(k, v) { this.setState(s => ({ payForm: { ...(s.payForm || {}), [k]: v }, payError: '' })); }
+  payInput(k) {
+    this._payInputs = this._payInputs || {};
+    if (!this._payInputs[k]) this._payInputs[k] = (e) => this.setPayField(k, String((e && e.target && e.target.value) || ''));
+    return this._payInputs[k];
+  }
+  startPayment = async () => {
+    const s = this.state;
+    if (s.payBusy || !s.cart.length) return;
+    const api = s.payments && s.payments.api;
+    const f = s.payForm || {};
+    const t = (v) => String(v || '').trim();
+    let why = '';
+    if (t(f.name).length < 2) why = 'Escribí tu nombre.';
+    else if (!PAY_PHONE_OK(f.phone)) why = 'Escribí un teléfono o WhatsApp para coordinar la entrega.';
+    else if (t(f.email) && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(t(f.email))) why = 'El email no parece correcto.';
+    if (why) { this.setState({ payError: why }); return; }
+    if (!api || !s.payments.on) { this.setState({ payError: 'El pago con Mercado Pago no está disponible en este momento. Podés pedir por WhatsApp.' }); return; }
+    const customer = { name: t(f.name), phone: t(f.phone), email: t(f.email), delivery: 'coordinar', notes: t(f.notes) };
+    const items = s.cart.map(ci => ({ productId: ci.productId, color: ci.color || '', qty: ci.qty }));
+    this.setState({ payBusy: true, payError: '' });
+    try { localStorage.setItem(PAYFORM_KEY, JSON.stringify({ ...customer, notes: '' })); } catch (e) {}
+    let d = null;
+    try {
+      const r = await fetch(api + '/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items, customer }) });
+      d = await r.json().catch(() => null);
+    } catch (e) { d = null; }
+    if (!d) { this.setState({ payBusy: false, payError: 'No pudimos conectarnos con el sistema de pagos. Probá de nuevo o pedí por WhatsApp.' }); return; }
+    if (!d.ok || !d.url) { this.setState({ payBusy: false, payError: d.message || 'No se pudo iniciar el pago. Probá de nuevo o pedí por WhatsApp.' }); return; }
+    try { localStorage.setItem(PAY_KEY, JSON.stringify({ ref: d.ref, code: d.code, api, url: d.url, total: d.total, at: Date.now() })); } catch (e) {}
+    try { window.location.assign(d.url); } catch (e) { window.location.href = d.url; }
+  };
+  // Regreso de Mercado Pago: se pregunta al servidor cómo quedó el pago.
+  async checkPayment(ref, attempt) {
+    clearTimeout(this._payTimer);
+    if (!ref) { this.setState({ payResult: { status: 'no_existe' }, payPolling: false }); return; }
+    let saved = {};
+    try { saved = JSON.parse(localStorage.getItem(PAY_KEY) || '{}') || {}; } catch (e) {}
+    let api = saved.ref === ref ? normalizePayments({ api: saved.api }).api : '';
+    if (!api) {
+      await Promise.race([this._storeReady, new Promise(r => setTimeout(r, 8000))]);
+      api = (this.state.payments && this.state.payments.api) || '';
+    }
+    const here = () => this.state.view === 'payment' && this.state.payRef === ref;
+    if (!api) { if (here()) this.setState({ payResult: { status: 'sin_conexion' }, payPolling: false }); return; }
+    let d;
+    try { const r = await fetch(api + '/status?ref=' + encodeURIComponent(ref)); d = await r.json(); }
+    catch (e) { d = { status: 'sin_conexion' }; }
+    if (!here()) return;
+    const status = (d && d.status) || 'no_existe';
+    const poll = status === 'esperando' && (this._payBack === 'ok' || this._payBack === 'pendiente') && attempt < 10;
+    this.setState({ payResult: { ...d, status }, payPolling: poll });
+    if (status === 'pagado') this.onPaid(ref);
+    if (poll) this._payTimer = setTimeout(() => this.checkPayment(ref, attempt + 1), 3000);
+  }
+  // Pago aprobado: se vacía el carrito (una sola vez por pago).
+  onPaid(ref) {
+    let saved = {};
+    try { saved = JSON.parse(localStorage.getItem(PAY_KEY) || '{}') || {}; } catch (e) {}
+    if (saved.ref !== ref || saved.done) return;
+    try { localStorage.setItem(PAY_KEY, JSON.stringify({ ...saved, done: true })); } catch (e) {}
+    this.setState({ cart: [], payForm: null }, () => this.saveCart());
+    this.setCheckoutCode(newOrderCode());
+  }
+  payReload = () => { this.setState({ payResult: null }); this.checkPayment(this.state.payRef, 0); };
+  payBackToCart = () => this.navigate('#/productos', () => this.setState({ cartOpen: true }));
+
+  // ---- Mercado Pago (panel de la dueña) ----
+  openPayEdit = () => this.setState(s => ({ payEdit: true, payApiDraft: (s.payments && s.payments.api) || '', payTest: null }));
+  cancelPayEdit = () => this.setState({ payEdit: false, payTest: null });
+  onPayApi = (e) => this.setState({ payApiDraft: String((e && e.target && e.target.value) || '').trim(), payTest: null });
+  async payHealth(raw) {
+    const api = normalizePayments({ api: raw }).api;
+    if (!api) return { ok: false, text: 'La dirección tiene que empezar con https:// (por ejemplo https://blublub-pagos.tu-usuario.workers.dev).' };
+    try {
+      const r = await fetch(api + '/health');
+      const d = await r.json();
+      if (d && d.ok) return { ok: true, text: 'Conectado: Mercado Pago ✓ · Firebase ✓' };
+      return { ok: false, text: [d && d.mercadopago ? 'Mercado Pago ✓' : 'Mercado Pago ✗ (revisá el secreto MP_ACCESS_TOKEN)', d && d.firebase ? 'Firebase ✓' : 'Firebase ✗ (revisá el secreto FIREBASE_SA)'].join(' · ') };
+    } catch (e) { return { ok: false, text: 'El servidor no responde. Revisá la dirección y que esté publicado (Deploy).' }; }
+  }
+  testPay = async () => {
+    this.setState({ payTesting: true, payTest: null });
+    const t = await this.payHealth(this.state.payApiDraft);
+    this.setState({ payTesting: false, payTest: t });
+  };
+  writePayments(p) {
+    this.setState({ payments: p });
+    firebaseReady.then(() => STORE_DOC.set({ settings: { payments: { mp: !!p.on, api: p.api || '' } } }, { merge: true }))
+      .catch(() => this.showToast('No se pudo guardar — revisá tu conexión'));
+  }
+  savePayApi = () => {
+    const draft = this.state.payApiDraft;
+    const api = normalizePayments({ api: draft }).api;
+    if (draft && !api) { this.setState({ payTest: { ok: false, text: 'La dirección tiene que empezar con https://' } }); return; }
+    const cur = this.state.payments || {};
+    this.writePayments({ on: api ? !!cur.on : false, api });
+    this.setState({ payEdit: false, payTest: null });
+    this.showToast('Guardado');
+  };
+  togglePay = async () => {
+    const P = this.state.payments || {};
+    if (this.state.payTesting) return;
+    if (P.on) {
+      if (!confirm('¿Apagar el pago con Mercado Pago? Las clientas van a ver solo "Finalizar por WhatsApp".')) return;
+      this.writePayments({ ...P, on: false });
+      this.showToast('Mercado Pago apagado');
+      return;
+    }
+    this.setState({ payTesting: true });
+    const t = await this.payHealth(P.api);
+    this.setState({ payTesting: false });
+    if (!t.ok) { alert('Todavía no se puede activar: ' + t.text); return; }
+    this.writePayments({ ...P, on: true });
+    this.showToast('Mercado Pago activo: ya aparece en el carrito');
+  };
+
+  payVals(subtotal) {
+    const s = this.state, P = s.payments || {}, f = s.payForm || {};
+    const mpOn = !!(P.on && P.api);
+    const formView = !!(s.cartOpen && s.payStep === 'form');
+    // Resultado del pago
+    const pr = s.payResult;
+    const st = s.view !== 'payment' ? '' : !pr ? 'cargando' : (pr.status === 'esperando' && s.payPolling) ? 'confirmando' : pr.status;
+    const code = (pr && pr.code) || '';
+    const until = pr && pr.expiresAt ? new Date(pr.expiresAt).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: TZ }) : '';
+    const fin = ['Pago sin terminar', 'El tiempo para pagar terminó', 'Los productos volvieron a la tienda. Si querés, armá el pedido de nuevo desde el carrito o escribinos.'];
+    const lost = ['Mercado Pago', 'No pudimos revisar el pago', 'Revisá tu conexión y probá de nuevo. Si ya pagaste, quedate tranquila: el pago queda registrado igual.'];
+    const T = {
+      cargando: ['Mercado Pago', 'Revisando tu pago…', ''],
+      confirmando: ['Mercado Pago', 'Estamos confirmando tu pago…', 'Tarda unos segundos. No cierres esta página.'],
+      pagado: ['¡Listo!', '¡Gracias! Tu pago fue aprobado', 'Ya tenemos tu pedido. Escribinos por WhatsApp con el número de pedido para coordinar la entrega.'],
+      esperando: ['Pago sin terminar', 'El pago no se completó', ((pr && pr.last === 'rejected') ? 'Mercado Pago rechazó el pago: podés probar con otra tarjeta o medio de pago.' : 'Todavía no recibimos el pago.') + ((until && pr && pr.url) ? ` Tus productos quedan reservados hasta las ${until}.` : '')],
+      vencido: fin, error: fin,
+      no_existe: ['Mercado Pago', 'No encontramos este pago', 'Si pagaste y ves este mensaje, escribinos por WhatsApp y lo revisamos.'],
+      sin_conexion: lost
+    }[st] || ['Mercado Pago', 'No encontramos este pago', 'Si pagaste y ves este mensaje, escribinos por WhatsApp y lo revisamos.'];
+    const waText = st === 'pagado' ? `Hola! Pagué el pedido ${code} con Mercado Pago. Quiero coordinar la entrega.`
+      : code ? `Hola! Quise pagar el pedido ${code} con Mercado Pago y no pude. ¿Me ayudan?` : 'Hola! Tengo una consulta sobre un pago con Mercado Pago.';
+    const paid = st === 'pagado';
+    return {
+      payMpOn: mpOn && s.cart.length > 0, payFormView: formView, cartListView: !formView,
+      cartTitle: formView ? 'Datos para el pago' : 'Tu carrito', cartTotalLabel: formView ? 'Total a pagar' : 'Subtotal',
+      openPayForm: this.openPayForm, closePayForm: this.closePayForm, startPayment: this.startPayment,
+      payForm: { name: f.name || '', phone: f.phone || '', email: f.email || '', notes: f.notes || '' },
+      onPayName: this.payInput('name'), onPayPhone: this.payInput('phone'), onPayEmail: this.payInput('email'), onPayNotes: this.payInput('notes'),
+      payHasError: !!s.payError, payError: s.payError || '',
+      payGoLabel: s.payBusy ? 'Abriendo Mercado Pago…' : 'Ir a pagar ' + this.fmt(subtotal), payGoOpacity: s.payBusy ? 0.6 : 1, payBusyAttr: s.payBusy ? 'true' : 'false',
+      waBtnBg: mpOn && s.cart.length ? '#fff' : '#1C1A19', waBtnInk: mpOn && s.cart.length ? '#1C1A19' : '#fff',
+      waBtnLabel: mpOn && s.cart.length ? 'Pedir por WhatsApp' : 'Finalizar por WhatsApp',
+      cartNote: mpOn && s.cart.length ? 'Pagá con tarjeta, débito o dinero en Mercado Pago. O pedí por WhatsApp y coordinamos.' : 'Coordinamos pago y envío por mensaje.',
+      isPayment: s.view === 'payment', payState: st,
+      payKicker: T[0], payTitle: T[1], payText: T[2], payKickerInk: paid ? '#4E7B4F' : '#9A938D',
+      payHasCode: !!code && st !== 'cargando', payCodeText: code, payHasTotal: !!(pr && pr.total), payTotalText: pr && pr.total ? 'Total ' + this.fmt(pr.total) : '',
+      payShowRetry: st === 'esperando' && !!(pr && pr.url), payRetryUrl: (pr && pr.url) || '#',
+      payShowReload: st === 'sin_conexion', payReload: this.payReload,
+      payShowWa: ['pagado', 'esperando', 'vencido', 'error', 'no_existe', 'sin_conexion'].includes(st),
+      payWaLink: `https://wa.me/${(this.props.whatsappNumber || '5493436114805').replace(/[^0-9]/g, '')}?text=${encodeURIComponent(waText)}`,
+      payWaLabel: paid ? 'Coordinar la entrega por WhatsApp' : 'Escribinos por WhatsApp',
+      payWaBg: paid ? '#1C1A19' : '#fff', payWaInk: paid ? '#fff' : '#1C1A19',
+      payShowCart: ['esperando', 'vencido', 'error'].includes(st), payBackToCart: this.payBackToCart
+    };
+  }
+  payAdminVals() {
+    const s = this.state, P = s.payments || {};
+    const configured = !!P.api, on = !!(P.on && P.api), t = s.payTest;
+    return {
+      payStateText: on ? 'Mercado Pago activo' : configured ? 'Mercado Pago apagado' : 'Mercado Pago sin conectar',
+      payHint: on ? 'En el carrito aparece "Pagar con Mercado Pago". Los pagos aprobados llegan solos a Ventas.'
+        : configured ? 'Las clientas solo ven "Finalizar por WhatsApp".' : 'Falta conectar el servidor de pagos (ver la guía de instalación).',
+      payDot: on ? '#4E7B4F' : configured ? '#C9962E' : '#B5ADA6',
+      payCardBorder: on ? '#CFE0CF' : '#E4DED8', payCardBg: on ? '#F6FAF6' : '#fff',
+      payEditing: !!s.payEdit, payNotEditing: !s.payEdit, payEditLabel: configured ? 'Configurar' : 'Conectar',
+      openPayEdit: this.openPayEdit, cancelPayEdit: this.cancelPayEdit,
+      payCanToggle: configured && !s.payEdit, payToggleLabel: s.payTesting ? 'Probando…' : on ? 'Apagar' : 'Activar', togglePay: this.togglePay,
+      payApiDraft: s.payApiDraft, onPayApi: this.onPayApi, testPay: this.testPay, savePayApi: this.savePayApi,
+      payHasTest: !!(s.payTesting || t), payTestText: s.payTesting ? 'Probando…' : (t ? t.text : ''), payTestInk: t && t.ok ? '#4E7B4F' : (s.payTesting ? '#7A736E' : '#A6322A')
+    };
+  }
   trackStat(kind, productId) {
     if (!productId || this.isAdminUser()) return;
     if (kind === 'views') {
@@ -3065,7 +3580,7 @@ class Component extends DCLogic {
         const orders = snap.docs.map(d => {
           const o = d.data({ serverTimestamps: 'estimate' }) || {};
           const date = o.createdAt && o.createdAt.toDate ? o.createdAt.toDate() : new Date();
-          return { id: d.id, code: o.code || '', status: o.status || 'pendiente', total: +o.total || 0, items: (Array.isArray(o.items) ? o.items : []).map(aliasLine), customer: o.customer || null, stockApplied: !!o.stockApplied, date, lines: orderLines(o) };
+          return { id: d.id, code: o.code || '', status: o.status || 'pendiente', total: +o.total || 0, items: (Array.isArray(o.items) ? o.items : []).map(aliasLine), customer: o.customer || null, payment: o.payment || null, source: o.source || '', stockProblem: !!o.stockProblem, paidWith: o.paidWith || '', note: o.note || '', stockApplied: !!o.stockApplied, date, lines: orderLines(o) };
         });
         this.setState({ orders, ordersLoaded: true, ordersError: '' });
       }, (err) => {
@@ -4625,6 +5140,26 @@ class Component extends DCLogic {
         isPending: o.status === 'pendiente', markSold: () => this.setOrderStatus(o.id, 'vendido'), cancelAll: () => this.setOrderStatus(o.id, 'cancelado'),
         remove: () => this.deleteOrder(o.id, o.code || ''), faded: o.status === 'cancelado' ? 0.55 : 1,
         hasStockNote: o.lines.some(l => l.held),
+        ...(() => {
+          const pay = o.payment, c = o.customer || {};
+          const B = { approved: ['Pagado con Mercado Pago', '#E8F1E8', '#2F5E31'], refunded: ['Pago devuelto', '#FBEDEA', '#A6322A'], charged_back: ['Contracargo en Mercado Pago', '#FBEDEA', '#A6322A'], cancelled: ['Pago cancelado', '#FBEDEA', '#A6322A'] };
+          const PW = { efectivo: 'Efectivo', transferencia: 'Transferencia', mercadopago: 'Mercado Pago', otro: 'Otro medio' };
+          const pb = pay ? (B[pay.status] || ['Mercado Pago: ' + pay.status, '#F3EFEA', '#5B554F'])
+            : o.source === 'manual' ? ['Cargada a mano' + (o.paidWith ? ' · ' + (PW[o.paidWith] || o.paidWith) : ''), '#F3EFEA', '#5B554F'] : null;
+          const warn = [];
+          if (pay && pay.status === 'approved' && pay.amountOk === false) warn.push(`El monto pagado (${this.fmt(pay.amount)}) no coincide con el total: revisalo en Mercado Pago.`);
+          if (o.stockProblem) warn.push('Se pagó cuando ya no quedaba stock reservado: fijate si lo tenés.');
+          const DL = { coordinar: 'Envío o retiro: a coordinar por WhatsApp', retiro: 'Retira en Paraná', parana: 'Envío en Paraná', envio: 'Envío a otra ciudad' };
+          const place = [c.address, c.city, c.zip ? 'CP ' + c.zip : ''].filter(Boolean).join(', ');
+          return {
+            hasPay: !!pb, payBadge: pb ? pb[0] + (pay && pay.status === 'approved' && +pay.installments > 1 ? ` · ${pay.installments} cuotas` : '') : '',
+            payBg: pb ? pb[1] : '#fff', payInk: pb ? pb[2] : '#1C1A19',
+            hasPayWarn: warn.length > 0, payWarn: warn.join(' '),
+            hasContact: !!(c.phone || c.delivery || o.note), hasPhone: !!c.phone, phone: c.phone || '', waLink: phoneWaLink(c.phone) || '#',
+            deliveryText: c.delivery ? (DL[c.delivery] || '') + (place ? ': ' + place : '') : '',
+            hasNotes: !!(c.notes || o.note), notes: c.notes || o.note || ''
+          };
+        })(),
         stockNote: o.status === 'pendiente' ? 'Stock reservado hasta que lo confirmes' : 'Descontado del stock',
         // Los pedidos los arma el navegador de la clienta: si alguien los modifica a mano,
         // acá se avisa (solo en los que todavía no confirmaste).
@@ -4723,6 +5258,9 @@ class Component extends DCLogic {
       cartItems, cartEmpty: cartItems.length === 0,
       cartSubtotalFormatted: this.fmt(cartSubtotal),
       whatsappCartLink, whatsappProductLink, onCheckout: this.onCheckout,
+      ...this.payVals(cartSubtotal),
+      ...this.payAdminVals(),
+      ...this.saleVals(),
       whatsappGeneralLink: `https://wa.me/${whatsappNumber}`,
       toast: s.toast,
 
