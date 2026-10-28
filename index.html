@@ -965,6 +965,27 @@
             </div>
           </sc-if>
         </div>
+        <div data-pixel-card="1" style="border:1px solid {{ pixelCardBorder }};background:{{ pixelCardBg }};padding:14px 18px;margin-bottom:14px;">
+          <div style="display:flex;align-items:center;gap:10px 20px;flex-wrap:wrap;">
+            <span style="display:flex;align-items:center;gap:9px;font-size:13.5px;"><span style="width:9px;height:9px;background:{{ pixelDot }};"></span>{{ pixelStateText }}</span>
+            <span style="flex:1;min-width:200px;font-size:12px;color:#7A736E;font-weight:300;line-height:1.5;">{{ pixelHint }}</span>
+            <sc-if value="{{ pixelNotEditing }}"><span data-pixel-edit="1" role="button" tabIndex="0" onClick="{{ openPixelEdit }}" style="cursor:pointer;font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:#3A3532;text-decoration:underline;text-underline-offset:3px;">{{ pixelEditLabel }}</span></sc-if>
+          </div>
+          <sc-if value="{{ pixelEditing }}">
+            <div style="display:grid;gap:10px;margin-top:14px;padding-top:14px;border-top:1px solid #EFE6DB;">
+              <div>
+                <label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Identificador del píxel (dataset)</label>
+                <input data-pixel-input="1" value="{{ pixelDraft }}" onChange="{{ onPixelDraft }}" inputMode="numeric" maxLength="20" placeholder="Ej: 1234567890123456" autoComplete="off" style="width:100%;box-sizing:border-box;padding:11px 13px;border:1px solid #D8D1CA;font-family:var(--bc-body);font-size:14px;background:#fff;">
+                <div style="font-size:11.5px;color:#9A938D;margin-top:6px;line-height:1.5;">Está en Meta → Administrador de eventos → Orígenes de datos → tu píxel: es un número de 15 o 16 cifras. No es secreto. Para desconectarlo, dejá el campo vacío y guardá.</div>
+              </div>
+              <sc-if value="{{ pixelHasError }}"><div role="alert" style="font-size:12.5px;color:#A6322A;">{{ pixelError }}</div></sc-if>
+              <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;">
+                <span role="button" tabIndex="0" onClick="{{ cancelPixelEdit }}" style="cursor:pointer;border:1px solid #D8D1CA;padding:11px 20px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#3A3532;">Cancelar</span>
+                <span data-pixel-save="1" role="button" tabIndex="0" onClick="{{ savePixel }}" style="cursor:pointer;background:#1C1A19;color:#fff;padding:11px 20px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;">Guardar</span>
+              </div>
+            </div>
+          </sc-if>
+        </div>
         <div data-pay-card="1" style="border:1px solid {{ payCardBorder }};background:{{ payCardBg }};padding:14px 18px;margin-bottom:14px;">
           <div style="display:flex;align-items:center;gap:10px 20px;flex-wrap:wrap;">
             <span style="display:flex;align-items:center;gap:9px;font-size:13.5px;"><span style="width:9px;height:9px;background:{{ payDot }};"></span>{{ payStateText }}</span>
@@ -1987,6 +2008,28 @@ function productColors(p) {
   }).map(v => { const own = productMedia(v); const st = stockOf(v); return { key: v.materialId, materialId: v.materialId, price: +v.price || 0, salePrice: +v.salePrice || 0, stock: st, outOfStock: !!v.outOfStock || st === 0, media: own.length ? own : base.media, ownMedia: own.length > 0 }; });
   return [base, ...extra];
 }
+// ---------- Píxel de Meta (anuncios de Facebook e Instagram) ----------
+// Se carga solo si la dueña guardó el identificador en el panel (settings.metaPixel) y nunca para
+// ella misma, así sus visitas no ensucian lo que mide Meta. Eventos: PageView, ViewContent, Search,
+// AddToCart, InitiateCheckout (abre el pago con Mercado Pago), Lead (pedido por WhatsApp),
+// Contact (otro WhatsApp) y Purchase (pago aprobado). No se manda ningún dato personal.
+let PIXEL_ID = '';
+const normalizePixel = (v) => { const t = String(v == null ? '' : v).replace(/\D/g, ''); return t.length >= 10 && t.length <= 20 ? t : ''; };
+function loadMetaPixel(id) {
+  if (PIXEL_ID || !normalizePixel(id)) return false;
+  PIXEL_ID = normalizePixel(id);
+  try {
+    /* Código oficial de Meta (fbevents.js) */
+    !function (f, b, e, v, n, t, s) { if (f.fbq) return; n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments); }; if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0'; n.queue = []; t = b.createElement(e); t.async = !0; t.src = v; s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s); }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+    window.fbq('init', PIXEL_ID);
+  } catch (e) { return false; }
+  return true;
+}
+function metaTrack(event, params, opts) {
+  if (!PIXEL_ID || typeof window.fbq !== 'function') return;
+  try { window.fbq('track', event, params || {}, opts || {}); } catch (e) {}
+}
+
 // ---------- Mercado Pago ----------
 // El cobro lo arma el servidor de pagos (Cloudflare): ver servidor/pagos-worker.js.
 // En la web solo se guarda la dirección de ese servidor y si está activo: settings.payments = { mp, api }.
@@ -2404,6 +2447,10 @@ class Component extends DCLogic {
     payApiDraft: '',
     payTest: null,
     payTesting: false,
+    metaPixel: '',
+    pixelEdit: false,
+    pixelDraft: '',
+    pixelError: '',
     saleForm: null,
     saleSaving: false,
     saleError: '',
@@ -2598,10 +2645,11 @@ class Component extends DCLogic {
           const migrated = this.migrate(data);
           const maint = normalizeMaint(data.settings && data.settings.maintenance);
           const payments = normalizePayments(data.settings && data.settings.payments);
+          const metaPixel = normalizePixel(data.settings && data.settings.metaPixel);
           try { localStorage.setItem(MAINT_KEY, JSON.stringify(maint)); } catch (e) {}
           if (this._storeReadyDone) setTimeout(this._storeReadyDone, 0);
           this.setState(st => ({
-            ...migrated, look, storeLoaded: true, lookKnown: true, maint, payments,
+            ...migrated, look, storeLoaded: true, lookKnown: true, maint, payments, metaPixel,
             ...((st.lookDraft && !st.lookDirty) ? this.freshLookDrafts(look, migrated.categories) : {})
           }), () => {
             // Si la dueña está editando la estética o mirando la vista previa, no se le pisa.
@@ -2643,6 +2691,15 @@ class Component extends DCLogic {
         }
       });
     }).catch((e) => { console.error('No se pudo conectar con Firebase:', e); this.setState({ storeLoaded: true, adminChecking: false }); this.showToast('No se pudo conectar. Revisá tu conexión.'); });
+    // Píxel de Meta: espera a saber si es la dueña (a ella no se la mide) y a tener la configuración.
+    Promise.all([this._authKnown, this._storeReady]).then(() => this.startPixel());
+    this._onPixelClick = (e) => {
+      const a = e.target && e.target.closest ? e.target.closest('a[href*="wa.me"]') : null;
+      if (!a || !this._pixelOn) return;
+      if (/pedido/i.test(decodeURIComponent(a.getAttribute('href') || '')) && this.state.cartOpen) return; // ese es "Lead"
+      metaTrack('Contact');
+    };
+    document.addEventListener('click', this._onPixelClick, true);
     // Si Firebase tarda demasiado, mostramos lo que haya en vez de quedarnos cargando.
     this._loadTimeout = setTimeout(() => {
       if (!this.state.storeLoaded) this.setState({ storeLoaded: true });
@@ -2703,6 +2760,7 @@ class Component extends DCLogic {
   }
 
   componentWillUnmount() {
+    if (this._onPixelClick) document.removeEventListener('click', this._onPixelClick, true);
     if (this._vidObs) { this._vidObs.disconnect(); this._vidObs = null; }
     if (this._cardObs) { this._cardObs.disconnect(); this._cardObs = null; }
     this.stopHolds();
@@ -2826,6 +2884,7 @@ class Component extends DCLogic {
     this._navAfter = null;
     const key = location.hash || '#/';
     if (next.view === 'product') this.trackStat('views', next.selectedProductId);
+    if (this._pixelOn) setTimeout(() => this.pixelPage(), 0);
     if (next.view === 'admin') this.startAdminData(); else this.stopAdminData();
     this._editReturn = null;
     if (this.state.zoomOpen) this.closeZoom();
@@ -3201,6 +3260,11 @@ class Component extends DCLogic {
       return { cart, cartBump: (s.cartBump || 0) + 1 };
     }, () => this.saveCart());
     this.trackStat('carts', productId);
+    if (this._pixelOn) {
+      const p = this.state.products.find(x => x.id === productId);
+      const c = p ? cartColor(p, color) : null;
+      if (p && c) metaTrack('AddToCart', { content_ids: [p.id], content_name: p.name, content_type: 'product', contents: [{ id: p.id, quantity: qty }], value: Math.round(this.effPrice(c)) * qty, currency: 'ARS' });
+    }
   }
   saveCart() {
     try { localStorage.setItem(Component.CART_KEY, JSON.stringify(this.state.cart)); } catch (e) {}
@@ -3216,6 +3280,7 @@ class Component extends DCLogic {
   // Cada pedido que sale por WhatsApp se guarda en Firebase con un código (ej. BC-7K2Q) que también va
   // en el mensaje, así la dueña lo encuentra en el panel y lo marca como vendido.
   onCheckout = () => {
+    if (this._pixelOn && this.state.cart.length) metaTrack('Lead', { ...this.pixelCart(), content_category: 'Pedido por WhatsApp' });
     const code = this.state.checkoutCode;
     if (!code || code === this._sentCode || !this.state.cart.length) return; // mismo pedido: no se duplica
     this._sentCode = code;
@@ -3234,6 +3299,57 @@ class Component extends DCLogic {
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     })).catch((e) => console.warn('No se pudo registrar el pedido (¿faltan las reglas nuevas en Firebase?)', e));
   };
+  // ---- Píxel de Meta ----
+  startPixel() {
+    if (this._pixelOn || this.isAdminUser() || this.isPreviewing()) return;
+    if (!this.state.metaPixel || !loadMetaPixel(this.state.metaPixel)) return;
+    this._pixelOn = true;
+    this.pixelPage();
+    if (this._pixelPending) { const f = this._pixelPending; this._pixelPending = null; f(); }
+  }
+  pixelPage() {
+    if (!this._pixelOn) return;
+    const s = this.state;
+    if (s.view === 'admin') return;
+    metaTrack('PageView');
+    if (s.view === 'product') {
+      const p = s.products.find(x => x.id === s.selectedProductId);
+      const c = p ? pickColor(p, s.selectedColor) : null;
+      if (p && c) metaTrack('ViewContent', { content_ids: [p.id], content_name: p.name, content_type: 'product', value: Math.round(this.effPrice(c)), currency: 'ARS' });
+    }
+  }
+  pixelCart() {
+    const lines = this.state.cart.map(ci => {
+      const p = this.state.products.find(x => x.id === ci.productId);
+      const c = p ? cartColor(p, ci.color) : null;
+      return p && c ? { id: p.id, quantity: ci.qty, price: Math.round(this.effPrice(c)) } : null;
+    }).filter(Boolean);
+    return { content_ids: lines.map(l => l.id), contents: lines.map(l => ({ id: l.id, quantity: l.quantity })), content_type: 'product', num_items: lines.reduce((a, l) => a + l.quantity, 0), value: lines.reduce((a, l) => a + l.price * l.quantity, 0), currency: 'ARS' };
+  }
+  openPixelEdit = () => this.setState(s => ({ pixelEdit: true, pixelDraft: s.metaPixel || '', pixelError: '' }));
+  cancelPixelEdit = () => this.setState({ pixelEdit: false, pixelError: '' });
+  onPixelDraft = (e) => this.setState({ pixelDraft: String((e && e.target && e.target.value) || '').replace(/[^\d]/g, '').slice(0, 20), pixelError: '' });
+  savePixel = () => {
+    const raw = this.state.pixelDraft;
+    const id = normalizePixel(raw);
+    if (raw && !id) { this.setState({ pixelError: 'El identificador es un número de 15 o 16 cifras (a veces menos). Copialo de nuevo desde Meta.' }); return; }
+    this.setState({ metaPixel: id, pixelEdit: false, pixelError: '' });
+    firebaseReady.then(() => STORE_DOC.set({ settings: { metaPixel: id } }, { merge: true }))
+      .then(() => this.showToast(id ? 'Píxel conectado. Empieza a medir en las próximas visitas.' : 'Píxel desconectado'))
+      .catch(() => this.showToast('No se pudo guardar — revisá tu conexión'));
+  };
+  pixelVals() {
+    const s = this.state, on = !!s.metaPixel;
+    return {
+      pixelStateText: on ? 'Píxel de Meta conectado' : 'Píxel de Meta sin conectar',
+      pixelHint: on ? `Mide visitas, productos vistos, búsquedas, agregados al carrito, pedidos por WhatsApp y pagos (${s.metaPixel}). Tus visitas no se cuentan.` : 'Conectalo para que Meta sepa qué hacen en la web las personas que llegan desde tus anuncios.',
+      pixelDot: on ? '#4E7B4F' : '#B5ADA6', pixelCardBorder: on ? '#CFE0CF' : '#E4DED8', pixelCardBg: on ? '#F6FAF6' : '#fff',
+      pixelEditing: !!s.pixelEdit, pixelNotEditing: !s.pixelEdit, pixelEditLabel: on ? 'Cambiar' : 'Conectar',
+      openPixelEdit: this.openPixelEdit, cancelPixelEdit: this.cancelPixelEdit, onPixelDraft: this.onPixelDraft, savePixel: this.savePixel,
+      pixelDraft: s.pixelDraft, pixelHasError: !!s.pixelError, pixelError: s.pixelError || ''
+    };
+  }
+
   // ---- Cargar una venta a mano (ventas cerradas por WhatsApp o en persona) ----
   newSaleLine() { return { key: '', name: '', qty: '1', price: '', auto: true }; }
   openSaleForm = () => this.setState({ saleForm: { lines: [this.newSaleLine()], date: dayKey(new Date()), method: 'efectivo', status: 'vendido', name: '', phone: '', note: '', stock: true }, saleError: '' });
@@ -3376,6 +3492,7 @@ class Component extends DCLogic {
     if (!f.name && u.name) f.name = u.name;
     if (!f.email && u.email) f.email = u.email;
     this.setState({ payStep: 'form', payForm: f, payError: '' });
+    if (this._pixelOn) metaTrack('InitiateCheckout', this.pixelCart());
   };
   closePayForm = () => { if (!this.state.payBusy) this.setState({ payStep: '', payError: '' }); };
   setPayField(k, v) { this.setState(s => ({ payForm: { ...(s.payForm || {}), [k]: v }, payError: '' })); }
@@ -3407,7 +3524,7 @@ class Component extends DCLogic {
     } catch (e) { d = null; }
     if (!d) { this.setState({ payBusy: false, payError: 'No pudimos conectarnos con el sistema de pagos. Probá de nuevo o pedí por WhatsApp.' }); return; }
     if (!d.ok || !d.url) { this.setState({ payBusy: false, payError: d.message || 'No se pudo iniciar el pago. Probá de nuevo o pedí por WhatsApp.' }); return; }
-    try { localStorage.setItem(PAY_KEY, JSON.stringify({ ref: d.ref, code: d.code, api, url: d.url, total: d.total, at: Date.now() })); } catch (e) {}
+    try { localStorage.setItem(PAY_KEY, JSON.stringify({ ref: d.ref, code: d.code, api, url: d.url, total: d.total, at: Date.now(), ids: items.map(i => i.productId), qty: items.reduce((a, i) => a + i.qty, 0) })); } catch (e) {}
     try { window.location.assign(d.url); } catch (e) { window.location.href = d.url; }
   };
   // Regreso de Mercado Pago: se pregunta al servidor cómo quedó el pago.
@@ -3439,6 +3556,9 @@ class Component extends DCLogic {
     try { saved = JSON.parse(localStorage.getItem(PAY_KEY) || '{}') || {}; } catch (e) {}
     if (saved.ref !== ref || saved.done) return;
     try { localStorage.setItem(PAY_KEY, JSON.stringify({ ...saved, done: true })); } catch (e) {}
+    // Compra para Meta (una sola vez por pago; eventID = referencia del pago).
+    const buy = () => metaTrack('Purchase', { value: +saved.total || 0, currency: 'ARS', content_ids: saved.ids || [], content_type: 'product', num_items: +saved.qty || 1 }, { eventID: ref });
+    if (this._pixelOn) buy(); else this._pixelPending = buy;
     this.setState({ cart: [], payForm: null }, () => this.saveCart());
     this.setCheckoutCode(newOrderCode());
   }
@@ -3831,7 +3951,17 @@ class Component extends DCLogic {
   onSortChange = (e) => this.setState({ sortBy: e.target.value });
 
   // ---- Buscador de la tienda ----
-  onCatSearch = (e) => this.setState({ catSearch: String(e.target.value || '').slice(0, 60) });
+  onCatSearch = (e) => {
+    const v = String(e.target.value || '').slice(0, 60);
+    this.setState({ catSearch: v });
+    clearTimeout(this._pixelSearchTimer);
+    if (this._pixelOn && v.trim().length >= 2) {
+      this._pixelSearchTimer = setTimeout(() => {
+        const q = this.state.catSearch.trim();
+        if (q.length >= 2 && q !== this._pixelLastSearch) { this._pixelLastSearch = q; metaTrack('Search', { search_string: q }); }
+      }, 1500);
+    }
+  };
   focusSearch(delay) {
     setTimeout(() => {
       const el = document.querySelector('[data-search-input]');
@@ -5261,6 +5391,7 @@ class Component extends DCLogic {
       ...this.payVals(cartSubtotal),
       ...this.payAdminVals(),
       ...this.saleVals(),
+      ...this.pixelVals(),
       whatsappGeneralLink: `https://wa.me/${whatsappNumber}`,
       toast: s.toast,
 
