@@ -245,6 +245,9 @@
         <div style="display:flex;justify-content:space-between;font-size:15px;margin-bottom:16px;">
           <span style="letter-spacing:0.04em;">{{ cartTotalLabel }}</span><span>{{ cartSubtotalFormatted }}</span>
         </div>
+        <sc-if value="{{ cartShowTransfer }}">
+          <div data-cart-transfer="1" style="display:flex;justify-content:space-between;gap:12px;font-size:13.5px;color:#4E7B4F;margin:-8px 0 16px;"><span>{{ cartTransferLabel }}</span><span>{{ cartTransferFormatted }}</span></div>
+        </sc-if>
         <sc-if value="{{ cartListView }}">
           <sc-if value="{{ payMpOn }}">
             <span data-pay-open="1" role="button" tabIndex="0" onClick="{{ openPayForm }}" style="cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;background:#1C1A19;color:#fff;padding:15px;font-size:11.5px;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:10px;" style-hover="background:var(--bc-accent);">Pagar con Mercado Pago</span>
@@ -261,6 +264,7 @@
           <span data-pay-go="1" role="button" tabIndex="0" aria-disabled="{{ payBusyAttr }}" onClick="{{ startPayment }}" style="cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;background:#1C1A19;color:#fff;padding:15px;font-size:11.5px;letter-spacing:0.18em;text-transform:uppercase;opacity:{{ payGoOpacity }};" style-hover="background:var(--bc-accent);">{{ payGoLabel }}</span>
           <span role="button" tabIndex="0" onClick="{{ closePayForm }}" style="cursor:pointer;display:block;text-align:center;margin-top:12px;font-size:12px;color:#7A736E;text-decoration:underline;text-underline-offset:3px;">Volver al carrito</span>
           <p style="margin:12px 0 0;font-size:11px;color:#9A938D;text-align:center;line-height:1.5;">Tus productos quedan reservados 30 minutos mientras pagás.</p>
+          <sc-if value="{{ payHasTransferNote }}"><p data-pay-transfer-note="1" style="margin:8px 0 0;font-size:11px;color:#7A736E;text-align:center;line-height:1.5;">{{ payTransferNote }}</p></sc-if>
         </sc-if>
       </div>
     </div>
@@ -493,6 +497,7 @@
                   </sc-if>
                   <span style="font-size:14px;color:{{ p.priceColor }};">{{ p.priceFormatted }}</span>
                 </div>
+                <sc-if value="{{ p.hasTransfer }}"><div data-card-transfer="1" style="font-size:11px;color:#7A736E;margin-top:5px;">{{ p.transferText }}</div></sc-if>
               </div>
             </div>
           </sc-for>
@@ -546,6 +551,7 @@
                       <span style="font-size:12.5px;color:#A79E96;text-decoration:line-through;">{{ p.oldPriceFormatted }}</span>
                       <span style="font-size:15px;color:#F0C9A4;">{{ p.priceFormatted }}</span>
                     </div>
+                    <sc-if value="{{ p.hasTransfer }}"><div data-card-transfer="1" style="font-size:11px;color:#CFC4BA;margin-top:5px;">{{ p.transferText }}</div></sc-if>
                   </div>
                 </div>
               </sc-for>
@@ -745,6 +751,7 @@
                 </sc-if>
                 <span style="font-size:14px;color:{{ p.priceColor }};">{{ p.priceFormatted }}</span>
               </div>
+              <sc-if value="{{ p.hasTransfer }}"><div data-card-transfer="1" style="font-size:11px;color:#7A736E;margin:-6px 0 12px;">{{ p.transferText }}</div></sc-if>
               <sc-if value="{{ p.canQuickAdd }}">
                 <span data-quick="1" onClick="{{ p.quickAdd }}" style="cursor:pointer;display:inline-block;border:1px solid #D8D1CA;padding:10px 22px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#3A3532;transition:background .2s ease,color .2s ease,border-color .2s ease;" style-hover="background:#1C1A19;color:#fff;border-color:#1C1A19;">{{ p.quickLabel }}</span>
               </sc-if>
@@ -839,6 +846,9 @@
               <span style="color:var(--bc-accent);box-shadow:inset 0 0 0 1px var(--bc-accent);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;padding:6px 11px;">Última unidad</span>
             </sc-if>
           </div>
+          <sc-if value="{{ selHasTransfer }}">
+            <div data-transfer-price="1" style="margin:-14px 0 26px;font-size:14px;color:#3A3532;line-height:1.5;"><span style="font-weight:500;">{{ selTransferPrice }}</span> {{ selTransferLabel }} <span style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#4E7B4F;margin-left:4px;">{{ selTransferOff }}</span></div>
+          </sc-if>
           <sc-if value="{{ hasColorChoice }}">
             <div style="margin:-6px 0 28px;">
               <div style="font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:#7A736E;margin-bottom:12px;">Color · <span style="color:#1C1A19;">{{ selectedColorName }}</span></div>
@@ -913,6 +923,7 @@
                   </sc-if>
                   <span style="font-size:13.5px;color:{{ p.priceColor }};">{{ p.priceFormatted }}</span>
                 </div>
+                <sc-if value="{{ p.hasTransfer }}"><div data-card-transfer="1" style="font-size:11px;color:#7A736E;margin-top:4px;">{{ p.transferText }}</div></sc-if>
               </div>
             </sc-for>
           </div>
@@ -962,6 +973,74 @@
               <div style="display:flex;gap:10px;justify-content:flex-end;">
                 <span role="button" tabIndex="0" onClick="{{ cancelMaintEdit }}" style="cursor:pointer;border:1px solid #D8D1CA;padding:11px 20px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#3A3532;">Cancelar</span>
                 <span role="button" tabIndex="0" onClick="{{ saveMaintText }}" style="cursor:pointer;background:#1C1A19;color:#fff;padding:11px 20px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;">Guardar cartel</span>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+        <div data-td-card="1" style="border:1px solid {{ tdCardBorder }};background:{{ tdCardBg }};padding:14px 18px;margin-bottom:14px;">
+          <div style="display:flex;align-items:center;gap:10px 20px;flex-wrap:wrap;">
+            <span style="display:flex;align-items:center;gap:9px;font-size:13.5px;"><span style="width:9px;height:9px;background:{{ tdDot }};"></span>{{ tdStateText }}</span>
+            <span style="flex:1;min-width:200px;font-size:12px;color:#7A736E;font-weight:300;line-height:1.5;">{{ tdHint }}</span>
+            <sc-if value="{{ tdIdle }}">
+              <span data-td-edit="1" role="button" tabIndex="0" onClick="{{ openTdEdit }}" style="cursor:pointer;font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:#3A3532;text-decoration:underline;text-underline-offset:3px;">{{ tdEditLabel }}</span>
+              <span data-price-open="1" role="button" tabIndex="0" onClick="{{ openPriceTool }}" style="cursor:pointer;background:#1C1A19;color:#fff;padding:11px 20px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;" style-hover="background:var(--bc-accent);">Actualizar precios</span>
+            </sc-if>
+          </div>
+          <sc-if value="{{ tdEditing }}">
+            <div style="display:grid;gap:12px;margin-top:14px;padding-top:14px;border-top:1px solid #EFE6DB;">
+              <div style="display:flex;gap:14px 22px;flex-wrap:wrap;align-items:flex-end;">
+                <div>
+                  <label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Descuento con transferencia</label>
+                  <div style="display:flex;align-items:center;gap:8px;"><input data-td-pct="1" value="{{ tdDraftPct }}" onChange="{{ onTdPct }}" inputMode="numeric" maxLength="2" placeholder="10" autoComplete="off" style="width:84px;box-sizing:border-box;padding:11px 13px;border:1px solid #D8D1CA;font-family:var(--bc-body);font-size:14px;background:#fff;"><span style="font-size:14px;">%</span></div>
+                </div>
+                <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;padding-bottom:12px;"><input data-td-cash="1" type="checkbox" checked="{{ tdDraftCash }}" onChange="{{ onTdCash }}"> También pagando en efectivo</label>
+              </div>
+              <div style="font-size:11.5px;color:#9A938D;line-height:1.55;">Solo cambia el descuento: los precios quedan como están. Para apagarlo, poné 0. Si querés que con el descuento queden los precios de hoy, usá "Actualizar precios".</div>
+              <sc-if value="{{ tdHasError }}"><div role="alert" style="font-size:12.5px;color:#A6322A;">{{ tdError }}</div></sc-if>
+              <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;">
+                <span role="button" tabIndex="0" onClick="{{ cancelTdEdit }}" style="cursor:pointer;border:1px solid #D8D1CA;padding:11px 20px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#3A3532;">Cancelar</span>
+                <span data-td-save="1" role="button" tabIndex="0" onClick="{{ saveTd }}" style="cursor:pointer;background:#1C1A19;color:#fff;padding:11px 20px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;">Guardar</span>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ ptOpen }}">
+            <div data-price-tool="1" style="display:grid;gap:12px;margin-top:14px;padding-top:14px;border-top:1px solid #EFE6DB;">
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <span data-price-mode="transfer" role="button" tabIndex="0" onClick="{{ pickPriceTransfer }}" style="cursor:pointer;padding:10px 15px;font-size:10.5px;letter-spacing:0.12em;text-transform:uppercase;border:1px solid {{ ptTBd }};background:{{ ptTBg }};color:{{ ptTInk }};">Para el descuento por transferencia</span>
+                <span data-price-mode="pct" role="button" tabIndex="0" onClick="{{ pickPricePct }}" style="cursor:pointer;padding:10px 15px;font-size:10.5px;letter-spacing:0.12em;text-transform:uppercase;border:1px solid {{ ptPBd }};background:{{ ptPBg }};color:{{ ptPInk }};">Subir un porcentaje</span>
+              </div>
+              <sc-if value="{{ ptIsTransfer }}">
+                <div style="display:flex;gap:14px 22px;flex-wrap:wrap;align-items:flex-end;">
+                  <div>
+                    <label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Descuento con transferencia</label>
+                    <div style="display:flex;align-items:center;gap:8px;"><input data-price-tpct="1" value="{{ ptTPct }}" onChange="{{ onPtTPct }}" inputMode="numeric" maxLength="2" autoComplete="off" style="width:84px;box-sizing:border-box;padding:11px 13px;border:1px solid #D8D1CA;font-family:var(--bc-body);font-size:14px;background:#fff;"><span style="font-size:14px;">%</span></div>
+                  </div>
+                  <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;padding-bottom:12px;"><input data-price-cash="1" type="checkbox" checked="{{ ptCash }}" onChange="{{ onPtCash }}"> También pagando en efectivo</label>
+                </div>
+              </sc-if>
+              <sc-if value="{{ ptIsPct }}">
+                <div>
+                  <label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Cuánto subir</label>
+                  <div style="display:flex;align-items:center;gap:8px;"><input data-price-pct="1" value="{{ ptPPct }}" onChange="{{ onPtPPct }}" inputMode="decimal" maxLength="5" placeholder="Ej: 8" autoComplete="off" style="width:84px;box-sizing:border-box;padding:11px 13px;border:1px solid #D8D1CA;font-family:var(--bc-body);font-size:14px;background:#fff;"><span style="font-size:14px;">%</span></div>
+                </div>
+              </sc-if>
+              <div style="font-size:12.5px;color:#5B554F;line-height:1.6;">{{ ptExplain }}</div>
+              <sc-if value="{{ ptHasWarn }}"><div role="note" style="font-size:12.5px;color:#A6322A;line-height:1.55;">{{ ptWarn }}</div></sc-if>
+              <sc-if value="{{ ptHasError }}"><div role="alert" style="font-size:12.5px;color:#A6322A;">{{ ptError }}</div></sc-if>
+              <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;">{{ ptSummary }}</div>
+              <div data-price-preview="1" style="max-height:300px;overflow:auto;border:1px solid #EFEAE4;background:#fff;">
+                <sc-for list="{{ ptRows }}" as="r" hint-placeholder-count="4">
+                  <div data-price-row="1" style="display:flex;flex-wrap:wrap;gap:2px 12px;justify-content:space-between;padding:8px 12px;border-bottom:1px solid #F3EFEA;font-size:12.5px;line-height:1.45;">
+                    <span style="flex:1;min-width:170px;">{{ r.name }} <span style="color:#9A938D;">· {{ r.color }}</span></span>
+                    <span style="white-space:nowrap;"><span style="color:#9A938D;">{{ r.before }}</span> → {{ r.after }}</span>
+                    <sc-if value="{{ r.hasTransfer }}"><span style="white-space:nowrap;color:#4E7B4F;flex-basis:100%;text-align:right;">{{ r.transfer }}</span></sc-if>
+                  </div>
+                </sc-for>
+              </div>
+              <sc-if value="{{ pbHas }}"><div data-price-last="1" style="font-size:12px;color:#7A736E;line-height:1.55;">{{ pbText }} <span data-price-undo="1" role="button" tabIndex="0" onClick="{{ undoPrices }}" style="cursor:pointer;color:#3A3532;text-decoration:underline;text-underline-offset:3px;">Deshacer ese cambio</span></div></sc-if>
+              <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;">
+                <span role="button" tabIndex="0" onClick="{{ closePriceTool }}" style="cursor:pointer;border:1px solid #D8D1CA;padding:11px 20px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#3A3532;">Cerrar</span>
+                <span data-price-apply="1" role="button" tabIndex="0" onClick="{{ applyPrices }}" style="cursor:pointer;background:#1C1A19;color:#fff;padding:11px 20px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;opacity:{{ ptApplyOpacity }};">{{ ptApplyLabel }}</span>
               </div>
             </div>
           </sc-if>
@@ -1076,7 +1155,7 @@
                   <span role="button" tabIndex="0" onClick="{{ addSaleLine }}" style="cursor:pointer;display:inline-block;border:1px solid #D8D1CA;padding:10px 18px;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#3A3532;margin-bottom:22px;background:#fff;" style-hover="border-color:#1C1A19;">+ Otro producto</span>
                   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:14px;">
                     <div><label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Fecha</label><input data-sale-date="1" type="date" value="{{ saleDate }}" max="{{ saleToday }}" onChange="{{ onSaleDate }}" style="width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid #D8D1CA;border-radius:0;font-family:var(--bc-body);font-size:14px;background:#fff;color:#1C1A19;"></div>
-                    <div><label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Cómo pagó</label><select data-sale-method="1" value="{{ saleMethod }}" onChange="{{ onSaleMethod }}" style="width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid #D8D1CA;border-radius:0;font-family:var(--bc-body);font-size:14px;background:#fff;color:#1C1A19;"><option value="efectivo">Efectivo</option><option value="transferencia">Transferencia</option><option value="mercadopago">Mercado Pago</option><option value="otro">Otro</option></select></div>
+                    <div><label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Cómo pagó</label><select data-sale-method="1" value="{{ saleMethod }}" onChange="{{ onSaleMethod }}" style="width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid #D8D1CA;border-radius:0;font-family:var(--bc-body);font-size:14px;background:#fff;color:#1C1A19;"><option value="efectivo">{{ saleOptCash }}</option><option value="transferencia">{{ saleOptTransfer }}</option><option value="mercadopago">Mercado Pago</option><option value="otro">Otro</option></select></div>
                     <div><label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Estado</label><select data-sale-status="1" value="{{ saleStatus }}" onChange="{{ onSaleStatus }}" style="width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid #D8D1CA;border-radius:0;font-family:var(--bc-body);font-size:14px;background:#fff;color:#1C1A19;"><option value="vendido">Vendido (falta entregar)</option><option value="entregado">Ya entregado</option></select></div>
                     <div><label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Clienta (opcional)</label><input data-sale-client="1" value="{{ saleName }}" onChange="{{ onSaleName }}" maxLength="80" style="width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid #D8D1CA;border-radius:0;font-family:var(--bc-body);font-size:14px;background:#fff;color:#1C1A19;"></div>
                     <div><label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Teléfono (opcional)</label><input data-sale-phone="1" value="{{ salePhone }}" onChange="{{ onSalePhone }}" inputMode="tel" maxLength="30" style="width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid #D8D1CA;border-radius:0;font-family:var(--bc-body);font-size:14px;background:#fff;color:#1C1A19;"></div>
@@ -1255,6 +1334,12 @@
                         <span style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;">Total del pedido</span>
                         <span style="font-size:14px;">{{ o.total }}</span>
                       </div>
+                      <sc-if value="{{ o.hasNet }}">
+                        <div data-order-net="1" style="display:flex;justify-content:space-between;align-items:baseline;padding-top:4px;">
+                          <span style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;">{{ o.netLabel }}</span>
+                          <span style="font-size:14px;">{{ o.netTotal }}</span>
+                        </div>
+                      </sc-if>
                       <sc-if value="{{ o.hasDecided }}">
                         <div style="display:flex;justify-content:space-between;align-items:baseline;padding-top:4px;">
                           <span style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#4E7B4F;">Confirmado</span>
@@ -1272,6 +1357,15 @@
                           <option value="cancelado">Cancelado</option>
                         </select>
                       </div>
+                      <sc-if value="{{ o.canSetPay }}">
+                        <select data-paid-with="1" value="{{ o.paidWith }}" onChange="{{ o.onPaidWith }}" aria-label="Cómo pagó" style="border:1px solid #D8D1CA;border-radius:0;background:#fff;padding:10px;font-family:var(--bc-body);font-size:13px;cursor:pointer;color:#1C1A19;">
+                          <option value="">Cómo pagó: sin indicar</option>
+                          <option value="transferencia">{{ o.optTransfer }}</option>
+                          <option value="efectivo">{{ o.optCash }}</option>
+                          <option value="mercadopago">Link de Mercado Pago</option>
+                          <option value="otro">Otro medio</option>
+                        </select>
+                      </sc-if>
                       <sc-if value="{{ o.isPending }}">
                         <span onClick="{{ o.markSold }}" style="cursor:pointer;text-align:center;background:#1C1A19;color:#fff;padding:11px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;transition:background .2s ease;" style-hover="background:var(--bc-accent);">Confirmar todo</span>
                         <span onClick="{{ o.cancelAll }}" style="cursor:pointer;text-align:center;border:1px solid #D8D1CA;color:#A6322A;padding:10px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;">Cancelar todo</span>
@@ -1976,7 +2070,9 @@ function orderStatusFrom(lines, prefer) {
 }
 function lineTotal(l) { return (+l.price || 0) * (+l.qty || 0); }
 function confirmedLines(o) { return orderLines(o).filter(l => l.state === 'confirmado'); }
-function confirmedTotal(o) { return confirmedLines(o).reduce((a, l) => a + lineTotal(l), 0); }
+// Con descuento (pagó con transferencia), cada producto cuenta con su precio rebajado.
+function lineNet(l, pct) { return pct > 0 ? withDiscount(+l.price || 0, pct) * (+l.qty || 0) : lineTotal(l); }
+function confirmedTotal(o) { const d = +(o && o.discountPct) || 0; return confirmedLines(o).reduce((a, l) => a + lineNet(l, d), 0); }
 // Lo que se guarda de cada producto del pedido (solo campos conocidos).
 function cleanLine(l) {
   const out = {};
@@ -2015,6 +2111,17 @@ function productColors(p) {
 // AddToCart, InitiateCheckout (abre el pago con Mercado Pago), Lead (pedido por WhatsApp),
 // Contact (otro WhatsApp) y Purchase (pago aprobado). No se manda ningún dato personal.
 let PIXEL_ID = '';
+// Descuento por pagar con transferencia (opcional también en efectivo): { pct: 1 a 50, cash }. pct 0 = sin descuento.
+const normalizeTransfer = (v) => { const pct = Math.round(+(v && v.pct) || 0); return { pct: pct >= 1 && pct <= 50 ? pct : 0, cash: !!(v && v.cash) }; };
+// Precio con descuento, redondeado hacia abajo a $100 (el descuento nunca queda menor al anunciado).
+function withDiscount(v, pct) {
+  const n = Math.round(+v || 0);
+  if (!(pct > 0) || n <= 0) return n;
+  const d = Math.floor(n * (100 - pct) / 10000) * 100;
+  return d > 0 ? d : n;
+}
+// Redondea hacia arriba a $100 (para los precios nuevos).
+function ceil100(x) { return Math.ceil(Math.round(x * 1000) / 1000 / 100) * 100; }
 const normalizePixel = (v) => { const t = String(v == null ? '' : v).replace(/\D/g, ''); return t.length >= 10 && t.length <= 20 ? t : ''; };
 function loadMetaPixel(id) {
   if (PIXEL_ID || !normalizePixel(id)) return false;
@@ -2449,6 +2556,14 @@ class Component extends DCLogic {
     payTest: null,
     payTesting: false,
     metaPixel: '',
+    transfer: { pct: 0, cash: false },
+    tdEdit: false,
+    tdDraftPct: '',
+    tdDraftCash: false,
+    tdError: '',
+    priceTool: null,
+    priceBusy: false,
+    priceBackup: null,
     pixelEdit: false,
     pixelDraft: '',
     pixelError: '',
@@ -2647,10 +2762,11 @@ class Component extends DCLogic {
           const maint = normalizeMaint(data.settings && data.settings.maintenance);
           const payments = normalizePayments(data.settings && data.settings.payments);
           const metaPixel = normalizePixel(data.settings && data.settings.metaPixel);
+          const transfer = normalizeTransfer(data.settings && data.settings.transferDiscount);
           try { localStorage.setItem(MAINT_KEY, JSON.stringify(maint)); } catch (e) {}
           if (this._storeReadyDone) setTimeout(this._storeReadyDone, 0);
           this.setState(st => ({
-            ...migrated, look, storeLoaded: true, lookKnown: true, maint, payments, metaPixel,
+            ...migrated, look, storeLoaded: true, lookKnown: true, maint, payments, metaPixel, transfer,
             ...((st.lookDraft && !st.lookDirty) ? this.freshLookDrafts(look, migrated.categories) : {})
           }), () => {
             // Si la dueña está editando la estética o mirando la vista previa, no se le pisa.
@@ -3351,6 +3467,241 @@ class Component extends DCLogic {
     };
   }
 
+  // ---- Descuento por transferencia ----
+  discountMethod(m) { const t = this.state.transfer || {}; return t.pct > 0 && (m === 'transferencia' || (m === 'efectivo' && !!t.cash)); }
+  // Precio para una venta a mano: con el descuento si pagó con transferencia (o efectivo, si corresponde).
+  saleUnitPrice(c, method) { const v = Math.round(this.effPrice(c)); return this.discountMethod(method) ? withDiscount(v, this.state.transfer.pct) : v; }
+  onSaleMethod = (e) => {
+    const method = String((e && e.target && e.target.value) || 'efectivo');
+    this.setSale(f => ({ ...f, method, lines: f.lines.map(l => {
+      if (!l.auto || !l.key || l.key === '__otro') return l;
+      const [pid, ck] = l.key.split('|');
+      const p = this.state.products.find(x => x.id === pid);
+      const c = p ? (productColors(p).find(x => x.key === ck) || productColors(p)[0]) : null;
+      return c ? { ...l, price: String(this.saleUnitPrice(c, method)) } : l;
+    }) }));
+  };
+  setPaidWith(id, v) {
+    const pw = ['transferencia', 'efectivo', 'mercadopago', 'otro'].includes(v) ? v : '';
+    const discountPct = this.discountMethod(pw) ? this.state.transfer.pct : 0;
+    this.setState(st => ({ orders: st.orders.map(o => (o.id === id ? { ...o, paidWith: pw, discountPct } : o)) }));
+    firebaseReady.then(() => db.collection('orders').doc(id).update({ paidWith: pw, discountPct })).catch(() => this.showToast('No se pudo guardar — revisá tu conexión'));
+  }
+  orderPayVals(o) {
+    const t = this.state.transfer || { pct: 0, cash: false };
+    const web = !o.payment && o.source !== 'manual';
+    const d = +o.discountPct || 0;
+    const live = (o.lines || []).filter(l => l.state !== 'cancelado');
+    const W = { transferencia: 'Pagó con transferencia', efectivo: 'Pagó en efectivo' };
+    return {
+      canSetPay: web, paidWith: o.paidWith || '', onPaidWith: (e) => this.setPaidWith(o.id, e.target.value),
+      optTransfer: t.pct > 0 ? `Transferencia (−${t.pct}%)` : 'Transferencia',
+      optCash: t.pct > 0 && t.cash ? `Efectivo (−${t.pct}%)` : 'Efectivo',
+      hasNet: d > 0, netLabel: d > 0 ? `${W[o.paidWith] || 'Con descuento'} (−${d}%)` : '',
+      netTotal: d > 0 ? this.fmt(live.reduce((a, l) => a + lineNet(l, d), 0)) : ''
+    };
+  }
+  openTdEdit = () => { const t = this.state.transfer || {}; this.setState({ tdEdit: true, priceTool: null, tdDraftPct: t.pct ? String(t.pct) : '10', tdDraftCash: !!t.cash, tdError: '' }); };
+  cancelTdEdit = () => this.setState({ tdEdit: false, tdError: '' });
+  onTdPct = (e) => this.setState({ tdDraftPct: String((e && e.target && e.target.value) || '').replace(/[^0-9]/g, '').slice(0, 2), tdError: '' });
+  onTdCash = (e) => this.setState({ tdDraftCash: !!(e && e.target && e.target.checked) });
+  saveTd = () => {
+    const raw = String(this.state.tdDraftPct || '').trim();
+    const pct = raw === '' ? 0 : parseInt(raw, 10);
+    if (!(pct >= 0 && pct <= 50)) { this.setState({ tdError: 'Poné un número de 0 a 50.' }); return; }
+    const td = { pct, cash: pct > 0 && !!this.state.tdDraftCash };
+    this.setState({ transfer: normalizeTransfer(td), tdEdit: false, tdError: '' });
+    firebaseReady.then(() => STORE_DOC.set({ settings: { transferDiscount: td } }, { merge: true }))
+      .then(() => this.showToast(pct ? `Listo: ${pct}% de descuento ${td.cash ? 'en efectivo o con transferencia' : 'con transferencia'}` : 'Descuento por transferencia apagado'))
+      .catch(() => this.showToast('No se pudo guardar — revisá tu conexión'));
+  };
+
+  // ---- Actualizar todos los precios ----
+  openPriceTool = () => {
+    const t = this.state.transfer || {};
+    this.setState({ priceTool: { mode: 'transfer', tpct: String(t.pct || 10), cash: !!t.cash, ppct: '', error: '' }, tdEdit: false });
+    this.loadPriceBackup();
+  };
+  closePriceTool = () => { if (!this.state.priceBusy) this.setState({ priceTool: null }); };
+  setPriceTool(patch) { this.setState(s => (s.priceTool ? { priceTool: { ...s.priceTool, ...patch, error: '' } } : null)); }
+  pickPriceTransfer = () => this.setPriceTool({ mode: 'transfer' });
+  pickPricePct = () => this.setPriceTool({ mode: 'pct' });
+  onPtTPct = (e) => this.setPriceTool({ tpct: String((e && e.target && e.target.value) || '').replace(/[^0-9]/g, '').slice(0, 2) });
+  onPtCash = (e) => this.setPriceTool({ cash: !!(e && e.target && e.target.checked) });
+  onPtPPct = (e) => this.setPriceTool({ ppct: String((e && e.target && e.target.value) || '').replace(/[^0-9,.\-]/g, '').slice(0, 5) });
+  // La regla elegida: { mode, pct, cash } o { error }.
+  priceRule() {
+    const t = this.state.priceTool;
+    if (!t) return null;
+    if (t.mode === 'transfer') {
+      const pct = parseInt(t.tpct, 10);
+      if (!(pct >= 1 && pct <= 50)) return { error: 'Poné un descuento de 1 a 50 %.' };
+      return { mode: 'transfer', pct, cash: !!t.cash };
+    }
+    const pct = parseFloat(String(t.ppct || '').replace(',', '.'));
+    if (!isFinite(pct) || pct === 0) return { error: 'Escribí cuánto subir, por ejemplo 8 (para bajar, con un menos adelante: -5).' };
+    if (pct < -50 || pct > 200) return { error: 'Poné un porcentaje entre -50 y 200.' };
+    return { mode: 'pct', pct };
+  }
+  newPriceFor(v, rule) {
+    const n = +v || 0;
+    if (!(n > 0)) return n;
+    const x = rule.mode === 'transfer' ? n * 100 / (100 - rule.pct) : n * (100 + rule.pct) / 100;
+    return Math.max(100, ceil100(x));
+  }
+  // Calcula los precios nuevos de todos los productos (cada color, con su oferta).
+  pricePlan(products, rule) {
+    const changes = [], before = {}, after = {};
+    const out = (products || []).map(p => {
+      if (!p || !p.id) return p;
+      const conv = (c, key) => {
+        const pr = +c.price || 0, sp = +c.salePrice || 0;
+        if (!(pr > 0)) return null;
+        const npr = this.newPriceFor(pr, rule);
+        let nsp = sp > 0 ? this.newPriceFor(sp, rule) : 0;
+        if (sp > 0 && sp < pr && nsp >= npr) nsp = Math.max(100, npr - 100);
+        (before[p.id] = before[p.id] || {})[key] = [pr, sp];
+        (after[p.id] = after[p.id] || {})[key] = [npr, nsp];
+        changes.push({ pid: p.id, name: p.name || 'Producto', key, materialId: key === 'base' ? p.materialId : key, pr, sp, npr, nsp });
+        return sp > 0 ? { price: npr, salePrice: nsp } : { price: npr };
+      };
+      const base = conv(p, 'base');
+      const vs = Array.isArray(p.variants) ? p.variants.map((v, i) => { const r = conv(v, v.materialId || ('v' + i)); return r ? { ...v, ...r } : v; }) : p.variants;
+      return { ...p, ...(base || {}), ...(Array.isArray(p.variants) ? { variants: vs } : {}) };
+    });
+    return { products: out, changes, before, after };
+  }
+  loadPriceBackup() {
+    firebaseReady.then(() => db.collection('private').doc('prices_backup').get()).then(snap => {
+      const d = snap && snap.exists ? snap.data() : null;
+      const at = d && d.at && d.at.toDate ? d.at.toDate() : null;
+      this.setState({ priceBackup: d && !d.undone ? { at, mode: d.mode, pct: +d.pct || 0, count: +d.count || 0 } : null });
+    }).catch(() => this.setState({ priceBackup: null }));
+  }
+  applyPrices = async () => {
+    const s = this.state, rule = this.priceRule();
+    if (!rule || s.priceBusy) return;
+    if (rule.error) { this.setState(st => ({ priceTool: st.priceTool ? { ...st.priceTool, error: rule.error } : null })); return; }
+    const preview = this.pricePlan(s.products, rule);
+    if (!preview.changes.length) { this.showToast('No hay precios para cambiar'); return; }
+    const what = rule.mode === 'transfer'
+      ? `Se suben ${preview.changes.length} precios para que con ${rule.pct}% de descuento queden como hoy, y se activa el descuento ${rule.cash ? 'en efectivo o con transferencia' : 'con transferencia'}.`
+      : `Se ${rule.pct > 0 ? 'suben' : 'bajan'} ${preview.changes.length} precios un ${Math.abs(rule.pct)}%.`;
+    if (!confirm(`${what}\n\nLos videos o publicaciones con precios viejos van a quedar desactualizados. Se puede deshacer desde acá.\n\n¿Cambiar los precios?`)) return;
+    this.setState({ priceBusy: true });
+    try {
+      await firebaseReady;
+      const backupRef = db.collection('private').doc('prices_backup');
+      let count = 0;
+      await db.runTransaction(async (t) => {
+        const snap = await t.get(STORE_DOC);
+        const data = snap.exists ? snap.data() : {};
+        const plan = this.pricePlan(Array.isArray(data.products) ? data.products : [], rule);
+        count = plan.changes.length;
+        const prevTd = normalizeTransfer(data.settings && data.settings.transferDiscount);
+        const upd = { products: plan.products };
+        if (rule.mode === 'transfer') upd.settings = { transferDiscount: { pct: rule.pct, cash: rule.cash } };
+        t.set(STORE_DOC, upd, { merge: true });
+        t.set(backupRef, { at: firebase.firestore.FieldValue.serverTimestamp(), mode: rule.mode, pct: rule.pct, cash: !!rule.cash, prevTd, count, before: plan.before, after: plan.after, undone: false });
+      });
+      this.setState({ priceBusy: false, priceTool: null, priceBackup: { at: new Date(), mode: rule.mode, pct: rule.pct, count } });
+      this.showToast(`Listo: ${count} precios actualizados${rule.mode === 'transfer' ? ` y ${rule.pct}% de descuento con transferencia activado` : ''}`);
+    } catch (e) {
+      console.error('No se pudieron cambiar los precios:', e);
+      this.setState(st => ({ priceBusy: false, priceTool: st.priceTool ? { ...st.priceTool, error: e && e.code === 'permission-denied' ? 'Firebase no dejó guardar: revisá que estés con la cuenta de Belu.' : 'No se pudo guardar. Revisá tu conexión y probá de nuevo: no se cambió nada.' } : null }));
+    }
+  };
+  undoPrices = async () => {
+    const b = this.state.priceBackup;
+    if (!b || this.state.priceBusy) return;
+    const when = b.at ? b.at.toLocaleString('es-AR', { day: 'numeric', month: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false, timeZone: TZ }) : '';
+    if (!confirm(`¿Volver a los precios que había antes del cambio${when ? ' del ' + when : ''}?${b.mode === 'transfer' ? ' El descuento por transferencia vuelve a como estaba.' : ''}\n\nLos precios que cambiaste a mano después no se tocan.`)) return;
+    this.setState({ priceBusy: true });
+    try {
+      await firebaseReady;
+      const backupRef = db.collection('private').doc('prices_backup');
+      let restored = 0, kept = 0;
+      await db.runTransaction(async (t) => {
+        const bs = await t.get(backupRef);
+        const bk = bs.exists ? bs.data() : null;
+        if (!bk || bk.undone) throw { code: 'no-backup' };
+        const snap = await t.get(STORE_DOC);
+        const data = snap.exists ? snap.data() : {};
+        const same = (c, a) => a && (+c.price || 0) === a[0] && (+c.salePrice || 0) === (a[1] || 0);
+        const back = (c, b0) => (b0[1] > 0 ? { price: b0[0], salePrice: b0[1] } : { price: b0[0], ...(c.salePrice !== undefined ? { salePrice: 0 } : {}) });
+        const products = (Array.isArray(data.products) ? data.products : []).map(p => {
+          const A = (bk.after || {})[p.id], B = (bk.before || {})[p.id];
+          if (!A || !B) return p;
+          let np = p;
+          if (A.base && B.base) { if (same(p, A.base)) { np = { ...np, ...back(p, B.base) }; restored++; } else kept++; }
+          if (Array.isArray(p.variants)) np = { ...np, variants: p.variants.map((v, i) => {
+            const k = v.materialId || ('v' + i);
+            if (!A[k] || !B[k]) return v;
+            if (same(v, A[k])) { restored++; return { ...v, ...back(v, B[k]) }; }
+            kept++; return v;
+          }) };
+          return np;
+        });
+        const upd = { products };
+        if (bk.mode === 'transfer') upd.settings = { transferDiscount: normalizeTransfer(bk.prevTd) };
+        t.set(STORE_DOC, upd, { merge: true });
+        t.set(backupRef, { undone: true }, { merge: true });
+      });
+      this.setState({ priceBusy: false, priceBackup: null });
+      this.showToast(`Listo: ${restored} precios volvieron a como estaban${kept ? ` (${kept} los habías cambiado a mano y quedaron)` : ''}`);
+    } catch (e) {
+      console.error('No se pudo deshacer:', e);
+      this.setState({ priceBusy: false, ...(e && e.code === 'no-backup' ? { priceBackup: null } : {}) });
+      this.showToast(e && e.code === 'no-backup' ? 'Ese cambio ya se había deshecho' : 'No se pudo deshacer — revisá tu conexión');
+    }
+  };
+  tdVals() {
+    const s = this.state, t = s.transfer || { pct: 0, cash: false }, on = t.pct > 0, pt = s.priceTool;
+    const rule = pt ? this.priceRule() : null;
+    const ok = rule && !rule.error;
+    const plan = ok ? this.pricePlan(s.products, rule) : { changes: [] };
+    const dRows = ok ? (rule.mode === 'transfer' ? rule.pct : (on ? t.pct : 0)) : 0;
+    const rows = plan.changes.map(c => {
+      const eff = c.nsp > 0 && c.nsp < c.npr ? c.nsp : c.npr;
+      return {
+        name: c.name, color: this.materialName(c.materialId) || 'sin color',
+        before: this.fmt(c.pr) + (c.sp > 0 && c.sp < c.pr ? ' (oferta ' + this.fmt(c.sp) + ')' : ''),
+        after: this.fmt(c.npr) + (c.nsp > 0 && c.nsp < c.npr ? ' (oferta ' + this.fmt(c.nsp) + ')' : ''),
+        hasTransfer: dRows > 0, transfer: dRows > 0 ? `Con transferencia: ${this.fmt(withDiscount(eff, dRows))}` : ''
+      };
+    });
+    const nProds = new Set(plan.changes.map(c => c.pid)).size;
+    const up = ok && rule.mode === 'transfer' ? (100 / (100 - rule.pct) - 1) * 100 : 0;
+    const pctTxt = (x) => x.toLocaleString('es-AR', { maximumFractionDigits: 1 });
+    const explain = !pt ? '' : pt.mode === 'transfer'
+      ? (ok ? `Sube todos los precios un ${pctTxt(up)}% (redondeado a $100 hacia arriba), así con ${rule.pct}% de descuento quedan como hoy. Al aplicar se activa el descuento y la web muestra el precio ${rule.cash ? 'en efectivo o con transferencia' : 'con transferencia'} en cada producto, el carrito y el mensaje de WhatsApp. Mercado Pago cobra el precio nuevo.` : '')
+      : `Sube (o baja, con un menos adelante) todos los precios ese porcentaje, redondeando a $100 hacia arriba. Sirve para actualizar por inflación. El descuento por transferencia no cambia${on ? `: sigue en ${t.pct}%` : ''}.`;
+    const warn = pt && pt.mode === 'transfer' && on ? `Ojo: el descuento ya está activo (${t.pct}%). Si los precios ya se subieron para el descuento, volver a aplicarlo los sube otra vez. Para cambiar solo el porcentaje, cerrá esto y tocá "Cambiar".` : '';
+    const b = s.priceBackup;
+    const when = b && b.at ? b.at.toLocaleString('es-AR', { day: 'numeric', month: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false, timeZone: TZ }) : '';
+    const sel = (on2) => ({ bd: on2 ? '#1C1A19' : '#D8D1CA', bg: on2 ? '#1C1A19' : '#fff', ink: on2 ? '#fff' : '#3A3532' });
+    const sT = sel(pt && pt.mode === 'transfer'), sP = sel(pt && pt.mode === 'pct');
+    return {
+      tdStateText: on ? `Descuento con transferencia: ${t.pct}%` : 'Sin descuento por transferencia',
+      tdHint: on ? `La web muestra el precio ${t.cash ? 'en efectivo o con transferencia' : 'con transferencia'} en los productos, el carrito y el mensaje de WhatsApp. Con Mercado Pago se cobra el precio de lista. En Ventas, marcá en cada pedido cómo pagó.` : 'Podés ofrecer un precio más bajo pagando con transferencia (Mercado Pago cobra comisión), y subir todos los precios de una vez.',
+      tdDot: on ? '#4E7B4F' : '#B5ADA6', tdCardBorder: on ? '#CFE0CF' : '#E4DED8', tdCardBg: on ? '#F6FAF6' : '#fff',
+      tdIdle: !s.tdEdit && !pt, tdEditing: !!s.tdEdit, tdEditLabel: on ? 'Cambiar' : 'Activar descuento',
+      openTdEdit: this.openTdEdit, cancelTdEdit: this.cancelTdEdit, onTdPct: this.onTdPct, onTdCash: this.onTdCash, saveTd: this.saveTd,
+      tdDraftPct: s.tdDraftPct, tdDraftCash: !!s.tdDraftCash, tdHasError: !!s.tdError, tdError: s.tdError || '',
+      openPriceTool: this.openPriceTool, closePriceTool: this.closePriceTool, pickPriceTransfer: this.pickPriceTransfer, pickPricePct: this.pickPricePct,
+      onPtTPct: this.onPtTPct, onPtCash: this.onPtCash, onPtPPct: this.onPtPPct, applyPrices: this.applyPrices, undoPrices: this.undoPrices,
+      ptOpen: !!pt, ptIsTransfer: !!pt && pt.mode === 'transfer', ptIsPct: !!pt && pt.mode === 'pct',
+      ptTBd: sT.bd, ptTBg: sT.bg, ptTInk: sT.ink, ptPBd: sP.bd, ptPBg: sP.bg, ptPInk: sP.ink,
+      ptTPct: pt ? pt.tpct : '', ptCash: !!(pt && pt.cash), ptPPct: pt ? pt.ppct : '',
+      ptExplain: explain, ptHasWarn: !!warn, ptWarn: warn,
+      ptHasError: !!(pt && (pt.error || (rule && rule.error && (pt.mode === 'transfer' || pt.ppct)))), ptError: (pt && pt.error) || (rule && rule.error) || '',
+      ptSummary: ok ? `Vista previa · ${plan.changes.length} precios en ${nProds} productos` : 'Vista previa',
+      ptRows: rows,
+      ptApplyLabel: s.priceBusy ? 'Guardando…' : ok ? `Aplicar a ${plan.changes.length} precios` : 'Aplicar', ptApplyOpacity: ok && !s.priceBusy ? 1 : 0.5,
+      pbHas: !!b, pbText: b ? `Último cambio de precios: ${when}${b.mode === 'transfer' ? ` (para el ${b.pct}% con transferencia)` : ` (${b.pct > 0 ? '+' : ''}${pctTxt(b.pct)}%)`}, ${b.count} precios.` : ''
+    };
+  }
+
   // ---- Cargar una venta a mano (ventas cerradas por WhatsApp o en persona) ----
   newSaleLine() { return { key: '', name: '', qty: '1', price: '', auto: true }; }
   openSaleForm = () => this.setState({ saleForm: { lines: [this.newSaleLine()], date: dayKey(new Date()), method: 'efectivo', status: 'vendido', name: '', phone: '', note: '', stock: true }, saleError: '' });
@@ -3371,7 +3722,7 @@ class Component extends DCLogic {
     const [pid, ck] = key.split('|');
     const p = this.state.products.find(x => x.id === pid);
     const c = p ? (productColors(p).find(x => x.key === ck) || productColors(p)[0]) : null;
-    this.setSaleLine(i, { key, ...((cur.auto || !cur.price) && c ? { price: String(Math.round(this.effPrice(c))), auto: true } : {}) });
+    this.setSaleLine(i, { key, ...((cur.auto || !cur.price) && c ? { price: String(this.saleUnitPrice(c, f.method)), auto: true } : {}) });
   }
   addSaleLine = () => this.setSale(f => ({ ...f, lines: f.lines.length >= 20 ? f.lines : [...f.lines, this.newSaleLine()] }));
   removeSaleLine(i) { this.setSale(f => ({ ...f, lines: f.lines.length > 1 ? f.lines.filter((_, j) => j !== i) : f.lines })); }
@@ -3443,7 +3794,9 @@ class Component extends DCLogic {
     const s = this.state, f = s.saleForm;
     const base = {
       saleOpen: !!f, saleClosed: !f, openSaleForm: this.openSaleForm, cancelSaleForm: this.cancelSaleForm, addSaleLine: this.addSaleLine, saveManualSale: this.saveManualSale,
-      onSaleDate: this.saleInput('date'), onSaleMethod: this.saleInput('method'), onSaleStatus: this.saleInput('status'), onSaleName: this.saleInput('name'),
+      onSaleDate: this.saleInput('date'), onSaleMethod: this.onSaleMethod,
+      saleOptCash: this.discountMethod('efectivo') ? `Efectivo (−${s.transfer.pct}%)` : 'Efectivo',
+      saleOptTransfer: this.discountMethod('transferencia') ? `Transferencia (−${s.transfer.pct}%)` : 'Transferencia', onSaleStatus: this.saleInput('status'), onSaleName: this.saleInput('name'),
       onSalePhone: this.saleInput('phone'), onSaleNote: this.saleInput('note'), onSaleStock: this.saleInput('stock'), saleToday: dayKey(new Date())
     };
     if (!f) return { ...base, saleLines: [], saleOptions: [], saleDate: '', saleMethod: 'efectivo', saleStatus: 'vendido', saleName: '', salePhone: '', saleNote: '', saleStock: true, saleTotal: this.fmt(0), saleHasError: false, saleError: '', saleSaveLabel: 'Guardar venta', saleSaveOpacity: 1 };
@@ -3617,7 +3970,7 @@ class Component extends DCLogic {
   };
 
   payVals(subtotal) {
-    const s = this.state, P = s.payments || {}, f = s.payForm || {};
+    const s = this.state, P = s.payments || {}, f = s.payForm || {}, tdP = s.transfer || { pct: 0, cash: false };
     const mpOn = !!(P.on && P.api);
     const formView = !!(s.cartOpen && s.payStep === 'form');
     // Resultado del pago
@@ -3649,7 +4002,10 @@ class Component extends DCLogic {
       payGoLabel: s.payBusy ? 'Abriendo Mercado Pago…' : 'Ir a pagar ' + this.fmt(subtotal), payGoOpacity: s.payBusy ? 0.6 : 1, payBusyAttr: s.payBusy ? 'true' : 'false',
       waBtnBg: mpOn && s.cart.length ? '#fff' : '#1C1A19', waBtnInk: mpOn && s.cart.length ? '#1C1A19' : '#fff',
       waBtnLabel: mpOn && s.cart.length ? 'Pedir por WhatsApp' : 'Finalizar por WhatsApp',
-      cartNote: mpOn && s.cart.length ? 'Pagá con tarjeta, débito o dinero en Mercado Pago. O pedí por WhatsApp y coordinamos.' : 'Coordinamos pago y envío por mensaje.',
+      cartNote: (mpOn && s.cart.length ? 'Pagá con tarjeta, débito o dinero en Mercado Pago. O pedí por WhatsApp y coordinamos.' : 'Coordinamos pago y envío por mensaje.')
+        + (tdP.pct > 0 && s.cart.length ? (mpOn ? ` Pidiendo por WhatsApp, ${tdP.cash ? 'en efectivo o con transferencia' : 'con transferencia'} tenés ${tdP.pct}% OFF.` : ` ${tdP.cash ? 'En efectivo o con transferencia' : 'Con transferencia'} tenés ${tdP.pct}% OFF.`) : ''),
+      payHasTransferNote: formView && tdP.pct > 0,
+      payTransferNote: tdP.pct > 0 ? `Con Mercado Pago se paga el precio de lista. ${tdP.cash ? 'En efectivo o con transferencia' : 'Con transferencia'} tenés ${tdP.pct}% OFF: para eso, volvé al carrito y pedí por WhatsApp.` : '',
       isPayment: s.view === 'payment', payState: st,
       payKicker: T[0], payTitle: T[1], payText: T[2], payKickerInk: paid ? '#4E7B4F' : '#9A938D',
       payHasCode: !!code && st !== 'cargando', payCodeText: code, payHasTotal: !!(pr && pr.total), payTotalText: pr && pr.total ? 'Total ' + this.fmt(pr.total) : '',
@@ -3701,7 +4057,7 @@ class Component extends DCLogic {
         const orders = snap.docs.map(d => {
           const o = d.data({ serverTimestamps: 'estimate' }) || {};
           const date = o.createdAt && o.createdAt.toDate ? o.createdAt.toDate() : new Date();
-          return { id: d.id, code: o.code || '', status: o.status || 'pendiente', total: +o.total || 0, items: (Array.isArray(o.items) ? o.items : []).map(aliasLine), customer: o.customer || null, payment: o.payment || null, source: o.source || '', stockProblem: !!o.stockProblem, paidWith: o.paidWith || '', note: o.note || '', stockApplied: !!o.stockApplied, date, lines: orderLines(o) };
+          return { id: d.id, code: o.code || '', status: o.status || 'pendiente', total: +o.total || 0, items: (Array.isArray(o.items) ? o.items : []).map(aliasLine), customer: o.customer || null, payment: o.payment || null, source: o.source || '', stockProblem: !!o.stockProblem, paidWith: o.paidWith || '', discountPct: +o.discountPct || 0, note: o.note || '', stockApplied: !!o.stockApplied, date, lines: orderLines(o) };
         });
         this.setState({ orders, ordersLoaded: true, ordersError: '' });
       }, (err) => {
@@ -4809,6 +5165,8 @@ class Component extends DCLogic {
     const transparentHeader = L.header === 'transparente' && s.view === 'home' && !s.scrolled;
 
     const SLOT = 'v6-';
+    const td = s.transfer || { pct: 0, cash: false }, tdOn = td.pct > 0;
+    const tdShort = td.cash ? 'en efectivo o transferencia' : 'con transferencia';
     const withDetails = (p) => {
       const colors = productColors(p);
       const multi = colors.length > 1;
@@ -4824,6 +5182,8 @@ class Component extends DCLogic {
         image: (media[0] && mediaThumb(media[0], 900)) || BLANK,
         imageId: SLOT + p.imageId,
         priceFormatted: priceVaries ? 'Desde ' + this.fmt(minPrice) : this.fmt(this.effPrice(shown)),
+        hasTransfer: tdOn && (priceVaries ? minPrice : this.effPrice(shown)) > 0,
+        transferText: tdOn ? (priceVaries ? 'Desde ' : '') + this.fmt(withDiscount(priceVaries ? minPrice : this.effPrice(shown), td.pct)) + ' ' + tdShort : '',
         isOnSale: sale,
         oldPriceFormatted: sale ? this.fmt(shown.price) : '',
         discountLabel: sale ? ('−' + Math.round((1 - parseFloat(shown.salePrice) / shown.price) * 100) + '%') : '',
@@ -4996,6 +5356,7 @@ class Component extends DCLogic {
       ...withDetails(selectedRaw),
       materialName: this.materialName(selColor.materialId),
       priceFormatted: this.fmt(this.effPrice(selColor)),
+      transferPrice: tdOn ? this.fmt(withDiscount(this.effPrice(selColor), td.pct)) : '',
       isOnSale: selSale,
       oldPriceFormatted: selSale ? this.fmt(selColor.price) : '',
       discountLabel: selSale ? ('−' + Math.round((1 - parseFloat(selColor.salePrice) / selColor.price) * 100) + '%') : '',
@@ -5073,9 +5434,11 @@ class Component extends DCLogic {
       };
     }).filter(Boolean);
     const cartSubtotal = cartItems.reduce((sum, i) => sum + i.unitPrice * i.qty, 0);
+    const cartTransfer = cartItems.reduce((sum, i) => sum + withDiscount(i.unitPrice, td.pct) * i.qty, 0);
+    const tdLong = td.cash ? 'Pagando en efectivo o con transferencia' : 'Pagando con transferencia';
     const orderCode = s.checkoutCode || '';
     const waLines = cartItems.map(i => `- ${i.qty} x ${i.name}${i.materialName ? ' (' + i.materialName + ')' : ''}: ${this.fmt(i.unitPrice * i.qty)}`).join('\n');
-    const whatsappCartLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Hola! Quiero hacer este pedido${orderCode ? ' (pedido ' + orderCode + ')' : ''}:\n${waLines}\nTotal: ${this.fmt(cartSubtotal)}`)}`;
+    const whatsappCartLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Hola! Quiero hacer este pedido${orderCode ? ' (pedido ' + orderCode + ')' : ''}:\n${waLines}\nTotal: ${this.fmt(cartSubtotal)}${tdOn && cartItems.length ? `\n${tdLong} (${td.pct}% OFF): ${this.fmt(cartTransfer)}` : ''}`)}`;
     const whatsappProductLink = `https://wa.me/${whatsappNumber}?text=Hola!%20Me%20interesa%20${encodeURIComponent(selectedProduct.name || '')}%20en%20${encodeURIComponent(selectedProduct.materialName || '')}`;
 
     // ---- Panel: Ventas ----
@@ -5120,7 +5483,7 @@ class Component extends DCLogic {
             const c = key ? this.costOf(it.productId, key) : null;
             if (c === null) return;
             costed += q;
-            gain += ((+it.price || 0) - c) * q;
+            gain += (withDiscount(+it.price || 0, +o.discountPct || 0) - c) * q;
           }));
           if (!units) return { label: 'Ganancia estimada', value: '—', sub: 'todavía no hay ventas confirmadas' };
           if (!costed) return { label: 'Ganancia estimada', value: '—', sub: 'cargá el costo de tus productos' };
@@ -5266,6 +5629,7 @@ class Component extends DCLogic {
           };
         }),
         total: this.fmt(o.total), status: o.status, dot: (STATUS[o.status] || STATUS.pendiente).dot,
+        ...this.orderPayVals(o),
         hasDecided: o.lines.some(l => l.state !== 'pendiente'), confirmedTotal: this.fmt(confirmedTotal(o)),
         onStatus: (e) => this.setOrderStatus(o.id, e.target.value),
         isPending: o.status === 'pendiente', markSold: () => this.setOrderStatus(o.id, 'vendido'), cancelAll: () => this.setOrderStatus(o.id, 'cancelado'),
@@ -5388,6 +5752,11 @@ class Component extends DCLogic {
       cartCount: s.cart.reduce((n, c) => n + c.qty, 0),
       cartItems, cartEmpty: cartItems.length === 0,
       cartSubtotalFormatted: this.fmt(cartSubtotal),
+      cartShowTransfer: tdOn && cartItems.length > 0 && !(s.cartOpen && s.payStep === 'form'),
+      cartTransferLabel: `${tdLong} (${td.pct}% OFF)`, cartTransferFormatted: this.fmt(cartTransfer),
+      selHasTransfer: tdOn && !!foundProduct && this.effPrice(selColor) > 0,
+      selTransferPrice: selectedProduct.transferPrice, selTransferLabel: tdShort, selTransferOff: tdOn ? td.pct + '% OFF' : '',
+      ...this.tdVals(),
       whatsappCartLink, whatsappProductLink, onCheckout: this.onCheckout,
       ...this.payVals(cartSubtotal),
       ...this.payAdminVals(),
