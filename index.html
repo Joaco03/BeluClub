@@ -246,7 +246,7 @@
           <span style="letter-spacing:0.04em;">{{ cartTotalLabel }}</span><span>{{ cartSubtotalFormatted }}</span>
         </div>
         <sc-if value="{{ cartShowTransfer }}">
-          <div data-cart-transfer="1" style="display:flex;justify-content:space-between;gap:12px;font-size:13.5px;color:#4E7B4F;margin:-8px 0 16px;"><span>{{ cartTransferLabel }}</span><span>{{ cartTransferFormatted }}</span></div>
+          <div data-cart-transfer="1" style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:15px;font-weight:500;color:#2F5E31;background:#EEF4EE;padding:9px 12px;margin:-6px 0 16px;"><span>{{ cartTransferLabel }}</span><span>{{ cartTransferFormatted }}</span></div>
         </sc-if>
         <sc-if value="{{ cartListView }}">
           <sc-if value="{{ payMpOn }}">
@@ -497,7 +497,7 @@
                   </sc-if>
                   <span style="font-size:14px;color:{{ p.priceColor }};">{{ p.priceFormatted }}</span>
                 </div>
-                <sc-if value="{{ p.hasTransfer }}"><div data-card-transfer="1" style="font-size:11px;color:#7A736E;margin-top:5px;">{{ p.transferText }}</div></sc-if>
+                <sc-if value="{{ p.hasTransfer }}"><div data-card-transfer="1" style="font-size:11px;color:#7A736E;margin-top:6px;line-height:1.45;"><span style="font-size:14px;font-weight:500;color:#3E6B47;">{{ p.trPrice }}</span> {{ p.trLabel }}</div></sc-if>
               </div>
             </div>
           </sc-for>
@@ -551,7 +551,7 @@
                       <span style="font-size:12.5px;color:#A79E96;text-decoration:line-through;">{{ p.oldPriceFormatted }}</span>
                       <span style="font-size:15px;color:#F0C9A4;">{{ p.priceFormatted }}</span>
                     </div>
-                    <sc-if value="{{ p.hasTransfer }}"><div data-card-transfer="1" style="font-size:11px;color:#CFC4BA;margin-top:5px;">{{ p.transferText }}</div></sc-if>
+                    <sc-if value="{{ p.hasTransfer }}"><div data-card-transfer="1" style="font-size:11px;color:#CFC4BA;margin-top:6px;line-height:1.45;"><span style="font-size:14.5px;font-weight:500;color:#F6F1EC;">{{ p.trPrice }}</span> {{ p.trLabel }}</div></sc-if>
                   </div>
                 </div>
               </sc-for>
@@ -751,7 +751,7 @@
                 </sc-if>
                 <span style="font-size:14px;color:{{ p.priceColor }};">{{ p.priceFormatted }}</span>
               </div>
-              <sc-if value="{{ p.hasTransfer }}"><div data-card-transfer="1" style="font-size:11px;color:#7A736E;margin:-6px 0 12px;">{{ p.transferText }}</div></sc-if>
+              <sc-if value="{{ p.hasTransfer }}"><div data-card-transfer="1" style="font-size:11px;color:#7A736E;margin:-5px 0 12px;line-height:1.45;"><span style="font-size:14px;font-weight:500;color:#3E6B47;">{{ p.trPrice }}</span> {{ p.trLabel }}</div></sc-if>
               <sc-if value="{{ p.canQuickAdd }}">
                 <span data-quick="1" onClick="{{ p.quickAdd }}" style="cursor:pointer;display:inline-block;border:1px solid #D8D1CA;padding:10px 22px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#3A3532;transition:background .2s ease,color .2s ease,border-color .2s ease;" style-hover="background:#1C1A19;color:#fff;border-color:#1C1A19;">{{ p.quickLabel }}</span>
               </sc-if>
@@ -847,7 +847,7 @@
             </sc-if>
           </div>
           <sc-if value="{{ selHasTransfer }}">
-            <div data-transfer-price="1" style="margin:-14px 0 26px;font-size:14px;color:#3A3532;line-height:1.5;"><span style="font-weight:500;">{{ selTransferPrice }}</span> {{ selTransferLabel }} <span style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#4E7B4F;margin-left:4px;">{{ selTransferOff }}</span></div>
+            <div data-transfer-price="1" style="display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 10px;width:fit-content;max-width:100%;box-sizing:border-box;margin:-12px 0 26px;padding:10px 14px;background:#EEF4EE;border:1px solid #CFE0CF;color:#3E6B47;line-height:1.35;"><span style="font-size:21px;font-weight:500;color:#2F5E31;">{{ selTransferPrice }}</span> <span style="font-size:13px;">{{ selTransferLabel }}</span> <span style="align-self:center;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;background:#4E7B4F;color:#fff;padding:4px 8px;">{{ selTransferOff }}</span></div>
           </sc-if>
           <sc-if value="{{ hasColorChoice }}">
             <div style="margin:-6px 0 28px;">
@@ -923,7 +923,7 @@
                   </sc-if>
                   <span style="font-size:13.5px;color:{{ p.priceColor }};">{{ p.priceFormatted }}</span>
                 </div>
-                <sc-if value="{{ p.hasTransfer }}"><div data-card-transfer="1" style="font-size:11px;color:#7A736E;margin-top:4px;">{{ p.transferText }}</div></sc-if>
+                <sc-if value="{{ p.hasTransfer }}"><div data-card-transfer="1" style="font-size:11px;color:#7A736E;margin-top:5px;line-height:1.45;"><span style="font-size:13.5px;font-weight:500;color:#3E6B47;">{{ p.trPrice }}</span> {{ p.trLabel }}</div></sc-if>
               </div>
             </sc-for>
           </div>
@@ -5184,6 +5184,7 @@ class Component extends DCLogic {
         priceFormatted: priceVaries ? 'Desde ' + this.fmt(minPrice) : this.fmt(this.effPrice(shown)),
         hasTransfer: tdOn && (priceVaries ? minPrice : this.effPrice(shown)) > 0,
         transferText: tdOn ? (priceVaries ? 'Desde ' : '') + this.fmt(withDiscount(priceVaries ? minPrice : this.effPrice(shown), td.pct)) + ' ' + tdShort : '',
+        trPrice: tdOn ? (priceVaries ? 'Desde ' : '') + this.fmt(withDiscount(priceVaries ? minPrice : this.effPrice(shown), td.pct)) : '', trLabel: tdShort,
         isOnSale: sale,
         oldPriceFormatted: sale ? this.fmt(shown.price) : '',
         discountLabel: sale ? ('−' + Math.round((1 - parseFloat(shown.salePrice) / shown.price) * 100) + '%') : '',
