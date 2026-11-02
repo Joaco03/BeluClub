@@ -18,9 +18,12 @@
 //
 //  Además, en Settings → Triggers → Cron Triggers: agregar "*/10 * * * *"
 //  (cada 10 minutos revisa los pagos que quedaron sin terminar).
+//
+//  Versión 1.1 (noviembre 2026): respeta el evento de ofertas del panel (Cyber Monday). Si las
+//  ofertas valen "solo con transferencia", con Mercado Pago se cobra el precio normal.
 // ============================================================================
 
-const VERSION = '1.0';
+const VERSION = '1.1';
 const ALLOWED_ORIGINS = ['https://blushop.com.ar', 'https://www.blushop.com.ar', 'https://joaco03.github.io'];
 const HOLD_MINUTES = 30;          // cuánto tiempo queda reservado el stock mientras la clienta paga
 const MAX_LINES = 20;             // productos distintos por compra
@@ -221,7 +224,17 @@ function colorsOf(p) {
   });
   return out;
 }
-const effPrice = (c) => (c.salePrice > 0 && c.salePrice < c.price) ? c.salePrice : c.price;
+const effPrice = (c, saleOk) => (saleOk !== false && c.salePrice > 0 && c.salePrice < c.price) ? c.salePrice : c.price;
+// Evento de ofertas (Cyber Monday, en el panel): si las ofertas valen solo con transferencia, Mercado Pago
+// cobra el precio normal; si "se terminan solas" y ya pasó la hora, también.
+function saleAllowed(settings, now) {
+  const ev = settings && settings.saleEvent;
+  if (!ev || !ev.on) return true;
+  if (ev.transferOnly) return false;
+  const end = Date.parse(ev.endsAt || '');
+  if (ev.autoEnd !== false && isFinite(end) && now >= end) return false;
+  return true;
+}
 function resolveAlias(aliases, id) {
   let a = aliases && aliases[id], n = 0, color = a && a.color;
   while (a && aliases[a.id] && n++ < 6) { a = aliases[a.id]; }
@@ -233,6 +246,7 @@ function priceCart(store, items) {
   const soon = {};
   (store.categories || []).forEach(c => { if (c && c.soon) soon[c.id] = true; });
   const matName = (id) => { const m = (store.materials || []).find(x => x && x.id === id); return m ? m.name : ''; };
+  const saleOk = saleAllowed(store.settings, Date.now());
   const byKey = {};
   const lines = [];
   for (const it of items) {
@@ -243,7 +257,7 @@ function priceCart(store, items) {
     if (!p || soon[p.categoryId]) throw userError('no_existe', 'Un producto del carrito ya no está en la tienda. Actualizá la página y revisá el carrito.', { productId: it.productId });
     const cs = colorsOf(p);
     const c = cs.find(x => x.key === color) || cs[0];
-    const price = Math.round(effPrice(c));
+    const price = Math.round(effPrice(c, saleOk));
     if (!(price > 0)) throw userError('sin_precio', `${p.name} no tiene precio cargado. Escribinos por WhatsApp.`, { productId: p.id });
     const k = p.id + '|' + c.key;
     if (byKey[k]) { byKey[k].qty += it.qty; }

@@ -72,6 +72,11 @@
       [data-pgrid] [data-badge="destacado"]{display:none!important;}
       [data-pgrid] [data-edit-chip]{right:6px!important;bottom:6px!important;padding:6px 8px!important;}
       [data-pgrid] [data-quick]{padding:9px 12px!important;letter-spacing:.12em!important;}
+      /* Franja de Cyber Monday más compacta */
+      [data-ev-strip] > div{padding:12px 16px!important;gap:6px 14px!important;}
+      [data-ev-strip] [data-ev-badge]{padding:5px 10px 5px 8px!important;}
+      [data-ev-strip] [data-ev-badge] span{font-size:10px!important;letter-spacing:.24em!important;}
+      [data-ev-countdown] > div{min-width:52px!important;}
     }
     @media (prefers-reduced-motion: reduce){
       *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important;}
@@ -122,7 +127,7 @@
       <div style="flex:1;overflow-y:auto;padding:28px 24px;display:flex;flex-direction:column;gap:2px;">
         <span data-menu-home="1" onClick="{{ goHome }}" style="cursor:pointer;font-family:var(--bc-title);font-size-adjust:var(--bc-title-adjust);font-size:24px;padding:10px 0;" style-hover="color:var(--bc-accent);">Inicio</span>
         <span onClick="{{ goCatalogAll }}" style="cursor:pointer;font-family:var(--bc-title);font-size-adjust:var(--bc-title-adjust);font-size:24px;padding:10px 0;" style-hover="color:var(--bc-accent);">Todos los productos</span>
-        <span onClick="{{ goSale }}" style="cursor:pointer;font-family:var(--bc-title);font-size-adjust:var(--bc-title-adjust);font-size:24px;padding:10px 0;color:#A6322A;" style-hover="color:var(--bc-accent);">Sale</span>
+        <span onClick="{{ goSale }}" style="cursor:pointer;font-family:var(--bc-title);font-size-adjust:var(--bc-title-adjust);font-size:24px;padding:10px 0;color:#A6322A;" style-hover="color:var(--bc-accent);">{{ saleMenuLabel }}</span>
         <div style="height:1px;background:#E4DED8;margin:14px 0 18px;"></div>
         <sc-for list="{{ menuCategories }}" as="c" hint-placeholder-count="4">
           <sc-if value="{{ c.ready }}"><span onClick="{{ c.select }}" style="cursor:pointer;font-size:13.5px;letter-spacing:0.06em;padding:9px 0;color:#3A3532;" style-hover="color:var(--bc-accent);">{{ c.name }}</span></sc-if>
@@ -400,6 +405,18 @@
         </div>
       </div>
 
+      <!-- CYBER MONDAY / EVENTO DE OFERTAS -->
+      <sc-if value="{{ evLive }}">
+        <div data-ev-strip="1" role="link" tabIndex="0" onClick="{{ goSale }}" style="cursor:pointer;background:#7C2620;color:#fff;">
+          <div style="max-width:1400px;margin:0 auto;padding:16px 24px;display:flex;align-items:center;justify-content:center;gap:10px 22px;flex-wrap:wrap;text-align:center;">
+            <div data-ev-badge="1" style="display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,0.55);padding:7px 13px 7px 10px;color:#F6F1EC;"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 2 4.8 13.4h6.1L9.9 22l8.8-11.6h-6.2L13.5 2z"></path></svg><span style="font-size:11px;font-weight:500;letter-spacing:0.3em;text-transform:uppercase;">{{ evTitle }}</span></div>
+            <span style="font-size:13.5px;letter-spacing:0.04em;">{{ evStripText }}</span>
+            <span style="font-size:13px;letter-spacing:0.05em;font-variant-numeric:tabular-nums;">Termina en <span data-cd="d">{{ cdD }}</span>d <span data-cd="h">{{ cdH }}</span>h <span data-cd="m">{{ cdM }}</span>m <span data-cd="s">{{ cdS }}</span>s</span>
+            <span style="font-size:10.5px;letter-spacing:0.2em;text-transform:uppercase;border-bottom:1px solid #fff;padding-bottom:3px;">Ver ofertas</span>
+          </div>
+        </div>
+      </sc-if>
+
       <!-- TRUST STRIP -->
       <div style="background:#1C1A19;">
         <div style="max-width:1400px;margin:0 auto;padding:44px 24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:34px;">
@@ -497,7 +514,7 @@
                   </sc-if>
                   <span style="font-size:14px;color:{{ p.priceColor }};">{{ p.priceFormatted }}</span>
                 </div>
-                <sc-if value="{{ p.hasTransfer }}"><div data-card-transfer="1" style="font-size:11px;color:#7A736E;margin-top:6px;line-height:1.45;"><span style="font-size:14px;font-weight:500;color:#3E6B47;">{{ p.trPrice }}</span> {{ p.trLabel }}</div></sc-if>
+                <sc-if value="{{ p.hasTransfer }}"><div data-card-transfer="1" style="font-size:11px;color:#7A736E;margin-top:6px;line-height:1.45;"><span style="font-size:14px;font-weight:500;color:{{ p.trColor }};">{{ p.trPrice }}</span> {{ p.trLabel }}</div></sc-if>
               </div>
             </div>
           </sc-for>
@@ -510,10 +527,21 @@
           <div style="max-width:1400px;margin:0 auto;">
             <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:40px;flex-wrap:wrap;">
               <div>
-                <div style="font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:#C7A98C;margin-bottom:14px;">Precios rebajados</div>
-                <h2 style="font-family:var(--bc-title);font-size-adjust:var(--bc-title-adjust);font-weight:300;font-size:46px;margin:0;line-height:1.05;color:#fff;">Sale</h2>
+                <sc-if value="{{ evLive }}">
+                  <div data-ev-sale="1">
+                    <div data-ev-badge="1" style="display:inline-flex;align-items:center;gap:8px;border:1px solid #F0C9A4;padding:7px 13px 7px 10px;color:#F0C9A4;"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 2 4.8 13.4h6.1L9.9 22l8.8-11.6h-6.2L13.5 2z"></path></svg><span style="font-size:11px;font-weight:500;letter-spacing:0.3em;text-transform:uppercase;">{{ evTitle }}</span></div>
+                    <h2 style="font-family:var(--bc-title);font-size-adjust:var(--bc-title-adjust);font-weight:300;font-size:46px;margin:18px 0 0;line-height:1.05;color:#fff;">{{ evHeadline }}</h2>
+                    <div style="font-size:13px;color:#CFC4BA;font-weight:300;margin:12px 0 20px;line-height:1.6;max-width:520px;">{{ evSub }}</div>
+                    <div data-ev-countdown="1" role="timer" aria-label="Tiempo que falta para que terminen las ofertas" style="display:flex;gap:8px;flex-wrap:wrap;"><div style="min-width:58px;text-align:center;border:1px solid rgba(255,255,255,0.22);padding:11px 6px 9px;"><div data-cd="d" style="font-size:28px;font-weight:300;color:#fff;line-height:1;font-variant-numeric:tabular-nums;">{{ cdD }}</div><div style="font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:#A79E96;margin-top:7px;">Días</div></div><div style="min-width:58px;text-align:center;border:1px solid rgba(255,255,255,0.22);padding:11px 6px 9px;"><div data-cd="h" style="font-size:28px;font-weight:300;color:#fff;line-height:1;font-variant-numeric:tabular-nums;">{{ cdH }}</div><div style="font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:#A79E96;margin-top:7px;">Horas</div></div><div style="min-width:58px;text-align:center;border:1px solid rgba(255,255,255,0.22);padding:11px 6px 9px;"><div data-cd="m" style="font-size:28px;font-weight:300;color:#fff;line-height:1;font-variant-numeric:tabular-nums;">{{ cdM }}</div><div style="font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:#A79E96;margin-top:7px;">Min</div></div><div style="min-width:58px;text-align:center;border:1px solid rgba(255,255,255,0.22);padding:11px 6px 9px;"><div data-cd="s" style="font-size:28px;font-weight:300;color:#fff;line-height:1;font-variant-numeric:tabular-nums;">{{ cdS }}</div><div style="font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:#A79E96;margin-top:7px;">Seg</div></div></div>
+                    <div style="font-size:11.5px;color:#A79E96;margin-top:10px;">{{ evEndText }}</div>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ evIdle }}">
+                  <div style="font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:#C7A98C;margin-bottom:14px;">Precios rebajados</div>
+                  <h2 style="font-family:var(--bc-title);font-size-adjust:var(--bc-title-adjust);font-weight:300;font-size:46px;margin:0;line-height:1.05;color:#fff;">Sale</h2>
+                </sc-if>
               </div>
-              <span onClick="{{ goSale }}" style="cursor:pointer;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#fff;border-bottom:1px solid #fff;padding-bottom:4px;">Ver todo el sale</span>
+              <span onClick="{{ goSale }}" style="cursor:pointer;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#fff;border-bottom:1px solid #fff;padding-bottom:4px;">{{ saleLinkLabel }}</span>
             </div>
             <div data-pgrid="1" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,245px));justify-content:center;gap:30px 22px;">
               <sc-for list="{{ saleProducts }}" as="p" hint-placeholder-count="4">
@@ -549,9 +577,9 @@
                     <div style="font-size:10.5px;letter-spacing:0.18em;text-transform:uppercase;color:#A79E96;margin:6px 0 8px;">{{ p.materialName }}</div>
                     <div style="display:flex;align-items:baseline;justify-content:center;gap:9px;">
                       <span style="font-size:12.5px;color:#A79E96;text-decoration:line-through;">{{ p.oldPriceFormatted }}</span>
-                      <span style="font-size:15px;color:#F0C9A4;">{{ p.priceFormatted }}</span>
+                      <span style="font-size:15px;color:{{ p.darkPriceColor }};">{{ p.priceFormatted }}</span>
                     </div>
-                    <sc-if value="{{ p.hasTransfer }}"><div data-card-transfer="1" style="font-size:11px;color:#CFC4BA;margin-top:6px;line-height:1.45;"><span style="font-size:14.5px;font-weight:500;color:#F6F1EC;">{{ p.trPrice }}</span> {{ p.trLabel }}</div></sc-if>
+                    <sc-if value="{{ p.hasTransfer }}"><div data-card-transfer="1" style="font-size:11px;color:#CFC4BA;margin-top:6px;line-height:1.45;"><span style="font-size:14.5px;font-weight:500;color:{{ p.trColorDark }};">{{ p.trPrice }}</span> {{ p.trLabel }}</div></sc-if>
                   </div>
                 </div>
               </sc-for>
@@ -649,6 +677,18 @@
         <span onClick="{{ goHome }}" style="cursor:pointer;">Inicio</span> — Productos
       </div>
       <h1 style="font-family:var(--bc-title);font-size-adjust:var(--bc-title-adjust);font-weight:300;font-size:48px;margin:0 0 28px;line-height:1.05;">{{ catalogTitle }}</h1>
+      <sc-if value="{{ evOnSalePage }}">
+        <div data-ev-page="1" style="display:flex;align-items:center;justify-content:space-between;gap:16px 28px;flex-wrap:wrap;border:1px solid #E4DED8;background:#FBF7F2;padding:18px 20px;margin:-8px 0 28px;">
+          <div style="flex:1;min-width:220px;">
+            <div style="font-family:var(--bc-title);font-size-adjust:var(--bc-title-adjust);font-weight:300;font-size:30px;line-height:1.1;color:var(--bc-accent);">{{ evHeadline }}</div>
+            <div style="font-size:13px;color:#5B554F;margin-top:12px;line-height:1.6;max-width:520px;">{{ evSub }}</div>
+          </div>
+          <div>
+            <div data-ev-countdown="1" role="timer" aria-label="Tiempo que falta para que terminen las ofertas" style="display:flex;gap:8px;flex-wrap:wrap;"><div style="min-width:58px;text-align:center;border:1px solid #E4DED8;padding:11px 6px 9px;"><div data-cd="d" style="font-size:28px;font-weight:300;color:#1C1A19;line-height:1;font-variant-numeric:tabular-nums;">{{ cdD }}</div><div style="font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:#9A938D;margin-top:7px;">Días</div></div><div style="min-width:58px;text-align:center;border:1px solid #E4DED8;padding:11px 6px 9px;"><div data-cd="h" style="font-size:28px;font-weight:300;color:#1C1A19;line-height:1;font-variant-numeric:tabular-nums;">{{ cdH }}</div><div style="font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:#9A938D;margin-top:7px;">Horas</div></div><div style="min-width:58px;text-align:center;border:1px solid #E4DED8;padding:11px 6px 9px;"><div data-cd="m" style="font-size:28px;font-weight:300;color:#1C1A19;line-height:1;font-variant-numeric:tabular-nums;">{{ cdM }}</div><div style="font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:#9A938D;margin-top:7px;">Min</div></div><div style="min-width:58px;text-align:center;border:1px solid #E4DED8;padding:11px 6px 9px;"><div data-cd="s" style="font-size:28px;font-weight:300;color:#1C1A19;line-height:1;font-variant-numeric:tabular-nums;">{{ cdS }}</div><div style="font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:#9A938D;margin-top:7px;">Seg</div></div></div>
+            <div style="font-size:11.5px;color:#9A938D;margin-top:8px;">{{ evEndText }}</div>
+          </div>
+        </div>
+      </sc-if>
 
       <div role="search" style="position:relative;max-width:480px;margin-bottom:24px;">
         <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" style="position:absolute;left:15px;top:50%;transform:translateY(-50%);color:#9A938D;pointer-events:none;"><circle cx="10.5" cy="10.5" r="6.3" stroke="currentColor" stroke-width="1.5"></circle><path d="M15.3 15.3l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg>
@@ -738,7 +778,7 @@
               <sc-if value="{{ p.featured }}">
                 <div data-badge="destacado" style="position:absolute;top:0;right:0;background:var(--bc-accent);color:#fff;font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;padding:6px 12px;">Destacado</div>
               </sc-if>
-              <sc-if value="{{ p.isOnSale }}">
+              <sc-if value="{{ p.offBadge }}">
                 <div data-badge="1" style="position:absolute;bottom:0;left:0;background:#A6322A;color:#fff;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;padding:7px 13px;">{{ p.discountLabel }}</div>
               </sc-if>
             </div>
@@ -751,7 +791,7 @@
                 </sc-if>
                 <span style="font-size:14px;color:{{ p.priceColor }};">{{ p.priceFormatted }}</span>
               </div>
-              <sc-if value="{{ p.hasTransfer }}"><div data-card-transfer="1" style="font-size:11px;color:#7A736E;margin:-5px 0 12px;line-height:1.45;"><span style="font-size:14px;font-weight:500;color:#3E6B47;">{{ p.trPrice }}</span> {{ p.trLabel }}</div></sc-if>
+              <sc-if value="{{ p.hasTransfer }}"><div data-card-transfer="1" style="font-size:11px;color:#7A736E;margin:-5px 0 12px;line-height:1.45;"><span style="font-size:14px;font-weight:500;color:{{ p.trColor }};">{{ p.trPrice }}</span> {{ p.trLabel }}</div></sc-if>
               <sc-if value="{{ p.canQuickAdd }}">
                 <span data-quick="1" onClick="{{ p.quickAdd }}" style="cursor:pointer;display:inline-block;border:1px solid #D8D1CA;padding:10px 22px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#3A3532;transition:background .2s ease,color .2s ease,border-color .2s ease;" style-hover="background:#1C1A19;color:#fff;border-color:#1C1A19;">{{ p.quickLabel }}</span>
               </sc-if>
@@ -847,7 +887,7 @@
             </sc-if>
           </div>
           <sc-if value="{{ selHasTransfer }}">
-            <div data-transfer-price="1" style="display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 10px;width:fit-content;max-width:100%;box-sizing:border-box;margin:-12px 0 26px;padding:10px 14px;background:#EEF4EE;border:1px solid #CFE0CF;color:#3E6B47;line-height:1.35;"><span style="font-size:21px;font-weight:500;color:#2F5E31;">{{ selTransferPrice }}</span> <span style="font-size:13px;">{{ selTransferLabel }}</span> <span style="align-self:center;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;background:#4E7B4F;color:#fff;padding:4px 8px;">{{ selTransferOff }}</span></div>
+            <div data-transfer-price="1" style="display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 10px;width:fit-content;max-width:100%;box-sizing:border-box;margin:-12px 0 26px;padding:10px 14px;background:{{ selTrBg }};border:1px solid {{ selTrBd }};color:{{ selTrInk }};line-height:1.35;"><span style="font-size:21px;font-weight:500;color:{{ selTrStrong }};">{{ selTransferPrice }}</span> <span style="font-size:13px;">{{ selTransferLabel }}</span> <sc-if value="{{ selHasOff }}"><span style="align-self:center;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;background:{{ selTrPill }};color:#fff;padding:4px 8px;">{{ selTransferOff }}</span></sc-if></div>
           </sc-if>
           <sc-if value="{{ hasColorChoice }}">
             <div style="margin:-6px 0 28px;">
@@ -923,7 +963,7 @@
                   </sc-if>
                   <span style="font-size:13.5px;color:{{ p.priceColor }};">{{ p.priceFormatted }}</span>
                 </div>
-                <sc-if value="{{ p.hasTransfer }}"><div data-card-transfer="1" style="font-size:11px;color:#7A736E;margin-top:5px;line-height:1.45;"><span style="font-size:13.5px;font-weight:500;color:#3E6B47;">{{ p.trPrice }}</span> {{ p.trLabel }}</div></sc-if>
+                <sc-if value="{{ p.hasTransfer }}"><div data-card-transfer="1" style="font-size:11px;color:#7A736E;margin-top:5px;line-height:1.45;"><span style="font-size:13.5px;font-weight:500;color:{{ p.trColor }};">{{ p.trPrice }}</span> {{ p.trLabel }}</div></sc-if>
               </div>
             </sc-for>
           </div>
@@ -983,6 +1023,7 @@
             <span style="flex:1;min-width:200px;font-size:12px;color:#7A736E;font-weight:300;line-height:1.5;">{{ tdHint }}</span>
             <sc-if value="{{ tdIdle }}">
               <span data-td-edit="1" role="button" tabIndex="0" onClick="{{ openTdEdit }}" style="cursor:pointer;font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:#3A3532;text-decoration:underline;text-underline-offset:3px;">{{ tdEditLabel }}</span>
+              <sc-if value="{{ tdCanToggle }}"><span data-td-toggle="1" role="button" tabIndex="0" onClick="{{ toggleTd }}" style="cursor:pointer;border:1px solid #D8D1CA;padding:11px 20px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#3A3532;">{{ tdToggleLabel }}</span></sc-if>
               <span data-price-open="1" role="button" tabIndex="0" onClick="{{ openPriceTool }}" style="cursor:pointer;background:#1C1A19;color:#fff;padding:11px 20px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;" style-hover="background:var(--bc-accent);">Actualizar precios</span>
             </sc-if>
           </div>
@@ -1041,6 +1082,34 @@
               <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;">
                 <span role="button" tabIndex="0" onClick="{{ closePriceTool }}" style="cursor:pointer;border:1px solid #D8D1CA;padding:11px 20px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#3A3532;">Cerrar</span>
                 <span data-price-apply="1" role="button" tabIndex="0" onClick="{{ applyPrices }}" style="cursor:pointer;background:#1C1A19;color:#fff;padding:11px 20px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;opacity:{{ ptApplyOpacity }};">{{ ptApplyLabel }}</span>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+        <div data-ev-card="1" style="border:1px solid {{ evCardBorder }};background:{{ evCardBg }};padding:14px 18px;margin-bottom:14px;">
+          <div style="display:flex;align-items:center;gap:10px 20px;flex-wrap:wrap;">
+            <span style="display:flex;align-items:center;gap:9px;font-size:13.5px;"><span style="width:9px;height:9px;background:{{ evDot }};"></span>{{ evStateText }}</span>
+            <span style="flex:1;min-width:200px;font-size:12px;color:#7A736E;font-weight:300;line-height:1.5;">{{ evHint }}</span>
+            <sc-if value="{{ evIdleCard }}">
+              <span data-ev-edit="1" role="button" tabIndex="0" onClick="{{ openEvEdit }}" style="cursor:pointer;font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:#3A3532;text-decoration:underline;text-underline-offset:3px;">{{ evEditLabel }}</span>
+              <sc-if value="{{ evIsOn }}"><span data-ev-off="1" role="button" tabIndex="0" onClick="{{ turnOffEvent }}" style="cursor:pointer;border:1px solid #D8D1CA;padding:11px 20px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#3A3532;">Apagar</span></sc-if>
+            </sc-if>
+          </div>
+          <sc-if value="{{ evHasWarn }}"><div role="note" style="margin-top:10px;font-size:12.5px;color:#A6322A;line-height:1.55;">{{ evWarn }}</div></sc-if>
+          <sc-if value="{{ evEditing }}">
+            <div style="display:grid;gap:12px;margin-top:14px;padding-top:14px;border-top:1px solid #EFE6DB;">
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;">
+                <div><label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Nombre del evento</label><input data-ev-title="1" value="{{ evDraftTitle }}" onChange="{{ onEvTitle }}" maxLength="40" autoComplete="off" style="width:100%;box-sizing:border-box;padding:11px 13px;border:1px solid #D8D1CA;border-radius:0;font-family:var(--bc-body);font-size:14px;background:#fff;color:#1C1A19;"></div>
+                <div><label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">Termina el día</label><input data-ev-date="1" type="date" value="{{ evDraftDate }}" onChange="{{ onEvDate }}" style="width:100%;box-sizing:border-box;padding:11px 13px;border:1px solid #D8D1CA;border-radius:0;font-family:var(--bc-body);font-size:14px;background:#fff;color:#1C1A19;"></div>
+                <div><label style="display:block;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:#7A736E;margin-bottom:7px;">A la hora</label><input data-ev-time="1" type="time" value="{{ evDraftTime }}" onChange="{{ onEvTime }}" style="width:100%;box-sizing:border-box;padding:11px 13px;border:1px solid #D8D1CA;border-radius:0;font-family:var(--bc-body);font-size:14px;background:#fff;color:#1C1A19;"></div>
+              </div>
+              <label style="display:flex;align-items:flex-start;gap:9px;font-size:13px;cursor:pointer;line-height:1.5;"><input data-ev-to="1" type="checkbox" checked="{{ evDraftTO }}" onChange="{{ onEvTO }}" style="margin-top:3px;"><span>Los precios de oferta valen solo pagando {{ evPayWord }} (con Mercado Pago se cobra el precio normal)</span></label>
+              <label style="display:flex;align-items:flex-start;gap:9px;font-size:13px;cursor:pointer;line-height:1.5;"><input data-ev-auto="1" type="checkbox" checked="{{ evDraftAuto }}" onChange="{{ onEvAuto }}" style="margin-top:3px;"><span>Cuando termina el contador, las ofertas se terminan solas (vuelven los precios normales)</span></label>
+              <div style="font-size:11.5px;color:#9A938D;line-height:1.55;">Los productos en oferta son los que tienen "precio de oferta" cargado. Mientras dura, la web muestra el cartel con la cuenta regresiva arriba en el inicio, en la sección Sale y en la página de ofertas. La hora es la de Argentina.</div>
+              <sc-if value="{{ evHasError }}"><div role="alert" style="font-size:12.5px;color:#A6322A;">{{ evError }}</div></sc-if>
+              <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;">
+                <span role="button" tabIndex="0" onClick="{{ cancelEvEdit }}" style="cursor:pointer;border:1px solid #D8D1CA;padding:11px 20px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#3A3532;">Cancelar</span>
+                <span data-ev-save="1" role="button" tabIndex="0" onClick="{{ saveEvent }}" style="cursor:pointer;background:#1C1A19;color:#fff;padding:11px 20px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;">Guardar y activar</span>
               </div>
             </div>
           </sc-if>
@@ -1949,7 +2018,7 @@
           <div style="font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:var(--bc-accent);margin-bottom:18px;">Tienda</div>
           <div style="display:flex;flex-direction:column;gap:12px;font-size:13px;font-weight:300;color:#5B554F;">
             <span onClick="{{ goCatalogAll }}" style="cursor:pointer;">Todos los productos</span>
-            <span onClick="{{ goSale }}" style="cursor:pointer;">Sale</span>
+            <span onClick="{{ goSale }}" style="cursor:pointer;">{{ saleMenuLabel }}</span>
             <sc-for list="{{ menuCategories }}" as="c" hint-placeholder-count="4">
               <sc-if value="{{ c.ready }}"><span onClick="{{ c.select }}" style="cursor:pointer;">{{ c.name }}</span></sc-if>
               <sc-if value="{{ c.soon }}"><span aria-disabled="true" style="cursor:default;color:#B5ADA6;">{{ c.name }} <span style="font-size:10px;letter-spacing:0.1em;">· ¡Próximamente!</span></span></sc-if>
@@ -2070,13 +2139,19 @@ function orderStatusFrom(lines, prefer) {
 }
 function lineTotal(l) { return (+l.price || 0) * (+l.qty || 0); }
 function confirmedLines(o) { return orderLines(o).filter(l => l.state === 'confirmado'); }
-// Con descuento (pagó con transferencia), cada producto cuenta con su precio rebajado.
-function lineNet(l, pct) { return pct > 0 ? withDiscount(+l.price || 0, pct) * (+l.qty || 0) : lineTotal(l); }
-function confirmedTotal(o) { const d = +(o && o.discountPct) || 0; return confirmedLines(o).reduce((a, l) => a + lineNet(l, d), 0); }
+// Si pagó con transferencia, cada producto cuenta con el precio con transferencia que tenía al pedirlo
+// (tprice: oferta o descuento); en pedidos viejos, con el % guardado en el pedido.
+function lineNet(l, o) {
+  const q = +l.qty || 0;
+  if (o && o.byTransfer && +l.tprice > 0) return +l.tprice * q;
+  const d = +(o && o.discountPct) || 0;
+  return d > 0 ? withDiscount(+l.price || 0, d) * q : lineTotal(l);
+}
+function confirmedTotal(o) { return confirmedLines(o).reduce((a, l) => a + lineNet(l, o), 0); }
 // Lo que se guarda de cada producto del pedido (solo campos conocidos).
 function cleanLine(l) {
   const out = {};
-  ['productId', 'name', 'color', 'colorId', 'qty', 'price', 'state', 'held'].forEach(k => { if (l[k] !== undefined) out[k] = l[k]; });
+  ['productId', 'name', 'color', 'colorId', 'qty', 'price', 'tprice', 'state', 'held'].forEach(k => { if (l[k] !== undefined) out[k] = l[k]; });
   return out;
 }
 // Día en hora argentina, como texto AAAA-MM-DD (así se agrupan las estadísticas por día).
@@ -2112,7 +2187,28 @@ function productColors(p) {
 // Contact (otro WhatsApp) y Purchase (pago aprobado). No se manda ningún dato personal.
 let PIXEL_ID = '';
 // Descuento por pagar con transferencia (opcional también en efectivo): { pct: 1 a 50, cash }. pct 0 = sin descuento.
-const normalizeTransfer = (v) => { const pct = Math.round(+(v && v.pct) || 0); return { pct: pct >= 1 && pct <= 50 ? pct : 0, cash: !!(v && v.cash) }; };
+// paused: apagado desde el panel sin perder el porcentaje. pct es el que rige (0 si está apagado).
+const normalizeTransfer = (v) => {
+  const base = Math.round(+(v && v.pct) || 0), ok = base >= 1 && base <= 50, paused = ok && !!(v && v.paused);
+  return { pct: ok && !paused ? base : 0, basePct: ok ? base : 0, paused, cash: !!(v && v.cash) };
+};
+// Evento de ofertas (Cyber Monday u otro): cartel con cuenta regresiva hasta endsAt (hora argentina).
+// transferOnly: los precios de oferta valen solo con transferencia (Mercado Pago cobra el precio normal).
+// autoEnd: al terminar, las ofertas dejan de valer solas.
+const normalizeSaleEvent = (v) => {
+  const end = Date.parse((v && v.endsAt) || '');
+  return { on: !!(v && v.on), title: String((v && v.title) || 'Cyber Monday').trim().slice(0, 40) || 'Cyber Monday', endsAt: isFinite(end) ? end : 0, transferOnly: !!(v && v.transferOnly), autoEnd: !(v && v.autoEnd === false) };
+};
+function cdParts(ms) {
+  const t = Math.max(0, Math.floor(ms / 1000)), two = (n) => String(n).padStart(2, '0');
+  return { d: two(Math.floor(t / 86400)), h: two(Math.floor(t / 3600) % 24), m: two(Math.floor(t / 60) % 60), s: two(t % 60) };
+}
+function fmtEventEnd(ms) {
+  try {
+    const d = new Date(ms);
+    return d.toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long', timeZone: TZ }) + ' a las ' + d.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: TZ });
+  } catch (e) { return ''; }
+}
 // Precio con descuento, redondeado hacia abajo a $100 (el descuento nunca queda menor al anunciado).
 function withDiscount(v, pct) {
   const n = Math.round(+v || 0);
@@ -2556,7 +2652,13 @@ class Component extends DCLogic {
     payTest: null,
     payTesting: false,
     metaPixel: '',
-    transfer: { pct: 0, cash: false },
+    transfer: { pct: 0, basePct: 0, paused: false, cash: false },
+    saleEvent: { on: false, title: 'Cyber Monday', endsAt: 0, transferOnly: false, autoEnd: true },
+    evEdit: false,
+    evDraft: null,
+    evError: '',
+    evTick: 0,
+    workerVersion: null,
     tdEdit: false,
     tdDraftPct: '',
     tdDraftCash: false,
@@ -2763,10 +2865,11 @@ class Component extends DCLogic {
           const payments = normalizePayments(data.settings && data.settings.payments);
           const metaPixel = normalizePixel(data.settings && data.settings.metaPixel);
           const transfer = normalizeTransfer(data.settings && data.settings.transferDiscount);
+          const saleEvent = normalizeSaleEvent(data.settings && data.settings.saleEvent);
           try { localStorage.setItem(MAINT_KEY, JSON.stringify(maint)); } catch (e) {}
           if (this._storeReadyDone) setTimeout(this._storeReadyDone, 0);
           this.setState(st => ({
-            ...migrated, look, storeLoaded: true, lookKnown: true, maint, payments, metaPixel, transfer,
+            ...migrated, look, storeLoaded: true, lookKnown: true, maint, payments, metaPixel, transfer, saleEvent,
             ...((st.lookDraft && !st.lookDirty) ? this.freshLookDrafts(look, migrated.categories) : {})
           }), () => {
             // Si la dueña está editando la estética o mirando la vista previa, no se le pisa.
@@ -2817,6 +2920,19 @@ class Component extends DCLogic {
       metaTrack('Contact');
     };
     document.addEventListener('click', this._onPixelClick, true);
+    this._evTimer = setInterval(() => {
+      const e = this.state.saleEvent;
+      if (!e || !e.on || !e.endsAt) return;
+      const ms = e.endsAt - Date.now();
+      if (ms <= 0) { if (this._evShownEnd !== e.endsAt) { this._evShownEnd = e.endsAt; this.setState({ evTick: Date.now() }); } return; }
+      const P = cdParts(ms);
+      document.querySelectorAll('[data-cd]').forEach(el => {
+        const v = P[el.getAttribute('data-cd')];
+        if (v === undefined) return;
+        const t = el.firstChild;
+        if (t && t.nodeType === 3) { if (t.nodeValue !== v) t.nodeValue = v; } else if (el.textContent !== v) el.textContent = v;
+      });
+    }, 1000);
     // Si Firebase tarda demasiado, mostramos lo que haya en vez de quedarnos cargando.
     this._loadTimeout = setTimeout(() => {
       if (!this.state.storeLoaded) this.setState({ storeLoaded: true });
@@ -2878,6 +2994,7 @@ class Component extends DCLogic {
 
   componentWillUnmount() {
     if (this._onPixelClick) document.removeEventListener('click', this._onPixelClick, true);
+    if (this._evTimer) clearInterval(this._evTimer);
     if (this._vidObs) { this._vidObs.disconnect(); this._vidObs = null; }
     if (this._cardObs) { this._cardObs.disconnect(); this._cardObs = null; }
     this.stopHolds();
@@ -2938,7 +3055,116 @@ class Component extends DCLogic {
     if (gain <= 0) return { text: gain === 0 ? 'Ojo: lo vendés al mismo precio que te costó' : `Ojo: perdés ${this.fmt(-gain)} por unidad`, color: '#A6322A' };
     return { text: `${eff !== pr ? 'Con la oferta ganás' : 'Ganás'} ${this.fmt(gain)} por unidad (${Math.round(gain / eff * 100)}% del precio)`, color: '#3E6B47' };
   }
-  onSale(p) { const sp = parseFloat(p.salePrice); return !!(sp && sp > 0 && sp < p.price); }
+  onSale(p) { if (!this.saleLive()) return false; const sp = parseFloat(p.salePrice); return !!(sp && sp > 0 && sp < p.price); }
+  // ---- Evento de ofertas (Cyber Monday) ----
+  evLive() { const e = this.state.saleEvent; return !!(e && e.on && e.endsAt && Date.now() < e.endsAt); }
+  // Con "se terminan solas", pasada la hora las ofertas dejan de valer (los precios de oferta quedan guardados).
+  saleLive() { const e = this.state.saleEvent; return !(e && e.on && e.autoEnd && e.endsAt && Date.now() >= e.endsAt); }
+  saleTransferOnly() { const e = this.state.saleEvent; return !!(e && e.on && e.transferOnly); }
+  isTransferMethod(m) { return m === 'transferencia' || (m === 'efectivo' && !!(this.state.transfer || {}).cash); }
+  // Precio normal: el que se paga con Mercado Pago u otro medio.
+  normalPrice(c) { return this.saleTransferOnly() && this.onSale(c) ? (+c.price || 0) : this.effPrice(c); }
+  // Precio con transferencia: el de oferta si tiene (los descuentos no se suman), o el normal con el % de transferencia.
+  transferPrice(c) {
+    if (this.onSale(c)) return this.effPrice(c);
+    const t = this.state.transfer || {};
+    return t.pct > 0 ? withDiscount(+c.price || 0, t.pct) : (+c.price || 0);
+  }
+  checkWorkerVersion() {
+    const P = this.state.payments || {};
+    if (!P.api) return;
+    fetch(String(P.api).replace(/\/+$/, '') + '/', { cache: 'no-store' }).then(r => r.json())
+      .then(d => this.setState({ workerVersion: parseFloat(d && d.version) || 0 })).catch(() => {});
+  }
+  openEvEdit = () => {
+    const e = this.state.saleEvent || {};
+    const end = e.endsAt || Date.parse('2026-11-04T23:59:00-03:00');
+    const d = new Date(end);
+    let date = '2026-11-04', time = '23:59';
+    try { date = d.toLocaleDateString('en-CA', { timeZone: TZ }); time = d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: TZ }); } catch (x) {}
+    this.setState({ evEdit: true, evError: '', evDraft: { title: e.title || 'Cyber Monday', date, time, transferOnly: e.on || e.endsAt ? !!e.transferOnly : true, autoEnd: e.autoEnd !== false } });
+    this.checkWorkerVersion();
+  };
+  cancelEvEdit = () => this.setState({ evEdit: false, evError: '' });
+  evInput(k) {
+    this._evInputs = this._evInputs || {};
+    if (!this._evInputs[k]) this._evInputs[k] = (ev) => { const t = ev && ev.target; const v = (k === 'transferOnly' || k === 'autoEnd') ? !!(t && t.checked) : String((t && t.value) || ''); this.setState(st => (st.evDraft ? { evDraft: { ...st.evDraft, [k]: v }, evError: '' } : null)); };
+    return this._evInputs[k];
+  }
+  saveEvent = () => {
+    const f = this.state.evDraft;
+    if (!f) return;
+    const title = String(f.title || '').trim().slice(0, 40) || 'Cyber Monday';
+    if (!/^\d{4}-\d\d-\d\d$/.test(f.date || '') || !/^\d\d:\d\d$/.test(f.time || '')) { this.setState({ evError: 'Poné el día y la hora en que termina.' }); return; }
+    const endsAt = `${f.date}T${f.time}:00-03:00`;
+    const end = Date.parse(endsAt);
+    if (!isFinite(end) || end <= Date.now()) { this.setState({ evError: 'Esa fecha y hora ya pasó: elegí una que todavía no llegó.' }); return; }
+    const ev = { on: true, title, endsAt, transferOnly: !!f.transferOnly, autoEnd: !!f.autoEnd };
+    this.setState({ saleEvent: normalizeSaleEvent(ev), evEdit: false, evError: '' });
+    firebaseReady.then(() => STORE_DOC.set({ settings: { saleEvent: ev } }, { merge: true }))
+      .then(() => this.showToast(`${title} activado: termina el ${fmtEventEnd(end)}`))
+      .catch(() => this.showToast('No se pudo guardar — revisá tu conexión'));
+  };
+  turnOffEvent = () => {
+    const e = this.state.saleEvent || {};
+    this.setState({ saleEvent: { ...e, on: false } });
+    firebaseReady.then(() => STORE_DOC.set({ settings: { saleEvent: { on: false } } }, { merge: true }))
+      .then(() => this.showToast(`${e.title || 'Evento'} apagado: las ofertas valen con cualquier medio de pago`))
+      .catch(() => this.showToast('No se pudo guardar — revisá tu conexión'));
+  };
+  toggleTd = () => {
+    const t = this.state.transfer || {};
+    if (!t.basePct) return;
+    const td = { pct: t.basePct, cash: !!t.cash, paused: !t.paused };
+    this.setState({ transfer: normalizeTransfer(td) });
+    firebaseReady.then(() => STORE_DOC.set({ settings: { transferDiscount: td } }, { merge: true }))
+      .then(() => this.showToast(td.paused ? `Descuento del ${t.basePct}% con transferencia apagado` : `Descuento del ${t.basePct}% con transferencia encendido`))
+      .catch(() => this.showToast('No se pudo guardar — revisá tu conexión'));
+  };
+  // Valores del cartel y la cuenta regresiva para la tienda.
+  evVals(shop) {
+    const s = this.state, e = s.saleEvent || {};
+    let maxOff = 0;
+    (shop || []).forEach(p => productColors(p).forEach(c => { if (this.onSale(c) && !c.outOfStock) maxOff = Math.max(maxOff, Math.round((1 - parseFloat(c.salePrice) / c.price) * 100)); }));
+    const live = this.evLive() && maxOff > 0;
+    const P = cdParts(live ? e.endsAt - Date.now() : 0);
+    const to = this.saleTransferOnly();
+    const trW = (s.transfer || {}).cash ? 'en efectivo o con transferencia' : 'con transferencia';
+    return {
+      evLive: live, evIdle: !live, evTitle: e.title || 'Cyber Monday', evHeadline: `Hasta ${maxOff}% OFF`,
+      cdD: P.d, cdH: P.h, cdM: P.m, cdS: P.s,
+      evStripText: `Hasta ${maxOff}% OFF${to ? ' pagando ' + trW : ''}`,
+      evSub: to ? `Precios de oferta pagando ${trW}. Con Mercado Pago se paga el precio normal.` : 'Precios rebajados por tiempo limitado.',
+      evEndText: live ? 'Termina el ' + fmtEventEnd(e.endsAt) : '',
+      saleLinkLabel: live ? 'Ver todas las ofertas' : 'Ver todo el sale',
+      saleMenuLabel: live ? (e.title || 'Sale') : 'Sale'
+    };
+  }
+  // Recuadro del evento en el panel.
+  evAdminVals() {
+    const s = this.state, e = s.saleEvent || {}, f = s.evDraft || {};
+    const now = Date.now(), live = this.evLive(), ended = !!(e.on && e.endsAt && now >= e.endsAt);
+    const n = s.products.filter(p => productColors(p).some(c => { const sp = parseFloat(c.salePrice); return sp > 0 && sp < c.price; })).length;
+    const trW = (s.transfer || {}).cash ? 'en efectivo o con transferencia' : 'con transferencia';
+    const left = live ? cdParts(e.endsAt - now) : null;
+    let hint;
+    if (!e.on) hint = 'Prepará un cartel con cuenta regresiva para Cyber Monday u otra fecha de ofertas. Las ofertas son los productos que tienen "precio de oferta" cargado.';
+    else if (live) hint = `Termina el ${fmtEventEnd(e.endsAt)} (faltan ${+left.d} d ${+left.h} h). ${n === 1 ? '1 producto' : n + ' productos'} con precio de oferta${n ? '' : ': cargá precios de oferta para que aparezca el cartel'}. ${e.transferOnly ? `Las ofertas valen solo pagando ${trW}: con Mercado Pago se cobra el precio normal.` : 'Las ofertas valen con cualquier medio de pago.'}${e.autoEnd ? ' Al terminar se apagan solas.' : ''}`;
+    else hint = `Terminó el ${fmtEventEnd(e.endsAt)}. ${e.autoEnd ? 'Las ofertas ya no valen y la web muestra los precios normales (los precios de oferta siguen cargados en cada producto).' : 'Las ofertas siguen valiendo hasta que las saques o apagues el evento.'}`;
+    const wantsTO = s.evEdit ? !!f.transferOnly : !!(e.on && e.transferOnly);
+    const P = s.payments || {};
+    const warn = wantsTO && P.on && P.api && s.workerVersion !== null && s.workerVersion < 1.1
+      ? 'El servidor de pagos todavía cobra con Mercado Pago el precio de oferta. Antes de usar "solo con transferencia", actualizalo en Cloudflare: Worker → Editar código → pegá el archivo servidor/pagos-worker.js nuevo → Deploy.' : '';
+    return {
+      evStateText: !e.on ? 'Sin evento de ofertas' : live ? `${e.title} activo` : `${e.title} terminado`,
+      evHint: hint, evDot: live ? '#A6322A' : e.on ? '#C7A98C' : '#B5ADA6', evCardBorder: live ? '#F0CFC9' : '#E4DED8', evCardBg: live ? '#FDF6F4' : '#fff',
+      evIdleCard: !s.evEdit, evIsOn: !!e.on, evEditLabel: e.on ? 'Cambiar' : 'Preparar evento',
+      openEvEdit: this.openEvEdit, cancelEvEdit: this.cancelEvEdit, saveEvent: this.saveEvent, turnOffEvent: this.turnOffEvent,
+      evEditing: !!s.evEdit, evDraftTitle: f.title || '', evDraftDate: f.date || '', evDraftTime: f.time || '', evDraftTO: !!f.transferOnly, evDraftAuto: !!f.autoEnd,
+      onEvTitle: this.evInput('title'), onEvDate: this.evInput('date'), onEvTime: this.evInput('time'), onEvTO: this.evInput('transferOnly'), onEvAuto: this.evInput('autoEnd'),
+      evPayWord: trW, evHasError: !!s.evError, evError: s.evError || '', evHasWarn: !!warn, evWarn: warn
+    };
+  }
   effPrice(p) { return this.onSale(p) ? parseFloat(p.salePrice) : (+p.price || 0); }
   anyOnSale(p) { return productColors(p).some(c => this.onSale(c)); }
   categoryName(id) { const c = this.state.categories.find(x => x.id === id); return c ? c.name : ''; }
@@ -3380,7 +3606,7 @@ class Component extends DCLogic {
     if (this._pixelOn) {
       const p = this.state.products.find(x => x.id === productId);
       const c = p ? cartColor(p, color) : null;
-      if (p && c) metaTrack('AddToCart', { content_ids: [p.id], content_name: p.name, content_type: 'product', contents: [{ id: p.id, quantity: qty }], value: Math.round(this.effPrice(c)) * qty, currency: 'ARS' });
+      if (p && c) metaTrack('AddToCart', { content_ids: [p.id], content_name: p.name, content_type: 'product', contents: [{ id: p.id, quantity: qty }], value: Math.round(this.normalPrice(c)) * qty, currency: 'ARS' });
     }
   }
   saveCart() {
@@ -3406,7 +3632,8 @@ class Component extends DCLogic {
       const p = this.state.products.find(x => x.id === ci.productId);
       if (!p) return null;
       const c = cartColor(p, ci.color);
-      return { productId: p.id, name: p.name, color: this.materialName(c.materialId), colorId: c.key, qty: ci.qty, price: this.effPrice(c) };
+      const price = Math.round(this.normalPrice(c)), tp = Math.round(this.transferPrice(c));
+      return { productId: p.id, name: p.name, color: this.materialName(c.materialId), colorId: c.key, qty: ci.qty, price, ...(tp > 0 && tp < price ? { tprice: tp } : {}) };
     }).filter(Boolean);
     const total = items.reduce((a, i) => a + i.price * i.qty, 0);
     const u = this.state.user;
@@ -3432,14 +3659,14 @@ class Component extends DCLogic {
     if (s.view === 'product') {
       const p = s.products.find(x => x.id === s.selectedProductId);
       const c = p ? pickColor(p, s.selectedColor) : null;
-      if (p && c) metaTrack('ViewContent', { content_ids: [p.id], content_name: p.name, content_type: 'product', value: Math.round(this.effPrice(c)), currency: 'ARS' });
+      if (p && c) metaTrack('ViewContent', { content_ids: [p.id], content_name: p.name, content_type: 'product', value: Math.round(this.normalPrice(c)), currency: 'ARS' });
     }
   }
   pixelCart() {
     const lines = this.state.cart.map(ci => {
       const p = this.state.products.find(x => x.id === ci.productId);
       const c = p ? cartColor(p, ci.color) : null;
-      return p && c ? { id: p.id, quantity: ci.qty, price: Math.round(this.effPrice(c)) } : null;
+      return p && c ? { id: p.id, quantity: ci.qty, price: Math.round(this.normalPrice(c)) } : null;
     }).filter(Boolean);
     return { content_ids: lines.map(l => l.id), contents: lines.map(l => ({ id: l.id, quantity: l.quantity })), content_type: 'product', num_items: lines.reduce((a, l) => a + l.quantity, 0), value: lines.reduce((a, l) => a + l.price * l.quantity, 0), currency: 'ARS' };
   }
@@ -3468,9 +3695,11 @@ class Component extends DCLogic {
   }
 
   // ---- Descuento por transferencia ----
-  discountMethod(m) { const t = this.state.transfer || {}; return t.pct > 0 && (m === 'transferencia' || (m === 'efectivo' && !!t.cash)); }
-  // Precio para una venta a mano: con el descuento si pagó con transferencia (o efectivo, si corresponde).
-  saleUnitPrice(c, method) { const v = Math.round(this.effPrice(c)); return this.discountMethod(method) ? withDiscount(v, this.state.transfer.pct) : v; }
+  // Hay un precio distinto para transferencia (descuento encendido u ofertas solo con transferencia).
+  transferPricing() { return (this.state.transfer || {}).pct > 0 || (this.saleTransferOnly() && this.saleLive()); }
+  discountMethod(m) { return this.transferPricing() && this.isTransferMethod(m); }
+  // Precio para una venta a mano: el de transferencia si pagó así, si no el normal.
+  saleUnitPrice(c, method) { return Math.round(this.isTransferMethod(method) ? this.transferPrice(c) : this.normalPrice(c)); }
   onSaleMethod = (e) => {
     const method = String((e && e.target && e.target.value) || 'efectivo');
     this.setSale(f => ({ ...f, method, lines: f.lines.map(l => {
@@ -3483,25 +3712,29 @@ class Component extends DCLogic {
   };
   setPaidWith(id, v) {
     const pw = ['transferencia', 'efectivo', 'mercadopago', 'otro'].includes(v) ? v : '';
-    const discountPct = this.discountMethod(pw) ? this.state.transfer.pct : 0;
-    this.setState(st => ({ orders: st.orders.map(o => (o.id === id ? { ...o, paidWith: pw, discountPct } : o)) }));
-    firebaseReady.then(() => db.collection('orders').doc(id).update({ paidWith: pw, discountPct })).catch(() => this.showToast('No se pudo guardar — revisá tu conexión'));
+    const byTransfer = this.isTransferMethod(pw);
+    const discountPct = byTransfer && this.state.transfer.pct > 0 ? this.state.transfer.pct : 0;
+    this.setState(st => ({ orders: st.orders.map(o => (o.id === id ? { ...o, paidWith: pw, discountPct, byTransfer } : o)) }));
+    firebaseReady.then(() => db.collection('orders').doc(id).update({ paidWith: pw, discountPct, byTransfer })).catch(() => this.showToast('No se pudo guardar — revisá tu conexión'));
   }
   orderPayVals(o) {
     const t = this.state.transfer || { pct: 0, cash: false };
     const web = !o.payment && o.source !== 'manual';
     const d = +o.discountPct || 0;
     const live = (o.lines || []).filter(l => l.state !== 'cancelado');
+    const hasTp = (o.lines || []).some(l => +l.tprice > 0);
     const W = { transferencia: 'Pagó con transferencia', efectivo: 'Pagó en efectivo' };
+    const net = live.reduce((a, l) => a + lineNet(l, o), 0), full = live.reduce((a, l) => a + lineTotal(l), 0);
+    const off = (pre) => hasTp ? `${pre} (con descuento)` : t.pct > 0 ? `${pre} (−${t.pct}%)` : pre;
     return {
       canSetPay: web, paidWith: o.paidWith || '', onPaidWith: (e) => this.setPaidWith(o.id, e.target.value),
-      optTransfer: t.pct > 0 ? `Transferencia (−${t.pct}%)` : 'Transferencia',
-      optCash: t.pct > 0 && t.cash ? `Efectivo (−${t.pct}%)` : 'Efectivo',
-      hasNet: d > 0, netLabel: d > 0 ? `${W[o.paidWith] || 'Con descuento'} (−${d}%)` : '',
-      netTotal: d > 0 ? this.fmt(live.reduce((a, l) => a + lineNet(l, d), 0)) : ''
+      optTransfer: off('Transferencia'),
+      optCash: t.cash ? off('Efectivo') : 'Efectivo',
+      hasNet: net < full, netLabel: net < full ? `${W[o.paidWith] || 'Con descuento'}${d > 0 && !hasTp ? ` (−${d}%)` : ''}` : '',
+      netTotal: net < full ? this.fmt(net) : ''
     };
   }
-  openTdEdit = () => { const t = this.state.transfer || {}; this.setState({ tdEdit: true, priceTool: null, tdDraftPct: t.pct ? String(t.pct) : '10', tdDraftCash: !!t.cash, tdError: '' }); };
+  openTdEdit = () => { const t = this.state.transfer || {}; this.setState({ tdEdit: true, priceTool: null, tdDraftPct: t.basePct ? String(t.basePct) : '10', tdDraftCash: !!t.cash, tdError: '' }); };
   cancelTdEdit = () => this.setState({ tdEdit: false, tdError: '' });
   onTdPct = (e) => this.setState({ tdDraftPct: String((e && e.target && e.target.value) || '').replace(/[^0-9]/g, '').slice(0, 2), tdError: '' });
   onTdCash = (e) => this.setState({ tdDraftCash: !!(e && e.target && e.target.checked) });
@@ -3509,7 +3742,7 @@ class Component extends DCLogic {
     const raw = String(this.state.tdDraftPct || '').trim();
     const pct = raw === '' ? 0 : parseInt(raw, 10);
     if (!(pct >= 0 && pct <= 50)) { this.setState({ tdError: 'Poné un número de 0 a 50.' }); return; }
-    const td = { pct, cash: pct > 0 && !!this.state.tdDraftCash };
+    const td = { pct, cash: !!this.state.tdDraftCash, paused: false };
     this.setState({ transfer: normalizeTransfer(td), tdEdit: false, tdError: '' });
     firebaseReady.then(() => STORE_DOC.set({ settings: { transferDiscount: td } }, { merge: true }))
       .then(() => this.showToast(pct ? `Listo: ${pct}% de descuento ${td.cash ? 'en efectivo o con transferencia' : 'con transferencia'}` : 'Descuento por transferencia apagado'))
@@ -3598,9 +3831,10 @@ class Component extends DCLogic {
         const data = snap.exists ? snap.data() : {};
         const plan = this.pricePlan(Array.isArray(data.products) ? data.products : [], rule);
         count = plan.changes.length;
-        const prevTd = normalizeTransfer(data.settings && data.settings.transferDiscount);
+        const pt0 = normalizeTransfer(data.settings && data.settings.transferDiscount);
+        const prevTd = { pct: pt0.basePct, cash: pt0.cash, paused: pt0.paused };
         const upd = { products: plan.products };
-        if (rule.mode === 'transfer') upd.settings = { transferDiscount: { pct: rule.pct, cash: rule.cash } };
+        if (rule.mode === 'transfer') upd.settings = { transferDiscount: { pct: rule.pct, cash: rule.cash, paused: false } };
         t.set(STORE_DOC, upd, { merge: true });
         t.set(backupRef, { at: firebase.firestore.FieldValue.serverTimestamp(), mode: rule.mode, pct: rule.pct, cash: !!rule.cash, prevTd, count, before: plan.before, after: plan.after, undone: false });
       });
@@ -3643,7 +3877,7 @@ class Component extends DCLogic {
           return np;
         });
         const upd = { products };
-        if (bk.mode === 'transfer') upd.settings = { transferDiscount: normalizeTransfer(bk.prevTd) };
+        if (bk.mode === 'transfer') { const b0 = bk.prevTd || {}; upd.settings = { transferDiscount: { pct: +b0.pct || 0, cash: !!b0.cash, paused: !!b0.paused } }; }
         t.set(STORE_DOC, upd, { merge: true });
         t.set(backupRef, { undone: true }, { merge: true });
       });
@@ -3682,8 +3916,9 @@ class Component extends DCLogic {
     const sel = (on2) => ({ bd: on2 ? '#1C1A19' : '#D8D1CA', bg: on2 ? '#1C1A19' : '#fff', ink: on2 ? '#fff' : '#3A3532' });
     const sT = sel(pt && pt.mode === 'transfer'), sP = sel(pt && pt.mode === 'pct');
     return {
-      tdStateText: on ? `Descuento con transferencia: ${t.pct}%` : 'Sin descuento por transferencia',
-      tdHint: on ? `La web muestra el precio ${t.cash ? 'en efectivo o con transferencia' : 'con transferencia'} en los productos, el carrito y el mensaje de WhatsApp. Con Mercado Pago se cobra el precio de lista. En Ventas, marcá en cada pedido cómo pagó.` : 'Podés ofrecer un precio más bajo pagando con transferencia (Mercado Pago cobra comisión), y subir todos los precios de una vez.',
+      tdCanToggle: t.basePct > 0, tdToggleLabel: t.paused ? 'Encender' : 'Apagar', toggleTd: this.toggleTd,
+      tdStateText: on ? `Descuento con transferencia: ${t.pct}%` : t.paused ? `Descuento con transferencia apagado (${t.basePct}%)` : 'Sin descuento por transferencia',
+      tdHint: t.paused ? `Está apagado: nadie tiene el ${t.basePct}% extra. Los precios de oferta siguen valiendo como diga el evento de ofertas. Para volver a activarlo, tocá Encender.` : on ? `La web muestra el precio ${t.cash ? 'en efectivo o con transferencia' : 'con transferencia'} en los productos, el carrito y el mensaje de WhatsApp. No se suma a los productos en oferta. Con Mercado Pago se cobra el precio de lista. En Ventas, marcá en cada pedido cómo pagó.` : 'Podés ofrecer un precio más bajo pagando con transferencia (Mercado Pago cobra comisión), y subir todos los precios de una vez.',
       tdDot: on ? '#4E7B4F' : '#B5ADA6', tdCardBorder: on ? '#CFE0CF' : '#E4DED8', tdCardBg: on ? '#F6FAF6' : '#fff',
       tdIdle: !s.tdEdit && !pt, tdEditing: !!s.tdEdit, tdEditLabel: on ? 'Cambiar' : 'Activar descuento',
       openTdEdit: this.openTdEdit, cancelTdEdit: this.cancelTdEdit, onTdPct: this.onTdPct, onTdCash: this.onTdCash, saveTd: this.saveTd,
@@ -3795,15 +4030,15 @@ class Component extends DCLogic {
     const base = {
       saleOpen: !!f, saleClosed: !f, openSaleForm: this.openSaleForm, cancelSaleForm: this.cancelSaleForm, addSaleLine: this.addSaleLine, saveManualSale: this.saveManualSale,
       onSaleDate: this.saleInput('date'), onSaleMethod: this.onSaleMethod,
-      saleOptCash: this.discountMethod('efectivo') ? `Efectivo (−${s.transfer.pct}%)` : 'Efectivo',
-      saleOptTransfer: this.discountMethod('transferencia') ? `Transferencia (−${s.transfer.pct}%)` : 'Transferencia', onSaleStatus: this.saleInput('status'), onSaleName: this.saleInput('name'),
+      saleOptCash: this.discountMethod('efectivo') ? (s.transfer.pct > 0 && !this.saleTransferOnly() ? `Efectivo (−${s.transfer.pct}%)` : 'Efectivo (con descuento)') : 'Efectivo',
+      saleOptTransfer: this.discountMethod('transferencia') ? (s.transfer.pct > 0 && !this.saleTransferOnly() ? `Transferencia (−${s.transfer.pct}%)` : 'Transferencia (con descuento)') : 'Transferencia', onSaleStatus: this.saleInput('status'), onSaleName: this.saleInput('name'),
       onSalePhone: this.saleInput('phone'), onSaleNote: this.saleInput('note'), onSaleStock: this.saleInput('stock'), saleToday: dayKey(new Date())
     };
     if (!f) return { ...base, saleLines: [], saleOptions: [], saleDate: '', saleMethod: 'efectivo', saleStatus: 'vendido', saleName: '', salePhone: '', saleNote: '', saleStock: true, saleTotal: this.fmt(0), saleHasError: false, saleError: '', saleSaveLabel: 'Guardar venta', saleSaveOpacity: 1 };
     const options = [];
     s.products.slice().sort((a, b) => a.name.localeCompare(b.name, 'es')).forEach(p => {
       const cs = productColors(p);
-      cs.forEach(c => options.push({ value: p.id + '|' + c.key, label: `${p.name}${cs.length > 1 || c.materialId ? ' — ' + (this.materialName(c.materialId) || 'sin color') : ''} · ${this.fmt(this.effPrice(c))}${c.stock === 0 || c.outOfStock ? ' (sin stock)' : ''}` }));
+      cs.forEach(c => options.push({ value: p.id + '|' + c.key, label: `${p.name}${cs.length > 1 || c.materialId ? ' — ' + (this.materialName(c.materialId) || 'sin color') : ''} · ${this.fmt(this.normalPrice(c))}${c.stock === 0 || c.outOfStock ? ' (sin stock)' : ''}` }));
     });
     let total = 0;
     const lines = f.lines.map((l, i) => {
@@ -3969,8 +4204,9 @@ class Component extends DCLogic {
     this.showToast('Mercado Pago activo: ya aparece en el carrito');
   };
 
-  payVals(subtotal) {
+  payVals(subtotal, tri) {
     const s = this.state, P = s.payments || {}, f = s.payForm || {}, tdP = s.transfer || { pct: 0, cash: false };
+    const tr = tri || { has: false, total: 0 }, trW = tdP.cash ? 'en efectivo o con transferencia' : 'con transferencia';
     const mpOn = !!(P.on && P.api);
     const formView = !!(s.cartOpen && s.payStep === 'form');
     // Resultado del pago
@@ -4003,9 +4239,9 @@ class Component extends DCLogic {
       waBtnBg: mpOn && s.cart.length ? '#fff' : '#1C1A19', waBtnInk: mpOn && s.cart.length ? '#1C1A19' : '#fff',
       waBtnLabel: mpOn && s.cart.length ? 'Pedir por WhatsApp' : 'Finalizar por WhatsApp',
       cartNote: (mpOn && s.cart.length ? 'Pagá con tarjeta, débito o dinero en Mercado Pago. O pedí por WhatsApp y coordinamos.' : 'Coordinamos pago y envío por mensaje.')
-        + (tdP.pct > 0 && s.cart.length ? (mpOn ? ` Pidiendo por WhatsApp, ${tdP.cash ? 'en efectivo o con transferencia' : 'con transferencia'} tenés ${tdP.pct}% OFF.` : ` ${tdP.cash ? 'En efectivo o con transferencia' : 'Con transferencia'} tenés ${tdP.pct}% OFF.`) : ''),
-      payHasTransferNote: formView && tdP.pct > 0,
-      payTransferNote: tdP.pct > 0 ? `Con Mercado Pago se paga el precio de lista. ${tdP.cash ? 'En efectivo o con transferencia' : 'Con transferencia'} tenés ${tdP.pct}% OFF: para eso, volvé al carrito y pedí por WhatsApp.` : '',
+        + (tr.has && s.cart.length ? (mpOn ? ` Pidiendo por WhatsApp y pagando ${trW}, pagás ${this.fmt(tr.total)}.` : ` Pagando ${trW} pagás ${this.fmt(tr.total)}.`) : ''),
+      payHasTransferNote: formView && tr.has,
+      payTransferNote: tr.has ? `Con Mercado Pago se paga el precio normal. Pagando ${trW} son ${this.fmt(tr.total)}: para eso, volvé al carrito y pedí por WhatsApp.` : '',
       isPayment: s.view === 'payment', payState: st,
       payKicker: T[0], payTitle: T[1], payText: T[2], payKickerInk: paid ? '#4E7B4F' : '#9A938D',
       payHasCode: !!code && st !== 'cargando', payCodeText: code, payHasTotal: !!(pr && pr.total), payTotalText: pr && pr.total ? 'Total ' + this.fmt(pr.total) : '',
@@ -4050,6 +4286,7 @@ class Component extends DCLogic {
   }
   startAdminData() {
     if (this._unsubOrders || !this.isAdminUser()) return;
+    this.checkWorkerVersion();
     this._unsubOrders = () => {};
     firebaseReady.then(() => {
       if (!this.isAdminUser()) { this._unsubOrders = null; return; }
@@ -4057,7 +4294,7 @@ class Component extends DCLogic {
         const orders = snap.docs.map(d => {
           const o = d.data({ serverTimestamps: 'estimate' }) || {};
           const date = o.createdAt && o.createdAt.toDate ? o.createdAt.toDate() : new Date();
-          return { id: d.id, code: o.code || '', status: o.status || 'pendiente', total: +o.total || 0, items: (Array.isArray(o.items) ? o.items : []).map(aliasLine), customer: o.customer || null, payment: o.payment || null, source: o.source || '', stockProblem: !!o.stockProblem, paidWith: o.paidWith || '', discountPct: +o.discountPct || 0, note: o.note || '', stockApplied: !!o.stockApplied, date, lines: orderLines(o) };
+          return { id: d.id, code: o.code || '', status: o.status || 'pendiente', total: +o.total || 0, items: (Array.isArray(o.items) ? o.items : []).map(aliasLine), customer: o.customer || null, payment: o.payment || null, source: o.source || '', stockProblem: !!o.stockProblem, paidWith: o.paidWith || '', discountPct: +o.discountPct || 0, byTransfer: !!o.byTransfer, note: o.note || '', stockApplied: !!o.stockApplied, date, lines: orderLines(o) };
         });
         this.setState({ orders, ordersLoaded: true, ordersError: '' });
       }, (err) => {
@@ -5167,27 +5404,37 @@ class Component extends DCLogic {
     const SLOT = 'v6-';
     const td = s.transfer || { pct: 0, cash: false }, tdOn = td.pct > 0;
     const tdShort = td.cash ? 'en efectivo o transferencia' : 'con transferencia';
+    const saleTO = this.saleTransferOnly() && this.saleLive();
+    const evV = this.evVals(shop);
     const withDetails = (p) => {
       const colors = productColors(p);
       const multi = colors.length > 1;
       const shown = colors.find(c => !c.outOfStock) || colors[0] || { price: p.price, salePrice: p.salePrice, media: productMedia(p) };
-      const prices = colors.map(c => this.effPrice(c));
-      const minPrice = prices.length ? Math.min(...prices) : this.effPrice(shown);
+      const prices = colors.map(c => this.normalPrice(c));
+      const minPrice = prices.length ? Math.min(...prices) : this.normalPrice(shown);
       const priceVaries = multi && prices.some(x => x !== prices[0]);
-      const sale = !priceVaries && this.onSale(shown);
+      // Tachado clásico solo si la oferta vale para todos; si vale solo con transferencia, se muestra como precio con transferencia.
+      const sale = !priceVaries && this.onSale(shown) && !saleTO;
+      const offBadge = this.onSale(shown) && (!priceVaries || saleTO);
+      const trs = colors.map(c => this.transferPrice(c));
+      const trShown = priceVaries ? (trs.length ? Math.min(...trs) : 0) : this.transferPrice(shown);
+      const baseShown = priceVaries ? minPrice : this.normalPrice(shown);
+      const trSale = saleTO && colors.some(c => this.onSale(c));
       const allOut = colors.length ? colors.every(c => c.outOfStock) : !!p.outOfStock;
       const media = cardMedia(p);
       return {
         ...p,
         image: (media[0] && mediaThumb(media[0], 900)) || BLANK,
         imageId: SLOT + p.imageId,
-        priceFormatted: priceVaries ? 'Desde ' + this.fmt(minPrice) : this.fmt(this.effPrice(shown)),
-        hasTransfer: tdOn && (priceVaries ? minPrice : this.effPrice(shown)) > 0,
-        transferText: tdOn ? (priceVaries ? 'Desde ' : '') + this.fmt(withDiscount(priceVaries ? minPrice : this.effPrice(shown), td.pct)) + ' ' + tdShort : '',
-        trPrice: tdOn ? (priceVaries ? 'Desde ' : '') + this.fmt(withDiscount(priceVaries ? minPrice : this.effPrice(shown), td.pct)) : '', trLabel: tdShort,
-        isOnSale: sale,
+        priceFormatted: priceVaries ? 'Desde ' + this.fmt(minPrice) : this.fmt(this.normalPrice(shown)),
+        hasTransfer: trShown > 0 && trShown < baseShown,
+        transferText: trShown > 0 && trShown < baseShown ? (priceVaries ? 'Desde ' : '') + this.fmt(trShown) + ' ' + tdShort : '',
+        trPrice: (priceVaries ? 'Desde ' : '') + this.fmt(trShown), trLabel: tdShort,
+        trColor: trSale ? '#A6322A' : '#3E6B47', trColorDark: trSale ? '#F0C9A4' : '#F6F1EC',
+        darkPriceColor: saleTO && this.onSale(shown) ? '#CFC4BA' : '#F0C9A4',
+        isOnSale: sale, offBadge,
         oldPriceFormatted: sale ? this.fmt(shown.price) : '',
-        discountLabel: sale ? ('−' + Math.round((1 - parseFloat(shown.salePrice) / shown.price) * 100) + '%') : '',
+        discountLabel: offBadge ? ('−' + Math.round((1 - parseFloat(shown.salePrice) / shown.price) * 100) + '%') : '',
         priceColor: sale ? '#A6322A' : 'var(--bc-accent)',
         categoryName: this.categoryName(p.categoryId),
         materialName: colors.map(c => this.materialName(c.materialId)).filter(Boolean).join(' · '),
@@ -5340,12 +5587,14 @@ class Component extends DCLogic {
     catalog = [...catalog.filter(p => !soldOut(p)), ...catalog.filter(soldOut)];
     const catalogProducts = loading ? [] : catalog.map(p => withCard(p, 'cat'));
     const catalogTitle = s.catFilter === 'all' ? 'Todos los productos'
-      : s.catFilter === 'sale' ? 'Sale' : this.categoryName(s.catFilter);
+      : s.catFilter === 'sale' ? (evV.evLive ? evV.evTitle : 'Sale') : this.categoryName(s.catFilter);
     const searching = qTokens.length > 0;
     const qShown = String(s.catSearch || '').trim();
     const qScope = s.catFilter !== 'all' ? ' en ' + catalogTitle : '';
     const qWiden = searching && !loading && catalog.length === 0 && (s.catFilter !== 'all' || s.matFilter !== 'all') ? shop.filter(qMatch).length : 0;
-    const saleProducts = loading ? [] : shop.filter(p => productColors(p).some(c => this.onSale(c) && !c.outOfStock)).slice(0, 4).map(p => withCard(p, 'sale'));
+    // Durante el evento de ofertas aparecen todas; si no, las primeras 4.
+    const saleAll = shop.filter(p => productColors(p).some(c => this.onSale(c) && !c.outOfStock));
+    const saleProducts = loading ? [] : (evV.evLive ? saleAll : saleAll.slice(0, 4)).map(p => withCard(p, 'sale'));
 
     // Un producto de una categoría "próximamente" solo lo puede abrir la dueña.
     const foundProduct = (admin ? s.products : shop).find(p => p.id === s.selectedProductId);
@@ -5356,12 +5605,12 @@ class Component extends DCLogic {
     const selectedProduct = {
       ...withDetails(selectedRaw),
       materialName: this.materialName(selColor.materialId),
-      priceFormatted: this.fmt(this.effPrice(selColor)),
-      transferPrice: tdOn ? this.fmt(withDiscount(this.effPrice(selColor), td.pct)) : '',
-      isOnSale: selSale,
-      oldPriceFormatted: selSale ? this.fmt(selColor.price) : '',
+      priceFormatted: this.fmt(this.normalPrice(selColor)),
+      transferPrice: this.fmt(this.transferPrice(selColor)),
+      isOnSale: selSale && !saleTO,
+      oldPriceFormatted: selSale && !saleTO ? this.fmt(selColor.price) : '',
       discountLabel: selSale ? ('−' + Math.round((1 - parseFloat(selColor.salePrice) / selColor.price) * 100) + '%') : '',
-      priceColor: selSale ? '#A6322A' : 'var(--bc-accent)',
+      priceColor: selSale && !saleTO ? '#A6322A' : 'var(--bc-accent)',
       outOfStock: !!selColor.outOfStock,
       lastUnit: lastUnitForColor(selectedRaw, selColor)
     };
@@ -5428,18 +5677,20 @@ class Component extends DCLogic {
       const key = this.cartKey(ci);
       return {
         productId: p.id, name: p.name, materialName: this.materialName(c.materialId), qty: ci.qty, color: c.key,
-        unitPrice: this.effPrice(c),
+        unitPrice: this.normalPrice(c), trUnit: this.transferPrice(c), trSale: saleTO && this.onSale(c),
         imageId: SLOT + p.imageId, image: c.media[0] ? mediaThumb(c.media[0], 300) : '',
-        lineTotalFormatted: this.fmt(this.effPrice(c) * ci.qty),
+        lineTotalFormatted: this.fmt(this.normalPrice(c) * ci.qty),
         inc: () => this.incCartItem(key), dec: () => this.decCartItem(key), remove: () => this.removeCartItem(key)
       };
     }).filter(Boolean);
     const cartSubtotal = cartItems.reduce((sum, i) => sum + i.unitPrice * i.qty, 0);
-    const cartTransfer = cartItems.reduce((sum, i) => sum + withDiscount(i.unitPrice, td.pct) * i.qty, 0);
+    const cartTransfer = cartItems.reduce((sum, i) => sum + Math.min(i.trUnit, i.unitPrice) * i.qty, 0);
+    const cartHasTr = cartItems.length > 0 && cartTransfer < cartSubtotal;
     const tdLong = td.cash ? 'Pagando en efectivo o con transferencia' : 'Pagando con transferencia';
+    const cartTrLabel = tdLong + (tdOn && !cartItems.some(i => i.trSale) ? ` (${td.pct}% OFF)` : '');
     const orderCode = s.checkoutCode || '';
     const waLines = cartItems.map(i => `- ${i.qty} x ${i.name}${i.materialName ? ' (' + i.materialName + ')' : ''}: ${this.fmt(i.unitPrice * i.qty)}`).join('\n');
-    const whatsappCartLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Hola! Quiero hacer este pedido${orderCode ? ' (pedido ' + orderCode + ')' : ''}:\n${waLines}\nTotal: ${this.fmt(cartSubtotal)}${tdOn && cartItems.length ? `\n${tdLong} (${td.pct}% OFF): ${this.fmt(cartTransfer)}` : ''}`)}`;
+    const whatsappCartLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Hola! Quiero hacer este pedido${orderCode ? ' (pedido ' + orderCode + ')' : ''}:\n${waLines}\nTotal: ${this.fmt(cartSubtotal)}${cartHasTr ? `\n${cartTrLabel}: ${this.fmt(cartTransfer)}` : ''}`)}`;
     const whatsappProductLink = `https://wa.me/${whatsappNumber}?text=Hola!%20Me%20interesa%20${encodeURIComponent(selectedProduct.name || '')}%20en%20${encodeURIComponent(selectedProduct.materialName || '')}`;
 
     // ---- Panel: Ventas ----
@@ -5484,7 +5735,7 @@ class Component extends DCLogic {
             const c = key ? this.costOf(it.productId, key) : null;
             if (c === null) return;
             costed += q;
-            gain += (withDiscount(+it.price || 0, +o.discountPct || 0) - c) * q;
+            gain += lineNet(it, o) - c * q;
           }));
           if (!units) return { label: 'Ganancia estimada', value: '—', sub: 'todavía no hay ventas confirmadas' };
           if (!costed) return { label: 'Ganancia estimada', value: '—', sub: 'cargá el costo de tus productos' };
@@ -5669,7 +5920,7 @@ class Component extends DCLogic {
             const p = s.products.find(x => x.id === it.productId);
             if (!p) return false;
             const c = productColors(p).find(x => x.key === it.colorId) || productColors(p)[0];
-            return c && Math.round(this.effPrice(c)) !== Math.round(+it.price || 0);
+            return c && ![this.normalPrice(c), this.effPrice(c), +c.price || 0].map(Math.round).includes(Math.round(+it.price || 0));
           });
           if (priceOff) why.push('algún precio es distinto al de la tienda hoy');
           return { hasCheck: why.length > 0, checkText: why.join(', ') + '.' };
@@ -5753,13 +6004,19 @@ class Component extends DCLogic {
       cartCount: s.cart.reduce((n, c) => n + c.qty, 0),
       cartItems, cartEmpty: cartItems.length === 0,
       cartSubtotalFormatted: this.fmt(cartSubtotal),
-      cartShowTransfer: tdOn && cartItems.length > 0 && !(s.cartOpen && s.payStep === 'form'),
-      cartTransferLabel: `${tdLong} (${td.pct}% OFF)`, cartTransferFormatted: this.fmt(cartTransfer),
-      selHasTransfer: tdOn && !!foundProduct && this.effPrice(selColor) > 0,
-      selTransferPrice: selectedProduct.transferPrice, selTransferLabel: tdShort, selTransferOff: tdOn ? td.pct + '% OFF' : '',
+      cartShowTransfer: cartHasTr && !(s.cartOpen && s.payStep === 'form'),
+      cartTransferLabel: cartTrLabel, cartTransferFormatted: this.fmt(cartTransfer),
+      selHasTransfer: !!foundProduct && this.transferPrice(selColor) > 0 && this.transferPrice(selColor) < this.normalPrice(selColor),
+      selTransferPrice: selectedProduct.transferPrice,
+      selTransferLabel: tdShort + (saleTO && selSale && evV.evLive ? ' · ' + evV.evTitle : ''),
+      selHasOff: (saleTO && selSale) || (!selSale && tdOn),
+      selTransferOff: saleTO && selSale ? selectedProduct.discountLabel : (tdOn ? td.pct + '% OFF' : ''),
+      selTrBg: saleTO && selSale ? '#FBEDEA' : '#EEF4EE', selTrBd: saleTO && selSale ? '#F0CFC9' : '#CFE0CF', selTrInk: saleTO && selSale ? '#A6322A' : '#3E6B47',
+      selTrStrong: saleTO && selSale ? '#A6322A' : '#2F5E31', selTrPill: saleTO && selSale ? '#A6322A' : '#4E7B4F',
+      ...evV, evOnSalePage: evV.evLive && s.catFilter === 'sale', ...this.evAdminVals(),
       ...this.tdVals(),
       whatsappCartLink, whatsappProductLink, onCheckout: this.onCheckout,
-      ...this.payVals(cartSubtotal),
+      ...this.payVals(cartSubtotal, { has: cartHasTr, total: cartTransfer }),
       ...this.payAdminVals(),
       ...this.saleVals(),
       ...this.pixelVals(),
