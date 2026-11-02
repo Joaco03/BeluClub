@@ -933,8 +933,12 @@
               </div>
               <div onClick="{{ addSelectedToCart }}" style="cursor:pointer;flex:1;min-width:200px;background:#1C1A19;color:#fff;display:flex;align-items:center;justify-content:center;padding:15px;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;" style-hover="background:var(--bc-accent);">Agregar al carrito</div>
             </div>
-            <a href="{{ whatsappProductLink }}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;border:1px solid #1C1A19;color:#1C1A19;padding:15px;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:34px;" style-hover="background:#F6F1EC;color:#1C1A19;">Consultar por WhatsApp</a>
+            <a href="{{ whatsappProductLink }}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;border:1px solid #1C1A19;color:#1C1A19;padding:15px;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:12px;" style-hover="background:#F6F1EC;color:#1C1A19;">Consultar por WhatsApp</a>
           </sc-if>
+          <div data-share="1" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:30px;">
+            <span data-share-btn="1" role="button" tabIndex="0" onClick="{{ shareProduct }}" style="cursor:pointer;flex:1;min-width:140px;display:flex;align-items:center;justify-content:center;gap:9px;border:1px solid #D8D1CA;color:#3A3532;padding:13px;font-size:10.5px;letter-spacing:0.18em;text-transform:uppercase;transition:border-color .2s ease,color .2s ease;" style-hover="border-color:#1C1A19;color:#1C1A19;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 15V3m0 0-4 4m4-4 4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7 10H5.5A1.5 1.5 0 0 0 4 11.5v8A1.5 1.5 0 0 0 5.5 21h13a1.5 1.5 0 0 0 1.5-1.5v-8a1.5 1.5 0 0 0-1.5-1.5H17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg>Compartir</span>
+            <span data-copy-link="1" role="button" tabIndex="0" onClick="{{ copyProductLink }}" aria-live="polite" style="cursor:pointer;flex:1;min-width:140px;display:flex;align-items:center;justify-content:center;gap:9px;border:1px solid #D8D1CA;color:#3A3532;padding:13px;font-size:10.5px;letter-spacing:0.18em;text-transform:uppercase;transition:border-color .2s ease,color .2s ease;color:{{ copyLinkInk }};border-color:{{ copyLinkBorder }};" style-hover="border-color:#1C1A19;color:#1C1A19;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1 1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path><path d="M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1-1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg>{{ copyLinkLabel }}</span>
+          </div>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:18px;padding-top:28px;border-top:1px solid #E4DED8;">
             <div><div style="font-size:9.5px;letter-spacing:0.2em;text-transform:uppercase;color:#9A938D;margin-bottom:5px;">Waterproof</div><div style="font-size:12.5px;font-weight:300;color:#5B554F;">Resiste agua y transpiración</div></div>
             <div><div style="font-size:9.5px;letter-spacing:0.2em;text-transform:uppercase;color:#9A938D;margin-bottom:5px;">Hipoalergénico</div><div style="font-size:12.5px;font-weight:300;color:#5B554F;">Acero inoxidable quirúrgico</div></div>
@@ -2234,6 +2238,8 @@ const normalizeSaleEvent = (v) => {
     popup: !(v && v.popup === false), popupImage: safeUrl(v && v.popupImage) };
 };
 const EVPOP_KEY = 'blublub_evpop_v1';
+// Dirección de la tienda para los links que se comparten.
+const SITE_URL = 'https://blushop.com.ar/';
 function cdParts(ms) {
   const t = Math.max(0, Math.floor(ms / 1000)), two = (n) => String(n).padStart(2, '0');
   return { d: two(Math.floor(t / 86400)), h: two(Math.floor(t / 3600) % 24), m: two(Math.floor(t / 60) % 60), s: two(t % 60) };
@@ -2694,6 +2700,7 @@ class Component extends DCLogic {
     evError: '',
     evTick: 0,
     evPopOpen: false,
+    linkCopied: false,
     evUploading: false,
     workerVersion: null,
     tdEdit: false,
@@ -3344,6 +3351,46 @@ class Component extends DCLogic {
   goHome = () => this.navigate('#/');
   goCatalogAll = () => this.navigate('#/productos');
   goSale = () => this.navigate('#/productos/sale');
+  // ---- Compartir un producto: link directo a ese producto (y al color elegido) ----
+  productShareUrl() {
+    const s = this.state, p = s.products.find(x => x.id === s.selectedProductId);
+    if (!p) return SITE_URL;
+    const cs = productColors(p), c = pickColor(p, s.selectedColor);
+    return SITE_URL + '#/producto/' + encodeURIComponent(p.id) + (cs.length > 1 && c && c.key ? '/' + encodeURIComponent(c.key) : '');
+  }
+  copyText(t) {
+    if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(t);
+    return new Promise((res, rej) => {
+      const ta = document.createElement('textarea');
+      ta.value = t; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.top = '0'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      let ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
+      ta.remove(); ok ? res() : rej(new Error('copy'));
+    });
+  }
+  copyProductLink = () => {
+    const url = this.productShareUrl();
+    this.copyText(url).then(() => {
+      this.setState({ linkCopied: true });
+      clearTimeout(this._copyTimer);
+      this._copyTimer = setTimeout(() => this.setState({ linkCopied: false }), 2500);
+      this.showToast('Link copiado: pegalo donde quieras');
+    }).catch(() => this.showToast('No se pudo copiar. El link es: ' + url));
+  };
+  shareProduct = () => {
+    const s = this.state, p = s.products.find(x => x.id === s.selectedProductId);
+    const url = this.productShareUrl();
+    const name = p ? p.name.trim() : 'The Blu Club';
+    const text = `Mirá ${name} en The Blu Club`;
+    const coarse = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
+    // En el celular abre el menú de compartir del teléfono (WhatsApp, Instagram, etc.).
+    if (navigator.share && coarse) {
+      navigator.share({ title: name + ' · The Blu Club', text, url }).catch(e => { if (!e || e.name !== 'AbortError') this.copyProductLink(); });
+      return;
+    }
+    // En la compu: WhatsApp Web con el link (y "Copiar link" al lado para pegarlo en otro lado).
+    window.open('https://wa.me/?text=' + encodeURIComponent(text + ': ' + url), '_blank', 'noopener');
+  };
   goFaq = () => this.navigate('#/', () => {
     setTimeout(() => {
       const el = document.getElementById('faq-section');
@@ -6127,6 +6174,8 @@ class Component extends DCLogic {
       ...evV, evOnSalePage: evV.evLive && s.catFilter === 'sale', ...this.evAdminVals(),
       ...this.tdVals(),
       whatsappCartLink, whatsappProductLink, onCheckout: this.onCheckout,
+      shareProduct: this.shareProduct, copyProductLink: this.copyProductLink,
+      copyLinkLabel: s.linkCopied ? '¡Link copiado!' : 'Copiar link', copyLinkInk: s.linkCopied ? '#2F5E31' : '#3A3532', copyLinkBorder: s.linkCopied ? '#CFE0CF' : '#D8D1CA',
       ...this.payVals(cartSubtotal, { has: cartHasTr, total: cartTransfer }),
       ...this.payAdminVals(),
       ...this.saleVals(),
