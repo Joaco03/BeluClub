@@ -127,7 +127,7 @@
       <div style="flex:1;overflow-y:auto;padding:28px 24px;display:flex;flex-direction:column;gap:2px;">
         <span data-menu-home="1" onClick="{{ goHome }}" style="cursor:pointer;font-family:var(--bc-title);font-size-adjust:var(--bc-title-adjust);font-size:24px;padding:10px 0;" style-hover="color:var(--bc-accent);">Inicio</span>
         <span onClick="{{ goCatalogAll }}" style="cursor:pointer;font-family:var(--bc-title);font-size-adjust:var(--bc-title-adjust);font-size:24px;padding:10px 0;" style-hover="color:var(--bc-accent);">Todos los productos</span>
-        <span onClick="{{ goSale }}" style="cursor:pointer;font-family:var(--bc-title);font-size-adjust:var(--bc-title-adjust);font-size:24px;padding:10px 0;color:#A6322A;" style-hover="color:var(--bc-accent);">{{ saleMenuLabel }}</span>
+        <span data-menu-sale="1" onClick="{{ goSale }}" style="cursor:pointer;font-family:var(--bc-title);font-size-adjust:var(--bc-title-adjust);font-size:{{ saleMenuSize }};padding:10px 0;color:#A6322A;display:flex;align-items:center;flex-wrap:wrap;gap:6px 12px;" style-hover="color:var(--bc-accent);">{{ saleMenuLabel }}<sc-if value="{{ evLive }}"><span data-menu-cd="1" aria-label="Tiempo que falta" style="font-family:var(--bc-body);font-size-adjust:none;font-size:12px;letter-spacing:0.06em;font-variant-numeric:tabular-nums;color:#A6322A;border:1px solid #A6322A;padding:4px 8px;line-height:1.2;white-space:nowrap;"><span data-cd="d">{{ cdD }}</span>d <span data-cd="h">{{ cdH }}</span>:<span data-cd="m">{{ cdM }}</span>:<span data-cd="s">{{ cdS }}</span></span></sc-if></span>
         <div style="height:1px;background:#E4DED8;margin:14px 0 18px;"></div>
         <sc-for list="{{ menuCategories }}" as="c" hint-placeholder-count="4">
           <sc-if value="{{ c.ready }}"><span onClick="{{ c.select }}" style="cursor:pointer;font-size:13.5px;letter-spacing:0.06em;padding:9px 0;color:#3A3532;" style-hover="color:var(--bc-accent);">{{ c.name }}</span></sc-if>
@@ -271,6 +271,25 @@
           <p style="margin:12px 0 0;font-size:11px;color:#9A938D;text-align:center;line-height:1.5;">Tus productos quedan reservados 30 minutos mientras pagás.</p>
           <sc-if value="{{ payHasTransferNote }}"><p data-pay-transfer-note="1" style="margin:8px 0 0;font-size:11px;color:#7A736E;text-align:center;line-height:1.5;">{{ payTransferNote }}</p></sc-if>
         </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- CYBER MONDAY: ventana con foto al entrar -->
+  <sc-if value="{{ evPopOpen }}">
+    <div data-ev-pop-bg="1" onClick="{{ closeEvPop }}" style="position:fixed;inset:0;background:rgba(28,26,25,0.55);z-index:67;animation:bcFade .25s ease;"></div>
+    <div data-ev-pop="1" role="dialog" aria-modal="true" aria-label="{{ evTitle }}" style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(400px,90vw);max-height:94vh;overflow:auto;background:#fff;z-index:68;animation:bcFade .3s ease;box-shadow:0 18px 60px rgba(28,26,25,0.35);">
+      <div style="position:relative;">
+        <img src="{{ evPopImage }}" alt="" style="display:block;width:100%;aspect-ratio:4/5;max-height:42vh;object-fit:cover;background:#F6F1EC;">
+        <span data-ev-pop-close="1" role="button" tabIndex="0" aria-label="Cerrar" onClick="{{ closeEvPop }}" style="position:absolute;top:10px;right:10px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.94);color:#1C1A19;font-size:26px;font-weight:300;line-height:1;cursor:pointer;">×</span>
+        <div style="position:absolute;left:12px;bottom:12px;background:#7C2620;"><div data-ev-badge="1" style="display:inline-flex;align-items:center;gap:8px;border:1px solid #7C2620;padding:7px 13px 7px 10px;color:#F6F1EC;"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 2 4.8 13.4h6.1L9.9 22l8.8-11.6h-6.2L13.5 2z"></path></svg><span style="font-size:11px;font-weight:500;letter-spacing:0.3em;text-transform:uppercase;">{{ evTitle }}</span></div></div>
+      </div>
+      <div style="padding:20px 22px 18px;text-align:center;">
+        <div style="font-family:var(--bc-title);font-size-adjust:var(--bc-title-adjust);font-weight:300;font-size:40px;line-height:1.05;color:#A6322A;">{{ evHeadline }}</div>
+        <div style="font-size:13px;color:#5B554F;line-height:1.55;margin:8px 0 16px;">{{ evPopSub }}</div>
+        <div data-ev-countdown="1" role="timer" aria-label="Tiempo que falta para que terminen las ofertas" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;"><div style="min-width:56px;text-align:center;border:1px solid #E4DED8;padding:10px 6px 8px;"><div data-cd="d" style="font-size:26px;font-weight:300;color:#1C1A19;line-height:1;font-variant-numeric:tabular-nums;">{{ cdD }}</div><div style="font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:#9A938D;margin-top:6px;">Días</div></div><div style="min-width:56px;text-align:center;border:1px solid #E4DED8;padding:10px 6px 8px;"><div data-cd="h" style="font-size:26px;font-weight:300;color:#1C1A19;line-height:1;font-variant-numeric:tabular-nums;">{{ cdH }}</div><div style="font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:#9A938D;margin-top:6px;">Horas</div></div><div style="min-width:56px;text-align:center;border:1px solid #E4DED8;padding:10px 6px 8px;"><div data-cd="m" style="font-size:26px;font-weight:300;color:#1C1A19;line-height:1;font-variant-numeric:tabular-nums;">{{ cdM }}</div><div style="font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:#9A938D;margin-top:6px;">Min</div></div><div style="min-width:56px;text-align:center;border:1px solid #E4DED8;padding:10px 6px 8px;"><div data-cd="s" style="font-size:26px;font-weight:300;color:#1C1A19;line-height:1;font-variant-numeric:tabular-nums;">{{ cdS }}</div><div style="font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:#9A938D;margin-top:6px;">Seg</div></div></div>
+        <span data-ev-pop-go="1" role="button" tabIndex="0" onClick="{{ goEvPop }}" style="display:block;margin-top:18px;background:#A6322A;color:#fff;padding:15px;font-size:11.5px;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;" style-hover="background:#7C2620;">Ver ofertas</span>
+        <span role="button" tabIndex="0" onClick="{{ closeEvPop }}" style="display:inline-block;margin-top:12px;font-size:12px;color:#7A736E;text-decoration:underline;text-underline-offset:3px;cursor:pointer;">Ahora no</span>
       </div>
     </div>
   </sc-if>
@@ -512,9 +531,9 @@
                   <sc-if value="{{ p.isOnSale }}">
                     <span style="font-size:12.5px;color:#9A938D;text-decoration:line-through;">{{ p.oldPriceFormatted }}</span>
                   </sc-if>
-                  <span style="font-size:14px;color:{{ p.priceColor }};">{{ p.priceFormatted }}</span>
+                  <span style="font-size:{{ p.priceSize }};color:{{ p.priceColor }};">{{ p.priceFormatted }}</span>
                 </div>
-                <sc-if value="{{ p.hasTransfer }}"><div data-card-transfer="1" style="font-size:11px;color:#7A736E;margin-top:6px;line-height:1.45;"><span style="font-size:14px;font-weight:500;color:{{ p.trColor }};">{{ p.trPrice }}</span> {{ p.trLabel }}</div></sc-if>
+                <sc-if value="{{ p.hasTransfer }}"><div data-card-transfer="1" style="font-size:11px;color:#7A736E;margin-top:6px;line-height:1.45;"><span style="font-size:{{ p.trSize }};font-weight:500;color:{{ p.trColor }};display:{{ p.trDisplay }};line-height:1.25;">{{ p.trPrice }}</span> {{ p.trLabel }}</div></sc-if>
               </div>
             </div>
           </sc-for>
@@ -577,9 +596,9 @@
                     <div style="font-size:10.5px;letter-spacing:0.18em;text-transform:uppercase;color:#A79E96;margin:6px 0 8px;">{{ p.materialName }}</div>
                     <div style="display:flex;align-items:baseline;justify-content:center;gap:9px;">
                       <span style="font-size:12.5px;color:#A79E96;text-decoration:line-through;">{{ p.oldPriceFormatted }}</span>
-                      <span style="font-size:15px;color:{{ p.darkPriceColor }};">{{ p.priceFormatted }}</span>
+                      <span style="font-size:{{ p.priceSizeDark }};color:{{ p.darkPriceColor }};">{{ p.priceFormatted }}</span>
                     </div>
-                    <sc-if value="{{ p.hasTransfer }}"><div data-card-transfer="1" style="font-size:11px;color:#CFC4BA;margin-top:6px;line-height:1.45;"><span style="font-size:14.5px;font-weight:500;color:{{ p.trColorDark }};">{{ p.trPrice }}</span> {{ p.trLabel }}</div></sc-if>
+                    <sc-if value="{{ p.hasTransfer }}"><div data-card-transfer="1" style="font-size:11px;color:#CFC4BA;margin-top:6px;line-height:1.45;"><span style="font-size:{{ p.trSizeDark }};font-weight:500;color:{{ p.trColorDark }};display:{{ p.trDisplay }};line-height:1.25;">{{ p.trPrice }}</span> {{ p.trLabel }}</div></sc-if>
                   </div>
                 </div>
               </sc-for>
@@ -789,9 +808,9 @@
                 <sc-if value="{{ p.isOnSale }}">
                   <span style="font-size:12.5px;color:#9A938D;text-decoration:line-through;">{{ p.oldPriceFormatted }}</span>
                 </sc-if>
-                <span style="font-size:14px;color:{{ p.priceColor }};">{{ p.priceFormatted }}</span>
+                <span style="font-size:{{ p.priceSize }};color:{{ p.priceColor }};">{{ p.priceFormatted }}</span>
               </div>
-              <sc-if value="{{ p.hasTransfer }}"><div data-card-transfer="1" style="font-size:11px;color:#7A736E;margin:-5px 0 12px;line-height:1.45;"><span style="font-size:14px;font-weight:500;color:{{ p.trColor }};">{{ p.trPrice }}</span> {{ p.trLabel }}</div></sc-if>
+              <sc-if value="{{ p.hasTransfer }}"><div data-card-transfer="1" style="font-size:11px;color:#7A736E;margin:-5px 0 12px;line-height:1.45;"><span style="font-size:{{ p.trSize }};font-weight:500;color:{{ p.trColor }};display:{{ p.trDisplay }};line-height:1.25;">{{ p.trPrice }}</span> {{ p.trLabel }}</div></sc-if>
               <sc-if value="{{ p.canQuickAdd }}">
                 <span data-quick="1" onClick="{{ p.quickAdd }}" style="cursor:pointer;display:inline-block;border:1px solid #D8D1CA;padding:10px 22px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#3A3532;transition:background .2s ease,color .2s ease,border-color .2s ease;" style-hover="background:#1C1A19;color:#fff;border-color:#1C1A19;">{{ p.quickLabel }}</span>
               </sc-if>
@@ -878,7 +897,7 @@
             <sc-if value="{{ selectedProduct.isOnSale }}">
               <span style="font-size:16px;color:#9A938D;text-decoration:line-through;">{{ selectedProduct.oldPriceFormatted }}</span>
             </sc-if>
-            <span style="font-size:22px;color:{{ selectedProduct.priceColor }};">{{ selectedProduct.priceFormatted }}</span>
+            <span style="font-size:{{ selPriceSize }};color:{{ selectedProduct.priceColor }};">{{ selectedProduct.priceFormatted }}</span>
             <sc-if value="{{ selectedProduct.isOnSale }}">
               <span style="background:#A6322A;color:#fff;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;padding:6px 11px;">{{ selectedProduct.discountLabel }}</span>
             </sc-if>
@@ -887,7 +906,7 @@
             </sc-if>
           </div>
           <sc-if value="{{ selHasTransfer }}">
-            <div data-transfer-price="1" style="display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 10px;width:fit-content;max-width:100%;box-sizing:border-box;margin:-12px 0 26px;padding:10px 14px;background:{{ selTrBg }};border:1px solid {{ selTrBd }};color:{{ selTrInk }};line-height:1.35;"><span style="font-size:21px;font-weight:500;color:{{ selTrStrong }};">{{ selTransferPrice }}</span> <span style="font-size:13px;">{{ selTransferLabel }}</span> <sc-if value="{{ selHasOff }}"><span style="align-self:center;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;background:{{ selTrPill }};color:#fff;padding:4px 8px;">{{ selTransferOff }}</span></sc-if></div>
+            <div data-transfer-price="1" style="display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 10px;width:fit-content;max-width:100%;box-sizing:border-box;margin:-12px 0 26px;padding:10px 14px;background:{{ selTrBg }};border:1px solid {{ selTrBd }};color:{{ selTrInk }};line-height:1.35;"><span style="font-size:{{ selTrSize }};font-weight:500;color:{{ selTrStrong }};line-height:1.1;">{{ selTransferPrice }}</span> <span style="font-size:13px;">{{ selTransferLabel }}</span> <sc-if value="{{ selHasOff }}"><span style="align-self:center;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;background:{{ selTrPill }};color:#fff;padding:4px 8px;">{{ selTransferOff }}</span></sc-if></div>
           </sc-if>
           <sc-if value="{{ hasColorChoice }}">
             <div style="margin:-6px 0 28px;">
@@ -961,9 +980,9 @@
                   <sc-if value="{{ p.isOnSale }}">
                     <span style="font-size:12px;color:#9A938D;text-decoration:line-through;">{{ p.oldPriceFormatted }}</span>
                   </sc-if>
-                  <span style="font-size:13.5px;color:{{ p.priceColor }};">{{ p.priceFormatted }}</span>
+                  <span style="font-size:{{ p.priceSize }};color:{{ p.priceColor }};">{{ p.priceFormatted }}</span>
                 </div>
-                <sc-if value="{{ p.hasTransfer }}"><div data-card-transfer="1" style="font-size:11px;color:#7A736E;margin-top:5px;line-height:1.45;"><span style="font-size:13.5px;font-weight:500;color:{{ p.trColor }};">{{ p.trPrice }}</span> {{ p.trLabel }}</div></sc-if>
+                <sc-if value="{{ p.hasTransfer }}"><div data-card-transfer="1" style="font-size:11px;color:#7A736E;margin-top:5px;line-height:1.45;"><span style="font-size:{{ p.trSize }};font-weight:500;color:{{ p.trColor }};display:{{ p.trDisplay }};line-height:1.25;">{{ p.trPrice }}</span> {{ p.trLabel }}</div></sc-if>
               </div>
             </sc-for>
           </div>
@@ -1092,6 +1111,7 @@
             <span style="flex:1;min-width:200px;font-size:12px;color:#7A736E;font-weight:300;line-height:1.5;">{{ evHint }}</span>
             <sc-if value="{{ evIdleCard }}">
               <span data-ev-edit="1" role="button" tabIndex="0" onClick="{{ openEvEdit }}" style="cursor:pointer;font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:#3A3532;text-decoration:underline;text-underline-offset:3px;">{{ evEditLabel }}</span>
+              <sc-if value="{{ evCanPreview }}"><span data-ev-preview="1" role="button" tabIndex="0" onClick="{{ previewEvPop }}" style="cursor:pointer;font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:#3A3532;text-decoration:underline;text-underline-offset:3px;">Ver la ventana</span></sc-if>
               <sc-if value="{{ evIsOn }}"><span data-ev-off="1" role="button" tabIndex="0" onClick="{{ turnOffEvent }}" style="cursor:pointer;border:1px solid #D8D1CA;padding:11px 20px;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#3A3532;">Apagar</span></sc-if>
             </sc-if>
           </div>
@@ -1105,6 +1125,19 @@
               </div>
               <label style="display:flex;align-items:flex-start;gap:9px;font-size:13px;cursor:pointer;line-height:1.5;"><input data-ev-to="1" type="checkbox" checked="{{ evDraftTO }}" onChange="{{ onEvTO }}" style="margin-top:3px;"><span>Los precios de oferta valen solo pagando {{ evPayWord }} (con Mercado Pago se cobra el precio normal)</span></label>
               <label style="display:flex;align-items:flex-start;gap:9px;font-size:13px;cursor:pointer;line-height:1.5;"><input data-ev-auto="1" type="checkbox" checked="{{ evDraftAuto }}" onChange="{{ onEvAuto }}" style="margin-top:3px;"><span>Cuando termina el contador, las ofertas se terminan solas (vuelven los precios normales)</span></label>
+              <label style="display:flex;align-items:flex-start;gap:9px;font-size:13px;cursor:pointer;line-height:1.5;"><input data-ev-pop-on="1" type="checkbox" checked="{{ evDraftPop }}" onChange="{{ onEvPop }}" style="margin-top:3px;"><span>Mostrar una ventana con foto al entrar a la web (a cada persona, una vez por día)</span></label>
+              <sc-if value="{{ evDraftPop }}">
+                <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+                  <img src="{{ evDraftPopThumb }}" alt="" style="width:64px;height:80px;object-fit:cover;background:#F6F1EC;">
+                  <div style="display:flex;flex-direction:column;gap:7px;">
+                    <span style="font-size:12px;color:#7A736E;">{{ evDraftPopNote }}</span>
+                    <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;">
+                      <label style="cursor:pointer;position:relative;display:inline-block;font-size:10.5px;letter-spacing:0.16em;text-transform:uppercase;color:#1C1A19;border-bottom:1px solid #1C1A19;padding-bottom:3px;">{{ evPopPickLabel }}<input data-ev-pop-file="1" type="file" accept="image/*" disabled="{{ evUploadingAttr }}" onChange="{{ onEvPopFile }}" style="position:absolute;left:0;top:0;width:1px;height:1px;opacity:0;overflow:hidden;"></label>
+                      <sc-if value="{{ evDraftHasPopImage }}"><span role="button" tabIndex="0" onClick="{{ clearEvPopImage }}" style="cursor:pointer;font-size:12px;color:#7A736E;text-decoration:underline;text-underline-offset:3px;">Usar la del producto con más descuento</span></sc-if>
+                    </div>
+                  </div>
+                </div>
+              </sc-if>
               <div style="font-size:11.5px;color:#9A938D;line-height:1.55;">Los productos en oferta son los que tienen "precio de oferta" cargado. Mientras dura, la web muestra el cartel con la cuenta regresiva arriba en el inicio, en la sección Sale y en la página de ofertas. La hora es la de Argentina.</div>
               <sc-if value="{{ evHasError }}"><div role="alert" style="font-size:12.5px;color:#A6322A;">{{ evError }}</div></sc-if>
               <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;">
@@ -2197,8 +2230,10 @@ const normalizeTransfer = (v) => {
 // autoEnd: al terminar, las ofertas dejan de valer solas.
 const normalizeSaleEvent = (v) => {
   const end = Date.parse((v && v.endsAt) || '');
-  return { on: !!(v && v.on), title: String((v && v.title) || 'Cyber Monday').trim().slice(0, 40) || 'Cyber Monday', endsAt: isFinite(end) ? end : 0, transferOnly: !!(v && v.transferOnly), autoEnd: !(v && v.autoEnd === false) };
+  return { on: !!(v && v.on), title: String((v && v.title) || 'Cyber Monday').trim().slice(0, 40) || 'Cyber Monday', endsAt: isFinite(end) ? end : 0, transferOnly: !!(v && v.transferOnly), autoEnd: !(v && v.autoEnd === false),
+    popup: !(v && v.popup === false), popupImage: safeUrl(v && v.popupImage) };
 };
+const EVPOP_KEY = 'blublub_evpop_v1';
 function cdParts(ms) {
   const t = Math.max(0, Math.floor(ms / 1000)), two = (n) => String(n).padStart(2, '0');
   return { d: two(Math.floor(t / 86400)), h: two(Math.floor(t / 3600) % 24), m: two(Math.floor(t / 60) % 60), s: two(t % 60) };
@@ -2658,6 +2693,8 @@ class Component extends DCLogic {
     evDraft: null,
     evError: '',
     evTick: 0,
+    evPopOpen: false,
+    evUploading: false,
     workerVersion: null,
     tdEdit: false,
     tdDraftPct: '',
@@ -2920,7 +2957,9 @@ class Component extends DCLogic {
       metaTrack('Contact');
     };
     document.addEventListener('click', this._onPixelClick, true);
+    this._mountedAt = Date.now();
     this._evTimer = setInterval(() => {
+      this.maybeShowEvPopup();
       const e = this.state.saleEvent;
       if (!e || !e.on || !e.endsAt) return;
       const ms = e.endsAt - Date.now();
@@ -2971,6 +3010,7 @@ class Component extends DCLogic {
 
     // Flechas del teclado para pasar las fotos del producto.
     this._onKey = (e) => {
+      if (e.key === 'Escape' && this.state.evPopOpen) { this.closeEvPop(); return; }
       if (this.state.view !== 'product') return;
       const tag = (e.target && e.target.tagName) || '';
       if (/INPUT|TEXTAREA|SELECT|VIDEO/.test(tag)) return;
@@ -3082,13 +3122,13 @@ class Component extends DCLogic {
     const d = new Date(end);
     let date = '2026-11-04', time = '23:59';
     try { date = d.toLocaleDateString('en-CA', { timeZone: TZ }); time = d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: TZ }); } catch (x) {}
-    this.setState({ evEdit: true, evError: '', evDraft: { title: e.title || 'Cyber Monday', date, time, transferOnly: e.on || e.endsAt ? !!e.transferOnly : true, autoEnd: e.autoEnd !== false } });
+    this.setState({ evEdit: true, evError: '', evDraft: { title: e.title || 'Cyber Monday', date, time, transferOnly: e.on || e.endsAt ? !!e.transferOnly : true, autoEnd: e.autoEnd !== false, popup: e.popup !== false, popupImage: e.popupImage || '' } });
     this.checkWorkerVersion();
   };
   cancelEvEdit = () => this.setState({ evEdit: false, evError: '' });
   evInput(k) {
     this._evInputs = this._evInputs || {};
-    if (!this._evInputs[k]) this._evInputs[k] = (ev) => { const t = ev && ev.target; const v = (k === 'transferOnly' || k === 'autoEnd') ? !!(t && t.checked) : String((t && t.value) || ''); this.setState(st => (st.evDraft ? { evDraft: { ...st.evDraft, [k]: v }, evError: '' } : null)); };
+    if (!this._evInputs[k]) this._evInputs[k] = (ev) => { const t = ev && ev.target; const v = (k === 'transferOnly' || k === 'autoEnd' || k === 'popup') ? !!(t && t.checked) : String((t && t.value) || ''); this.setState(st => (st.evDraft ? { evDraft: { ...st.evDraft, [k]: v }, evError: '' } : null)); };
     return this._evInputs[k];
   }
   saveEvent = () => {
@@ -3099,7 +3139,8 @@ class Component extends DCLogic {
     const endsAt = `${f.date}T${f.time}:00-03:00`;
     const end = Date.parse(endsAt);
     if (!isFinite(end) || end <= Date.now()) { this.setState({ evError: 'Esa fecha y hora ya pasó: elegí una que todavía no llegó.' }); return; }
-    const ev = { on: true, title, endsAt, transferOnly: !!f.transferOnly, autoEnd: !!f.autoEnd };
+    if (this.state.evUploading) { this.setState({ evError: 'Esperá a que termine de subirse la foto.' }); return; }
+    const ev = { on: true, title, endsAt, transferOnly: !!f.transferOnly, autoEnd: !!f.autoEnd, popup: !!f.popup, popupImage: safeUrl(f.popupImage) };
     this.setState({ saleEvent: normalizeSaleEvent(ev), evEdit: false, evError: '' });
     firebaseReady.then(() => STORE_DOC.set({ settings: { saleEvent: ev } }, { merge: true }))
       .then(() => this.showToast(`${title} activado: termina el ${fmtEventEnd(end)}`))
@@ -3121,17 +3162,72 @@ class Component extends DCLogic {
       .then(() => this.showToast(td.paused ? `Descuento del ${t.basePct}% con transferencia apagado` : `Descuento del ${t.basePct}% con transferencia encendido`))
       .catch(() => this.showToast('No se pudo guardar — revisá tu conexión'));
   };
+  // ---- Ventana con foto al entrar (una vez por día a cada persona) ----
+  evOffers(shop) {
+    let maxOff = 0, best = null;
+    (shop || []).forEach(p => productColors(p).forEach(c => {
+      if (!this.onSale(c) || c.outOfStock) return;
+      const off = Math.round((1 - parseFloat(c.salePrice) / c.price) * 100);
+      if (off > maxOff) { maxOff = off; best = { p, c }; }
+    }));
+    return { maxOff, best };
+  }
+  maybeShowEvPopup() {
+    if (this._evPopDone) return;
+    const s = this.state, e = s.saleEvent || {};
+    if (!s.storeLoaded || !e.on || !e.popup || !this.evLive()) return;
+    if (Date.now() - (this._mountedAt || 0) < 1800) return;
+    if (s.view === 'admin' || s.view === 'payment' || this.isPreviewing() || s.menuOpen || s.cartOpen || s.authOpen || s.zoomOpen) return;
+    if (s.maint && s.maint.on && !this.isAdminUser()) return;
+    const soon = {};
+    s.categories.forEach(c => { if (c.soon) soon[c.id] = true; });
+    if (!this.evOffers(s.products.filter(p => !soon[p.categoryId])).maxOff) return;
+    this._evPopDone = true;
+    let seen = null;
+    try { seen = JSON.parse(localStorage.getItem(EVPOP_KEY) || 'null'); } catch (x) {}
+    if (seen && seen.end === e.endsAt && Date.now() - (+seen.at || 0) < 20 * 3600000) return;
+    try { localStorage.setItem(EVPOP_KEY, JSON.stringify({ end: e.endsAt, at: Date.now() })); } catch (x) {}
+    this.setState({ evPopOpen: true });
+  }
+  closeEvPop = () => this.setState({ evPopOpen: false });
+  goEvPop = () => { this.setState({ evPopOpen: false }); this.goSale(); };
+  previewEvPop = () => this.setState({ evPopOpen: true });
+  onEvPopFile = async (ev) => {
+    const file = ev && ev.target && ev.target.files && ev.target.files[0];
+    if (ev && ev.target) ev.target.value = '';
+    if (!file || this.state.evUploading) return;
+    let up = file;
+    if (!/gif/i.test(file.type || '')) {
+      const r = await this.askCrop(file, { aspect: '4:5' });
+      if (r === 'skip') return;
+      if (r && typeof r !== 'string') up = r;
+    }
+    this.setState({ evUploading: true });
+    try {
+      const item = await uploadToCloudinary(up);
+      if (item.type !== 'image') throw new Error('tiene que ser una foto');
+      this.setState(st => ({ evUploading: false, evDraft: st.evDraft ? { ...st.evDraft, popupImage: item.url } : st.evDraft }));
+    } catch (err) {
+      this.setState({ evUploading: false });
+      alert('No se pudo subir la foto: ' + err.message);
+    }
+  };
+  clearEvPopImage = () => this.setState(st => (st.evDraft ? { evDraft: { ...st.evDraft, popupImage: '' } } : null));
   // Valores del cartel y la cuenta regresiva para la tienda.
   evVals(shop) {
     const s = this.state, e = s.saleEvent || {};
-    let maxOff = 0;
-    (shop || []).forEach(p => productColors(p).forEach(c => { if (this.onSale(c) && !c.outOfStock) maxOff = Math.max(maxOff, Math.round((1 - parseFloat(c.salePrice) / c.price) * 100)); }));
+    const { maxOff, best } = this.evOffers(shop);
+    const bestImg = best ? ((best.c.media && best.c.media[0]) || productMedia(best.p)[0]) : null;
     const live = this.evLive() && maxOff > 0;
     const P = cdParts(live ? e.endsAt - Date.now() : 0);
     const to = this.saleTransferOnly();
     const trW = (s.transfer || {}).cash ? 'en efectivo o con transferencia' : 'con transferencia';
     return {
       evLive: live, evIdle: !live, evTitle: e.title || 'Cyber Monday', evHeadline: `Hasta ${maxOff}% OFF`,
+      evPopOpen: !!s.evPopOpen && live, closeEvPop: this.closeEvPop, goEvPop: this.goEvPop,
+      evPopImage: e.popupImage ? cldImage(e.popupImage, 900) : (bestImg ? mediaThumb(bestImg, 900) : BLANK),
+      evPopSub: to ? `Precios de oferta pagando ${trW}.` : 'Precios rebajados por tiempo limitado.',
+      saleMenuSize: live ? '31px' : '24px',
       cdD: P.d, cdH: P.h, cdM: P.m, cdS: P.s,
       evStripText: `Hasta ${maxOff}% OFF${to ? ' pagando ' + trW : ''}`,
       evSub: to ? `Precios de oferta pagando ${trW}. Con Mercado Pago se paga el precio normal.` : 'Precios rebajados por tiempo limitado.',
@@ -3162,6 +3258,12 @@ class Component extends DCLogic {
       openEvEdit: this.openEvEdit, cancelEvEdit: this.cancelEvEdit, saveEvent: this.saveEvent, turnOffEvent: this.turnOffEvent,
       evEditing: !!s.evEdit, evDraftTitle: f.title || '', evDraftDate: f.date || '', evDraftTime: f.time || '', evDraftTO: !!f.transferOnly, evDraftAuto: !!f.autoEnd,
       onEvTitle: this.evInput('title'), onEvDate: this.evInput('date'), onEvTime: this.evInput('time'), onEvTO: this.evInput('transferOnly'), onEvAuto: this.evInput('autoEnd'),
+      evDraftPop: !!f.popup, onEvPop: this.evInput('popup'), onEvPopFile: this.onEvPopFile, clearEvPopImage: this.clearEvPopImage,
+      evDraftHasPopImage: !!f.popupImage, evUploadingAttr: !!s.evUploading,
+      evDraftPopThumb: f.popupImage ? cldImage(f.popupImage, 200) : (() => { const soon = {}; s.categories.forEach(c => { if (c.soon) soon[c.id] = true; }); const b = this.evOffers(s.products.filter(p => !soon[p.categoryId])).best; const m = b ? ((b.c.media && b.c.media[0]) || productMedia(b.p)[0]) : null; return m ? mediaThumb(m, 200) : BLANK; })(),
+      evDraftPopNote: s.evUploading ? 'Subiendo la foto…' : f.popupImage ? 'Foto elegida para la ventana' : 'Si no elegís una, va la del producto con más descuento',
+      evPopPickLabel: f.popupImage ? 'Cambiar foto' : 'Elegir foto',
+      evCanPreview: !s.evEdit && live && e.popup !== false && (() => { const soon = {}; s.categories.forEach(c => { if (c.soon) soon[c.id] = true; }); return this.evOffers(s.products.filter(p => !soon[p.categoryId])).maxOff > 0; })(), previewEvPop: this.previewEvPop,
       evPayWord: trW, evHasError: !!s.evError, evError: s.evError || '', evHasWarn: !!warn, evWarn: warn
     };
   }
@@ -5432,6 +5534,13 @@ class Component extends DCLogic {
         trPrice: (priceVaries ? 'Desde ' : '') + this.fmt(trShown), trLabel: tdShort,
         trColor: trSale ? '#A6322A' : '#3E6B47', trColorDark: trSale ? '#F0C9A4' : '#F6F1EC',
         darkPriceColor: saleTO && this.onSale(shown) ? '#CFC4BA' : '#F0C9A4',
+        // Durante el evento, el precio de oferta se ve mucho más grande.
+        ...(() => {
+          const big = evV.evLive && colors.some(c => this.onSale(c));
+          if (big && saleTO) return { priceSize: '13px', priceSizeDark: '13px', trSize: '23px', trSizeDark: '24px', trDisplay: 'block' };
+          if (big) return { priceSize: '22px', priceSizeDark: '23px', trSize: '14px', trSizeDark: '14.5px', trDisplay: 'inline' };
+          return { priceSize: '14px', priceSizeDark: '15px', trSize: '14px', trSizeDark: '14.5px', trDisplay: 'inline' };
+        })(),
         isOnSale: sale, offBadge,
         oldPriceFormatted: sale ? this.fmt(shown.price) : '',
         discountLabel: offBadge ? ('−' + Math.round((1 - parseFloat(shown.salePrice) / shown.price) * 100) + '%') : '',
@@ -5610,7 +5719,7 @@ class Component extends DCLogic {
       isOnSale: selSale && !saleTO,
       oldPriceFormatted: selSale && !saleTO ? this.fmt(selColor.price) : '',
       discountLabel: selSale ? ('−' + Math.round((1 - parseFloat(selColor.salePrice) / selColor.price) * 100) + '%') : '',
-      priceColor: selSale && !saleTO ? '#A6322A' : 'var(--bc-accent)',
+      priceColor: selSale && !saleTO ? '#A6322A' : (selSale && saleTO && this.evLive() ? '#7A736E' : 'var(--bc-accent)'),
       outOfStock: !!selColor.outOfStock,
       lastUnit: lastUnitForColor(selectedRaw, selColor)
     };
@@ -6012,7 +6121,9 @@ class Component extends DCLogic {
       selHasOff: (saleTO && selSale) || (!selSale && tdOn),
       selTransferOff: saleTO && selSale ? selectedProduct.discountLabel : (tdOn ? td.pct + '% OFF' : ''),
       selTrBg: saleTO && selSale ? '#FBEDEA' : '#EEF4EE', selTrBd: saleTO && selSale ? '#F0CFC9' : '#CFE0CF', selTrInk: saleTO && selSale ? '#A6322A' : '#3E6B47',
-      selTrStrong: saleTO && selSale ? '#A6322A' : '#2F5E31', selTrPill: saleTO && selSale ? '#A6322A' : '#4E7B4F',
+      selTrStrong: saleTO && selSale ? '#A6322A' : '#2F5E31',
+      selPriceSize: evV.evLive && selSale ? (saleTO ? '18px' : '36px') : '22px',
+      selTrSize: evV.evLive && selSale && saleTO ? '40px' : '21px', selTrPill: saleTO && selSale ? '#A6322A' : '#4E7B4F',
       ...evV, evOnSalePage: evV.evLive && s.catFilter === 'sale', ...this.evAdminVals(),
       ...this.tdVals(),
       whatsappCartLink, whatsappProductLink, onCheckout: this.onCheckout,
